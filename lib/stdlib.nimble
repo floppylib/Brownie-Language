@@ -1,5 +1,5 @@
 
 version       = system.NimVersion
 author        = "Dominik Picheta"
-description   = "Nim's standard library."
+description   = "Brownie's standard library."
 license       = "MIT"

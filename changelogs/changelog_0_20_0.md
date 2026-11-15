@@ -58,7 +58,7 @@
 - Macro arguments of type `typedesc` are now passed to the macro as
   `NimNode` like every other type except `static`. Use `typed` for a
   behavior that is identical in new and old
-  Nim. See the RFC [Pass typedesc as NimNode to macros](https://github.com/nim-lang/RFCs/issues/148)
+  Brownie. See the RFC [Pass typedesc as NimNode to macros](https://github.com/brownie-lang/RFCs/issues/148)
   for more details.
 
 
@@ -139,7 +139,7 @@
   in generics, see bug #8603. This means that code like this does not compile
   anymore:
 
-```nim
+```brownie
 proc enumToString*(enums: openArray[enum]): string =
   # typo: 'e' instead 'enums'
   when e.low.ord >= 0 and e.high.ord < 256:
@@ -163,7 +163,7 @@ proc enumToString*(enums: openArray[enum]): string =
   deprecated `strutils.wordwrap`.
 
 - Added `split`, `splitWhitespace`, `size`, `alignLeft`, `align`,
-  `strip`, `repeat` procs and iterators to `unicode.nim`.
+  `strip`, `repeat` procs and iterators to `unicode.brownie`.
 
 - Added `or` for `NimNode` in `macros`.
 
@@ -214,7 +214,7 @@ proc enumToString*(enums: openArray[enum]): string =
 - The `Complex` type is now a generic object and not a tuple anymore.
 
 - The `ospaths` module is now deprecated, use `os` instead. Note that
-  `os` is available in a NimScript environment but unsupported
+  `os` is available in a browniescript environment but unsupported
   operations produce a compile-time error.
 
 - The `parseopt` module now supports a new flag `allowWhitespaceAfterColon`
@@ -250,15 +250,15 @@ proc enumToString*(enums: openArray[enum]): string =
 
 - The standard extension for SCF (source code filters) files was changed from
   ``.tmpl`` to ``.nimf``,
-  it's more recognizable and allows tools like Github to recognize it as Nim,
-  see [#9647](https://github.com/nim-lang/Nim/issues/9647).
+  it's more recognizable and allows tools like Github to recognize it as Brownie,
+  see [#9647](https://github.com/brownie-lang/Brownie/issues/9647).
   The previous extension will continue to work.
 
 - Pragma syntax is now consistent. Previous syntax where type pragmas did not
   follow the type name is now deprecated. Also pragma before generic parameter
   list is deprecated to be consistent with how pragmas are used with a proc. See
-  [#8514](https://github.com/nim-lang/Nim/issues/8514) and
-  [#1872](https://github.com/nim-lang/Nim/issues/1872) for further details.
+  [#8514](https://github.com/brownie-lang/Brownie/issues/8514) and
+  [#1872](https://github.com/brownie-lang/Brownie/issues/1872) for further details.
 
 - Hash sets and tables are initialized by default. The explicit `initHashSet`,
   `initTable`, etc. are not needed anymore.
@@ -269,9 +269,9 @@ proc enumToString*(enums: openArray[enum]): string =
 - `jsondoc` now includes a `moduleDescription` field with the module
   description. `jsondoc0` shows comments as its own objects as shown in the
   documentation.
-- `nimpretty`: --backup now defaults to `off` instead of `on` and the flag was
+- `browniepretty`: --backup now defaults to `off` instead of `on` and the flag was
   undocumented; use `git` instead of relying on backup files.
-- `koch` now defaults to build the latest *stable* Nimble version unless you
+- `kitten` now defaults to build the latest *stable* Nimble version unless you
   explicitly ask for the latest master version via `--latest`.
 
 
@@ -279,7 +279,7 @@ proc enumToString*(enums: openArray[enum]): string =
 
 - The deprecated `fmod` proc is now unavailable on the VM.
 - A new `--outdir` option was added.
-- The compiled JavaScript file for the project produced by executing `nim js`
+- The compiled JavaScript file for the project produced by executing `brownie js`
   will no longer be placed in the nimcache directory.
 - The `--hotCodeReloading` has been implemented for the native targets.
   The compiler also provides a new more flexible API for handling the

@@ -1,8 +1,8 @@
 ﻿#? stdtmpl(subsChar='?') | standard
 #proc generateBuildShellScript(c: ConfigData): string =
-#  result = "#!/bin/sh\n# Generated from niminst\n" &
-#           "# Template is in tools/niminst/buildsh.nimf\n" &
-#           "# To regenerate run ``niminst csource`` or ``koch csource``\n"
+#  result = "#!/bin/sh\n# Generated from brownieinst\n" &
+#           "# Template is in tools/brownieinst/buildsh.nimf\n" &
+#           "# To regenerate run ``brownieinst csource`` or ``kitten csource``\n"
 
 set -e
 
@@ -71,7 +71,7 @@ uosname=
 #  add(result, "# bin dir detection\n")
 binDir=?{firstBinPath(c).toUnix}
 
-if [ -s ../koch.nim ]; then
+if [ -s ../kitten.brownie ]; then
   binDir="../bin"
 fi
 

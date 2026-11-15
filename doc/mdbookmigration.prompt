@@ -1,14 +1,14 @@
-# Migrate an mdBook project to `nim book`
+# Migrate an mdBook project to `brownie book`
 
 Convert a Markdown documentation book (currently built with mdBook) into a
-`nim book` project. The book lives in a directory (call it `book/`) with a
-`SUMMARY.md` at its root, and the API docs (generated from `.nim` source via
-`nim doc --project --index:on`) live in a sibling `api/` directory that ends up
+`brownie book` project. The book lives in a directory (call it `book/`) with a
+`SUMMARY.md` at its root, and the API docs (generated from `.brownie` source via
+`brownie doc --project --index:on`) live in a sibling `api/` directory that ends up
 at `<outdir>/api/`.
 
 ## Context
 
-`nim book` is a Nim compiler command that turns a directory of Nim-flavored
+`brownie book` is a Brownie compiler command that turns a directory of Brownie-flavored
 Markdown (`.md`) files into a static documentation site, using `SUMMARY.md` for
 structure/navigation. It supports:
 
@@ -17,7 +17,7 @@ structure/navigation. It supports:
 - `.. admonition::` (and the shorthand `.. note::`, `.. warning::`,
   `.. important::`).
 - `.. title::` for page titles.
-- `.. importdoc::` + Pandoc-style references for cross-referencing Nim symbols.
+- `.. importdoc::` + Pandoc-style references for cross-referencing Brownie symbols.
 - `.. image::` for images.
 
 ## Migration steps
@@ -32,7 +32,7 @@ Replace mdBook's fenced-code admonitions with RST directives:
 - ` ```admonish info` → `.. note::` (there is **no** `info` directive; map it
   to `note`)
 
-Valid admonition directives in Nim's RST are: `admonition`, `attention`,
+Valid admonition directives in Brownie's RST are: `admonition`, `attention`,
 `caution`, `danger`, `error`, `hint`, `important`, `note`, `tip`, `warning`.
 Map any mdBook admonition type not in this list to the closest valid one
 (e.g. `info` → `note`).
@@ -63,27 +63,27 @@ Replace mdBook's `{{#include PATH}}` and `{{#shiftinclude auto:PATH:NAME}}` with
 
 Notes:
 
-- `:code:` gives Nim syntax highlighting (defaults to Nim; use `:code: <lang>`
+- `:code:` gives Brownie syntax highlighting (defaults to Brownie; use `:code: <lang>`
   for other languages).
-- The `#ANCHOR:` / `#ANCHOR_END:` markers must exist in the source `.nim`
+- The `#ANCHOR:` / `#ANCHOR_END:` markers must exist in the source `.brownie`
   files. Normalize them to `#ANCHOR:` (no space after `#`) — a space after `#`
   is interpreted as a Markdown heading.
 - Include paths are resolved **relative to each `.md` file's own directory**
   (not the book root). Adjust `../` counts accordingly.
-- Remove the surrounding ` ```nim ` fences — `.. include::` is a block
+- Remove the surrounding ` ```brownie ` fences — `.. include::` is a block
   directive, not inline.
 
 ### 3. Remove mdBook artifacts
 
 Remove any leftover mdBook-specific markup, in particular `<!-- toc -->`
-comments (mdBook's table-of-contents placeholder). `nim book` generates its own
+comments (mdBook's table-of-contents placeholder). `brownie book` generates its own
 TOC from the document headings, so these placeholders are dead and should be
 deleted.
 
 ### 4. Emphasis syntax
 
 Replace underscore emphasis with asterisks: `_italic_` → `*italic*` (and
-`__bold__` → `**bold**` if present). Nim's Markdown dialect does not support
+`__bold__` → `**bold**` if present). Brownie's Markdown dialect does not support
 `_` for emphasis — only `*`.
 
 Be careful not to touch underscores that are part of identifiers, filenames, or
@@ -123,13 +123,13 @@ Markdown links:
 The `.html` path is relative to the current page's location (adjust `../` as
 needed). API module pages live under `./api/chronos/...`.
 
-**6b. Nim code references** (symbols, procs, types, etc.) — use Pandoc-style
+**6b. Brownie code references** (symbols, procs, types, etc.) — use Pandoc-style
 references, resolved via `.. importdoc::`:
 
 **First read these to learn the syntax:**
 
-- https://nim-lang.org/docs/markdown_rst.html#referencing
-- https://nim-lang.org/docs/docgen.html#simple-documentation-links
+- https://brownie-lang.org/docs/markdown_rst.html#referencing
+- https://brownie-lang.org/docs/docgen.html#simple-documentation-links
 
 - **The reference syntax is `[Ref]`** (square brackets, no trailing
   underscore). It is **not** `` `ref`_ `` and **not** `ref_`.
@@ -141,7 +141,7 @@ references, resolved via `.. importdoc::`:
   overloads) → use the parenthesized signature form:
   `[symbol(ParamType1, ParamType2)]`. This is the disambiguation syntax (NOT
   the comma-separated complex name).
-- Leave stdlib links (`nim-lang.org/docs/...`) as-is — they can't be resolved
+- Leave stdlib links (`brownie-lang.org/docs/...`) as-is — they can't be resolved
   via `importdoc`.
 
 ### 7. Images
@@ -154,7 +154,7 @@ with `:alt:`).
 After migration, build with:
 
 ```sh
-nim book --outdir:<outdir> book
+brownie book --outdir:<outdir> book
 ```
 
 and check:

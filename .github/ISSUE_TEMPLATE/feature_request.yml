@@ -9,7 +9,7 @@ body:
     value: |
       - Please provide a minimal code example that illustrates the basic idea behind your feature request.
         Reports with full repro code and descriptive detailed information will likely receive feedback faster.
-      - There is a separate repository for the detailed RFCs and proposals: https://github.com/nim-lang/RFCs.
+      - There is a separate repository for the detailed RFCs and proposals: https://github.com/brownie-lang/RFCs.
         If you have a simple feature request, you can post it here using this form,
         but bear in mind that adding new features to the language is currently a low priority.
 
@@ -67,6 +67,6 @@ body:
   attributes:
     value: |
       - Thanks for your contributions!, your ideas will receive feedback from the community soon...
-      - **Remember to :star: Star the Nim project on GitHub!.**
-      - Consider writing a PR targetting devel branch after filing this, see [contributing](https://nim-lang.github.io/Nim/contributing.html).
-      - [Please, consider a Donation for the Nim project.](https://nim-lang.org/donate.html)
+      - **Remember to :star: Star the Brownie project on GitHub!.**
+      - Consider writing a PR targetting devel branch after filing this, see [contributing](https://brownie-lang.github.io/Brownie/contributing.html).
+      - [Please, consider a Donation for the Brownie project.](https://brownie-lang.org/donate.html)

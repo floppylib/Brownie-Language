@@ -1,2 +1,2 @@
-doAssert defined(nimscript)
+doAssert defined(browniescript)
 echo "123"

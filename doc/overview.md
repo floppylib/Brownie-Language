@@ -1,5 +1,5 @@
 =============================
-Nim Documentation Overview
+Brownie Documentation Overview
 =============================
 
 :Author: Andreas Rumpf

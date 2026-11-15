@@ -1,5 +1,5 @@
 =====================
-Nim Tutorial (Part I)
+Brownie Tutorial (Part I)
 =====================
 
 :Author: Andreas Rumpf
@@ -15,21 +15,21 @@ Introduction
 >  "Der Mensch ist doch ein Augentier -- Schöne Dinge wünsch' ich mir."
 
 
-This document is a tutorial for the programming language *Nim*.
+This document is a tutorial for the programming language *Brownie*.
 
 This tutorial assumes that you are familiar with basic programming concepts
 like variables, types, or statements.
 
-Here are several other resources for learning Nim:
+Here are several other resources for learning Brownie:
 
-* [Nim Basics tutorial](https://narimiran.github.io/nim-basics/) - a gentle 
+* [Brownie Basics tutorial](https://narimiran.github.io/brownie-basics/) - a gentle 
   introduction of the concepts mentioned above
-* [Learn Nim in 5 minutes](https://learnxinyminutes.com/docs/nim/) - quick,
-  five-minute introduction to Nim
-* [The Nim manual](manual.html) - many more examples of the advanced language features
+* [Learn Brownie in 5 minutes](https://learnxinyminutes.com/docs/brownie/) - quick,
+  five-minute introduction to Brownie
+* [The Brownie manual](manual.html) - many more examples of the advanced language features
 
 All code examples in this tutorial, as well as the ones found in the rest of
-Nim's documentation, follow the [Nim style guide](nep1.html).
+Brownie's documentation, follow the [Brownie style guide](nep1.html).
 
 
 The first program
@@ -37,7 +37,7 @@ The first program
 
 We start the tour with a modified "hello world" program:
 
-  ```Nim  test = "nim c $1"
+  ```Brownie  test = "brownie c $1"
   # This is a comment
   echo "What's your name? "
   var name: string = readLine(stdin)
@@ -45,42 +45,42 @@ We start the tour with a modified "hello world" program:
   ```
 
 
-Save this code to the file "greetings.nim". Now compile and run it:
+Save this code to the file "greetings.brownie". Now compile and run it:
   ```cmd
-  nim compile --run greetings.nim
+  brownie compile --run greetings.brownie
   ```
 
-With the ``--run`` [switch](nimc.html#compiler-usage-commandminusline-switches) Nim
+With the ``--run`` [switch](nimc.html#compiler-usage-commandminusline-switches) Brownie
 executes the file automatically after compilation. You can give your program
 command-line arguments by appending them after the filename:
   ```cmd
-  nim compile --run greetings.nim arg1 arg2
+  brownie compile --run greetings.brownie arg1 arg2
   ```
 
 Commonly used commands and switches have abbreviations, so you can also use:
   ```cmd
-  nim c -r greetings.nim
+  brownie c -r greetings.brownie
   ```
 
 This is a **debug version**.
 To compile a release version use:
   ```cmd
-  nim c -d:release greetings.nim
+  brownie c -d:release greetings.brownie
   ```
 
-By default, the Nim compiler generates a large number of runtime checks
+By default, the Brownie compiler generates a large number of runtime checks
 aiming for your debugging pleasure. With ``-d:release`` some checks are
 [turned off and optimizations are turned on](
 nimc.html#compiler-usage-compileminustime-symbols).
 
 For benchmarking or production code, use the ``-d:release`` switch.
 For comparing the performance with unsafe languages like C, use the ``-d:danger`` switch
-in order to get meaningful, comparable results. Otherwise, Nim might be handicapped
+in order to get meaningful, comparable results. Otherwise, Brownie might be handicapped
 by checks that are **not even available** for C.
 
 Though it should be pretty obvious what the program does, I will explain the
 syntax: statements which are not indented are executed when the program
-starts. Indentation is Nim's way of grouping statements. Indentation is
+starts. Indentation is Brownie's way of grouping statements. Indentation is
 done with spaces only, tabulators are not allowed.
 
 String literals are enclosed in double-quotes. The `var` statement declares
@@ -90,12 +90,12 @@ compiler knows that [readLine](syncio.html#readLine,File) returns a string,
 you can leave out the type in the declaration (this is called `local type
 inference`:idx:). So this will work too:
 
-  ```Nim  test = "nim c $1"
+  ```Brownie  test = "brownie c $1"
   var name = readLine(stdin)
   ```
 
 Note that this is basically the only form of type inference that exists in
-Nim: it is a good compromise between brevity and readability.
+Brownie: it is a good compromise between brevity and readability.
 
 The "hello world" program contains several identifiers that are already known
 to the compiler: `echo`, [readLine](syncio.html#readLine,File), etc.
@@ -106,8 +106,8 @@ imported by any other module.
 Lexical elements
 ================
 
-Let us look at Nim's lexical elements in more detail: like other
-programming languages Nim consists of (string) literals, identifiers,
+Let us look at Brownie's lexical elements in more detail: like other
+programming languages Brownie consists of (string) literals, identifiers,
 keywords, comments, operators, and other punctuation marks.
 
 
@@ -118,8 +118,8 @@ String literals are enclosed in double-quotes; character literals in single
 quotes. Special characters are escaped with ``\``: ``\n`` means newline, ``\t``
 means tabulator, etc. There are also *raw* string literals:
 
-  ```Nim
-  r"C:\program files\nim"
+  ```Brownie
+  r"C:\program files\brownie"
   ```
 
 In raw literals, the backslash is not an escape character.
@@ -136,7 +136,7 @@ Comments
 Comments start anywhere outside a string or character literal with the
 hash character `#`. Documentation comments start with `##`:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   # A comment.
 
   var myVariable: int ## a documentation comment
@@ -150,9 +150,9 @@ documentation generators.
 Multiline comments are started with `#[` and terminated with `]#`.  Multiline
 comments can also be nested.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   #[
-  You can have any Nim code text commented
+  You can have any Brownie code text commented
   out inside this with no indentation restrictions.
         yes("May I ask a pointless question?")
     #[
@@ -177,14 +177,14 @@ The var statement
 =================
 The var statement declares a new local or global variable:
 
-  ```nim
+  ```brownie
   var x, y: int # declares x and y to have the type `int`
   ```
 
 Indentation can be used after the `var` keyword to list a whole section of
 variables:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   var
     x, y: int
     # a comment can occur here too
@@ -199,14 +199,14 @@ Constants are symbols which are bound to a value. The constant's value
 cannot change. The compiler must be able to evaluate the expression in a
 constant declaration at compile time:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   const x = "abc" # the constant x contains the string "abc"
   ```
 
 Indentation can be used after the `const` keyword to list a whole section of
 constants:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   const
     x = 1
     # a comment can occur here too
@@ -221,7 +221,7 @@ The `let` statement works like the `var` statement but the declared
 symbols are *single assignment* variables: After the initialization their
 value cannot change:
 
-  ```nim
+  ```brownie
   let x = "abc" # introduces a new variable `x` and binds a value to it
   x = "xyz"     # Illegal: assignment to `x`
   ```
@@ -230,11 +230,11 @@ The difference between `let` and `const` is: `let` introduces a variable
 that can not be re-assigned, `const` means "enforce compile time evaluation
 and put it into a data section":
 
-  ```nim
+  ```brownie
   const input = readLine(stdin) # Error: constant expression expected
   ```
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   let input = readLine(stdin)   # works
   ```
 
@@ -245,7 +245,7 @@ The assignment statement
 The assignment statement assigns a new value to a variable or more generally
 to a storage location:
 
-  ```nim
+  ```brownie
   var x = "abc" # introduces a new variable `x` and assigns a value to it
   x = "xyz"     # assigns a new value to `x`
   ```
@@ -254,7 +254,7 @@ to a storage location:
 overloaded. You can declare multiple variables with a single assignment
 statement and all the variables will have the same value:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   var x, y = 3  # assigns 3 to the variables `x` and `y`
   echo "x ", x  # outputs "x 3"
   echo "y ", y  # outputs "y 3"
@@ -277,7 +277,7 @@ If statement
 
 The if statement is one way to branch the control flow:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   let name = readLine(stdin)
   if name == "":
     echo "Poor soul, you lost your name?"
@@ -299,7 +299,7 @@ Case statement
 Another way to branch is provided by the case statement. A case statement allows
 for multiple branches:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   let name = readLine(stdin)
   case name
   of "":
@@ -319,7 +319,7 @@ The case statement can deal with integers, other ordinal types, and strings.
 (What an ordinal type is will be explained soon.)
 For integers or other ordinal types value ranges are also possible:
 
-  ```nim
+  ```brownie
   # this statement will be explained later:
   from std/strutils import parseInt
 
@@ -336,7 +336,7 @@ every value that `n` may contain, but the code only handles the values
 (though it is possible thanks to the range notation), we fix this by telling
 the compiler that for every other value nothing should be done:
 
-  ```nim
+  ```brownie
   ...
   case n
   of 0..2, 4..7: echo "The number is in the set: {0, 1, 2, 4, 5, 6, 7}"
@@ -360,7 +360,7 @@ While statement
 
 The while statement is a simple looping construct:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   echo "What's your name? "
   var name = readLine(stdin)
   while name == "":
@@ -379,7 +379,7 @@ The `for` statement is a construct to loop over any element an *iterator*
 provides. The example uses the built-in [countup](
 system.html#countup.i,T,T,Positive) iterator:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   echo "Counting to ten: "
   for i in countup(1, 10):
     echo i
@@ -391,7 +391,7 @@ The variable `i` is implicitly declared by the
 system.html#countup.i,T,T,Positive) returns. `i` runs through the values
 1, 2, .., 10. Each value is `echo`-ed. This code does the same:
 
-  ```nim
+  ```brownie
   echo "Counting to 10: "
   var i = 1
   while i <= 10:
@@ -400,17 +400,17 @@ system.html#countup.i,T,T,Positive) returns. `i` runs through the values
   # --> Outputs 1 2 3 4 5 6 7 8 9 10 on different lines
   ```
 
-Since counting up occurs so often in programs, Nim also has a [..](
+Since counting up occurs so often in programs, Brownie also has a [..](
 system.html#...i,T,T) iterator that does the same:
 
-  ```nim
+  ```brownie
   for i in 1 .. 10:
     ...
   ```
 
 Counting down can be achieved as easily (but is less often needed):
 
-  ```nim
+  ```brownie
   echo "Counting down from 10 to 1: "
   for i in countdown(10, 1):
     echo i
@@ -421,14 +421,14 @@ Zero-indexed counting has two shortcuts `..<` and `.. ^1`
 ([backward index operator](system.html#^.t%2Cint)) to simplify
 counting to one less than the higher index:
 
-  ```nim
+  ```brownie
   for i in 0 ..< 10:
     ...  # the same as 0 .. 9
   ```
 
 or
 
-  ```nim
+  ```brownie
   var s = "some string"
   for i in 0 ..< s.len:
     ...
@@ -436,7 +436,7 @@ or
 
 or
 
-  ```nim
+  ```brownie
   var s = "some string"
   for idx, c in s[0 .. ^1]:
     ... # ^1 is the last element, ^2 would be one before it, and so on
@@ -446,7 +446,7 @@ Other useful iterators for collections (like arrays and sequences) are
 * `items` and `mitems`, which provides immutable and mutable elements respectively, and
 * `pairs` and `mpairs` which provides the element and an index number (immutable and mutable respectively)
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   for index, item in ["a","b"].pairs:
     echo item, " at index ", index
   # => a at index 0
@@ -460,7 +460,7 @@ Control flow statements have a feature not covered yet: they open a
 new scope. This means that in the following example, `x` is not accessible
 outside the loop:
 
-  ```nim  test = "nim c $1"  status = 1
+  ```brownie  test = "brownie c $1"  status = 1
   while false:
     var x = "hi"
   echo x # does not work
@@ -470,7 +470,7 @@ A while (for) statement introduces an implicit block. Identifiers
 are only visible within the block they have been declared. The `block`
 statement can be used to open a new block explicitly:
 
-  ```nim  test = "nim c $1"  status = 1
+  ```brownie  test = "brownie c $1"  status = 1
   block myblock:
     var x = "hi"
   echo x # does not work either
@@ -486,7 +486,7 @@ A block can be left prematurely with a `break` statement. The break statement
 can leave a `while`, `for`, or a `block` statement. It leaves the
 innermost construct, unless a label of a block is given:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   block myblock:
     echo "entering block"
     while true:
@@ -511,7 +511,7 @@ Continue statement
 Like in many other programming languages, a `continue` statement starts
 the next iteration immediately:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   for i in 1 .. 5:
     if i <= 3: continue
     echo i # will only print 4 and 5
@@ -523,7 +523,7 @@ When statement
 
 Example:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   when system.hostOS == "windows":
     echo "running on Windows!"
   elif system.hostOS == "linux":
@@ -550,17 +550,17 @@ the `#ifdef`:c: construct in the C programming language.
 Statements and indentation
 ==========================
 
-Now that we covered the basic control flow statements, let's return to Nim
+Now that we covered the basic control flow statements, let's return to Brownie
 indentation rules.
 
-In Nim, there is a distinction between *simple statements* and *complex
+In Brownie, there is a distinction between *simple statements* and *complex
 statements*. *Simple statements* cannot contain other statements:
 Assignment, procedure calls, or the `return` statement are all simple
 statements. *Complex statements* like `if`, `when`, `for`, `while` can
 contain other statements. To avoid ambiguities, complex statements must always
 be indented, but single simple statements do not:
 
-  ```nim
+  ```brownie
   # no indentation needed for single-assignment statement:
   if x: x = false
 
@@ -582,7 +582,7 @@ be indented, but single simple statements do not:
 condition in an if statement is an example of an expression. Expressions can
 contain indentation at certain places for better readability:
 
-  ```nim
+  ```brownie
   if thisIsaLongCondition() and
       thisIsAnotherLongCondition(1,
          2, 3, 4):
@@ -595,7 +595,7 @@ an open parenthesis and after commas.
 With parenthesis and semicolons `(;)` you can use statements where only
 an expression is allowed:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   # computes fac(4) at compile time:
   const fac4 = (var x = 1; for i in 1..4: x *= i; x)
   ```
@@ -607,11 +607,11 @@ Procedures
 To define new commands like [echo](system.html#echo,varargs[typed,])
 and [readLine](syncio.html#readLine,File) in the examples, the concept of a
 *procedure* is needed. You might be used to them being called *methods* or
-*functions* in other languages, but Nim
+*functions* in other languages, but Brownie
 [differentiates these concepts](tut1.html#procedures-funcs-and-methods). In
-Nim, new procedures are defined with the `proc` keyword:
+Brownie, new procedures are defined with the `proc` keyword:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   proc yes(question: string): bool =
     echo question, " (y/n)"
     while true:
@@ -649,7 +649,7 @@ shorthand for `return result`. The `result` value is always returned
 automatically at the end of a procedure if there is no `return` statement at
 the exit.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   proc sumTillNegative(x: varargs[int]): int =
     for i in x:
       if i < 0:
@@ -672,7 +672,7 @@ A procedure that does not have any `return` statement and does not use the
 special `result` variable returns the value of its last expression. For example,
 this procedure
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   proc helloWorld(): string =
     "Hello, World!"
   ```
@@ -688,7 +688,7 @@ most efficient way. If a mutable variable is needed inside the procedure, it has
 to be declared with `var` in the procedure body. Shadowing the parameter name
 is possible, and actually an idiom:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   proc printSeq(s: seq, nprinted: int = -1) =
     var nprinted = if nprinted == -1: s.len else: min(nprinted, s.len)
     for i in 0 ..< nprinted:
@@ -698,7 +698,7 @@ is possible, and actually an idiom:
 If the procedure needs to modify the argument for the
 caller, a `var` parameter can be used:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   proc divmod(a, b: int; res, remainder: var int) =
     res = a div b        # integer division
     remainder = a mod b  # integer modulo operation
@@ -720,10 +720,10 @@ Discard statement
 -----------------
 
 To call a procedure that returns a value just for its side effects and ignoring
-its return value, a `discard` statement **must** be used. Nim does not
+its return value, a `discard` statement **must** be used. Brownie does not
 allow silently throwing away a return value:
 
-  ```nim
+  ```brownie
   discard yes("May I ask a pointless question?")
   ```
 
@@ -731,7 +731,7 @@ allow silently throwing away a return value:
 The return value can be ignored implicitly if the called proc/iterator has
 been declared with the `discardable` pragma:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   proc p(x, y: int): int {.discardable.} =
     return x + y
 
@@ -747,7 +747,7 @@ parameters appear. This is especially true for procedures that construct a
 complex data type. Therefore, the arguments to a procedure can be named, so
 that it is clear which argument belongs to which parameter:
 
-  ```nim
+  ```brownie
   proc createWindow(x, y, width, height: int; title: string;
                     show: bool): Window =
      ...
@@ -760,7 +760,7 @@ Now that we use named arguments to call `createWindow` the argument order
 does not matter anymore. Mixing named arguments with ordered arguments is
 also possible, but not very readable:
 
-  ```nim
+  ```brownie
   var w = createWindow(0, 0, title = "My Application",
                        height = 600, width = 800, true)
   ```
@@ -775,7 +775,7 @@ To make the `createWindow` proc easier to use it should provide `default
 values`; these are values that are used as arguments if the caller does not
 specify them:
 
-  ```nim
+  ```brownie
   proc createWindow(x = 0, y = 0, width = 500, height = 700,
                     title = "unknown",
                     show = true): Window =
@@ -794,9 +794,9 @@ no need to write `title: string = "unknown"`, for example.
 Overloaded procedures
 ---------------------
 
-Nim provides the ability to overload procedures similar to C++:
+Brownie provides the ability to overload procedures similar to C++:
 
-  ```nim
+  ```brownie
   proc toString(x: int): string =
     result =
       if x < 0: "negative"
@@ -813,7 +813,7 @@ Nim provides the ability to overload procedures similar to C++:
   ```
 
 (Note that `toString` is usually the [$](dollars.html) operator in
-Nim.) The compiler chooses the most appropriate proc for the `toString`
+Brownie.) The compiler chooses the most appropriate proc for the `toString`
 calls. How this overloading resolution algorithm works exactly is not
 discussed here -- see the manual for details. Ambiguous calls are reported as errors.
 
@@ -821,13 +821,13 @@ discussed here -- see the manual for details. Ambiguous calls are reported as er
 Operators
 ---------
 
-The Nim standard library makes heavy use of overloading - one reason for this is that
+The Brownie standard library makes heavy use of overloading - one reason for this is that
 each operator like `+` is just an overloaded proc. The parser lets you
 use operators in *infix notation* (`a + b`) or *prefix notation* (`+ a`).
 An infix operator always receives two arguments, a prefix operator always one.
 (Postfix operators are not possible, because this would be ambiguous: does
 `a @ @ b` mean `(a) @ (@b)` or `(a@) @ (b)`? It always means
-`(a) @ (@b)`, because there are no postfix operators in Nim.)
+`(a) @ (@b)`, because there are no postfix operators in Brownie.)
 
 Apart from a few built-in keyword operators such as `and`, `or`, `not`,
 operators always consist of these characters:
@@ -841,7 +841,7 @@ can be [found in the manual](manual.html#syntax-precedence).
 
 To define a new operator enclose the operator in backticks "`":
 
-  ```nim
+  ```brownie
   proc `$` (x: myDataType): string = ...
   # now the $ operator also works with myDataType, overloading resolution
   # ensures that $ works for built-in types just like before
@@ -850,7 +850,7 @@ To define a new operator enclose the operator in backticks "`":
 The "`" notation can also be used to call an operator just like any other
 procedure:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   if `==`( `+`(3, 4), 7): echo "true"
   ```
 
@@ -860,15 +860,15 @@ Forward declarations
 
 Every variable, procedure, etc. needs to be declared before it can be used.
 (The reason for this is that it is non-trivial to avoid this need in a
-language that supports metaprogramming as extensively as Nim does.)
+language that supports metaprogramming as extensively as Brownie does.)
 However, this cannot be done for mutually recursive procedures:
 
-  ```nim
+  ```brownie
   # forward declaration:
   proc even(n: int): bool
   ```
 
-  ```nim
+  ```brownie
   proc odd(n: int): bool =
     assert(n >= 0) # makes sure we don't run into negative recursion
     if n == 0: false
@@ -898,9 +898,9 @@ whose value is then returned implicitly.
 Funcs and methods
 -----------------
 
-As mentioned in the introduction, Nim differentiates between procedures,
+As mentioned in the introduction, Brownie differentiates between procedures,
 functions, and methods, defined by the `proc`, `func`, and `method` keywords
-respectively. In some ways, Nim is a bit more pedantic in its definitions than
+respectively. In some ways, Brownie is a bit more pedantic in its definitions than
 other languages.
 
 Functions are closer to the concept of a pure mathematical
@@ -925,7 +925,7 @@ Iterators
 
 Let's return to the simple counting example:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   echo "Counting to ten: "
   for i in countup(1, 10):
     echo i
@@ -934,7 +934,7 @@ Let's return to the simple counting example:
 Can a [countup](system.html#countup.i,T,T,Positive) proc be written that
 supports this loop? Let's try:
 
-  ```nim
+  ```brownie
   proc countup(a, b: int): int =
     var res = a
     while res <= b:
@@ -948,7 +948,7 @@ finished. This *return and continue* is called a `yield` statement. Now
 the only thing left to do is to replace the `proc` keyword by `iterator`
 and here it is -- our first iterator:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   iterator countup(a, b: int): int =
     var res = a
     while res <= b:
@@ -986,7 +986,7 @@ that are available for them in detail.
 Booleans
 --------
 
-Nim's boolean type is called `bool` and consists of the two
+Brownie's boolean type is called `bool` and consists of the two
 pre-defined values `true` and `false`. Conditions in `while`,
 `if`, `elif`, and `when` statements must be of type bool.
 
@@ -994,7 +994,7 @@ The operators `not, and, or, xor, <, <=, >, >=, !=, ==` are defined
 for the bool type. The `and` and `or` operators perform short-circuit
 evaluation. For example:
 
-  ```nim
+  ```brownie
   while p != nil and p.name != "xyz":
     # p.name is not evaluated if p == nil
     p = p.next
@@ -1022,10 +1022,10 @@ Strings
 -------
 
 String variables are **mutable**, so appending to a string
-is possible, and quite efficient. Strings in Nim are both zero-terminated and have a
+is possible, and quite efficient. Strings in Brownie are both zero-terminated and have a
 length field. A string's length can be retrieved with the builtin `len`
 procedure; the length never counts the terminating zero. Accessing the
-terminating zero is an error, it only exists so that a Nim string can be converted
+terminating zero is an error, it only exists so that a Brownie string can be converted
 to a `cstring` without doing a copy.
 
 The assignment operator for strings copies the string. You can use the `&`
@@ -1043,14 +1043,14 @@ A string variable is initialized with the empty string `""`.
 Integers
 --------
 
-Nim has these integer types built-in:
+Brownie has these integer types built-in:
 `int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64`.
 
 The default integer type is `int`. Integer literals can have a *type suffix*
 to specify a non-default integer type:
 
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   let
     x = 0     # x is of type `int`
     y = 0'i8  # y is of type `int8`
@@ -1083,7 +1083,7 @@ cannot be detected at compile time).
 Floats
 ------
 
-Nim has these floating-point types built-in: `float float32 float64`.
+Brownie has these floating-point types built-in: `float float32 float64`.
 
 The default float type is `float`. In the current implementation,
 `float` is always 64-bits.
@@ -1091,7 +1091,7 @@ The default float type is `float`. In the current implementation,
 Float literals can have a *type suffix* to specify a non-default float
 type:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   var
     x = 0.0      # x is of type `float`
     y = 0.0'f32  # y is of type `float32`
@@ -1113,7 +1113,7 @@ Type Conversion
 Conversion between numerical types is performed by using the
 type as a function:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   var
     x: int32 = 1.int32   # same as calling int32(1)
     y: int8  = int8('a') # 'a' == 97'i8
@@ -1135,11 +1135,11 @@ system.html#repr,T) proc which works with any type and even complex data
 graphs with cycles. The following example shows that even for basic types
 there is a difference between the `$` and `repr` outputs:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   var
     myBool = true
     myCharacter = 'n'
-    myString = "nim"
+    myString = "brownie"
     myInteger = 42
     myFloat = 3.14
   echo myBool, ":", repr(myBool)
@@ -1147,7 +1147,7 @@ there is a difference between the `$` and `repr` outputs:
   echo myCharacter, ":", repr(myCharacter)
   # --> n:'n'
   echo myString, ":", repr(myString)
-  # --> nim:"nim"
+  # --> brownie:"brownie"
   echo myInteger, ":", repr(myInteger)
   # --> 42:42
   echo myFloat, ":", repr(myFloat)
@@ -1158,9 +1158,9 @@ there is a difference between the `$` and `repr` outputs:
 Advanced types
 ==============
 
-In Nim new types can be defined within a `type` statement:
+In Brownie new types can be defined within a `type` statement:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     BiggestInt = int64      # biggest integer type that is available
     BiggestFloat = float64  # biggest float type that is available
@@ -1178,7 +1178,7 @@ These values are a set of ordered symbols. Each symbol is mapped
 to an integer value internally. The first symbol is represented
 at runtime by 0, the second by 1, and so on. For example:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     Direction = enum
       north, east, south, west
@@ -1239,7 +1239,7 @@ Subranges
 A subrange type is a range of values from an integer or enumeration type
 (the base type). Example:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     MySubrange = range[0..5]
   ```
@@ -1255,7 +1255,7 @@ type as `range[0..high(int)]` ([high](system.html#high,typedesc[T]) returns
 the maximal value). Other programming languages may suggest the use of unsigned
 integers for natural numbers. This is often **unwise**: you don't want unsigned
 arithmetic (which wraps around) just because the numbers cannot be negative.
-Nim's `Natural` type helps to avoid this common programming error.
+Brownie's `Natural` type helps to avoid this common programming error.
 
 
 Sets
@@ -1271,7 +1271,7 @@ an array has the same type. The array's index type can be any ordinal type.
 
 Arrays can be constructed using `[]`:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     IntArray = array[0..5, int] # an array that is indexed with 0..5
   var
@@ -1287,7 +1287,7 @@ always bounds checked (at compile-time or at runtime). These checks can be
 disabled via pragmas or invoking the compiler with the
 ``--bound_checks:off`` command line switch.
 
-Arrays are value types, like any other Nim type. The assignment operator
+Arrays are value types, like any other Brownie type. The assignment operator
 copies the whole array contents.
 
 The built-in [len](system.html#len,TOpenArray) proc returns the array's
@@ -1295,7 +1295,7 @@ length. [low(a)](system.html#low,openArray[T]) returns the lowest valid index
 for the array `a` and [high(a)](system.html#high,openArray[T]) the highest
 valid index.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     Direction = enum
       north, east, south, west
@@ -1315,13 +1315,13 @@ valid index.
 
 The syntax for nested arrays (multidimensional) in other languages is a matter
 of appending more brackets because usually each dimension is restricted to the
-same index type as the others. In Nim you can have different dimensions with
+same index type as the others. In Brownie you can have different dimensions with
 different index types, so the nesting syntax is slightly different. Building on
 the previous example where a level is defined as an array of enums indexed by
 yet another enum, we can add the following lines to add a light tower type
 subdivided into height levels accessed through their integer index:
 
-  ```nim
+  ```brownie
   type
     LightTower = array[1..10, LevelSetting]
   var
@@ -1341,7 +1341,7 @@ length.  Another way of defining the `LightTower` to better illustrate its
 nested nature would be to omit the previous definition of the `LevelSetting`
 type and instead write it embedded directly as the type of the first dimension:
 
-  ```nim
+  ```brownie
   type
     LightTower = array[1..10, array[north..west, BlinkLights]]
   ```
@@ -1349,7 +1349,7 @@ type and instead write it embedded directly as the type of the first dimension:
 It is quite common to have arrays start at zero, so there's a shortcut syntax
 to specify a range from zero to the specified index minus one:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     IntArray = array[0..5, int] # an array that is indexed with 0..5
     QuickArray = array[6, int]  # an array that is indexed with 0..5
@@ -1383,7 +1383,7 @@ A sequence may be passed to an openarray parameter.
 
 Example:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   var
     x: seq[int] # a reference to a sequence of integers
   x = @[1, 2, 3, 4, 5, 6] # the @ turns the array into a sequence allocated on the heap
@@ -1401,7 +1401,7 @@ value. Here the `for` statement is looping over the results from the
 [pairs()](iterators.html#pairs.i,seq[T]) iterator from the [system](
 system.html) module.  Examples:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   for value in @[3, 4, 5]:
     echo value
   # --> 3
@@ -1429,7 +1429,7 @@ and [high](system.html#high,openArray[T]) operations are available for open
 arrays too.  Any array with a compatible base type can be passed to an
 openarray parameter, the index type does not matter.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   var
     fruits:   seq[string]       # reference to a sequence of strings that is initialized with '@[]'
     capitals: array[3, string]  # array of strings with a fixed size
@@ -1457,7 +1457,7 @@ also a means to implement passing a variable number of
 arguments to a procedure. The compiler converts the list of arguments
 to an array automatically:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   proc myWriteln(f: File, a: varargs[string]) =
     for s in items(a):
       write(f, s)
@@ -1472,7 +1472,7 @@ This transformation is only done if the varargs parameter is the
 last parameter in the procedure header. It is also possible to perform
 type conversions in this context:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   proc myWriteln(f: File, a: varargs[string, `$`]) =
     for s in items(a):
       write(f, s)
@@ -1496,9 +1496,9 @@ context. A slice is just an object of type Slice which contains two bounds,
 `a` and `b`. By itself a slice is not very useful, but other collection types
 define operators which accept Slice objects to define ranges.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   var
-    a = "Nim is a programming language"
+    a = "Brownie is a programming language"
     b = "Slices are useless."
 
   echo a[7 .. 12] # --> 'a prog'
@@ -1512,13 +1512,13 @@ their type, but it is the proc using the slice object which defines what values
 are accepted.
 
 To understand the different ways of specifying the indices of
-strings, arrays, sequences, etc., it must be remembered that Nim uses
+strings, arrays, sequences, etc., it must be remembered that Brownie uses
 zero-based indices.
 
 So the string `b` is of length 19, and two different ways of specifying the
 indices are
 
-  ```nim
+  ```brownie
   "Slices are useless."
    |          |     |
    0         11    17   using indices
@@ -1554,7 +1554,7 @@ Each object type `Foo` has a constructor `Foo(field: value, ...)`
 where all of its fields can be initialized. Unspecified fields will
 get their default value.
 
-  ```nim
+  ```brownie
   type
     Person = object
       name: string
@@ -1587,7 +1587,7 @@ get their default value.
 Object fields that should be visible from outside the defining module have to
 be marked with `*`.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     Person* = object # the type is visible from other modules
       name*: string  # the field of this type is visible from other modules
@@ -1614,7 +1614,7 @@ tuple's field. Another notation that is not available for objects is
 `t[i]` to access the `i`'th field. Here `i` must be a constant
 integer.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     # type representing a person:
     # A person consists of a name and an age.
@@ -1678,7 +1678,7 @@ use parentheses around the values you want to assign the unpacking to,
 otherwise, you will be assigning the same value to all the individual
 variables! For example:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   import std/os
 
   let
@@ -1697,7 +1697,7 @@ variables! For example:
 
 Tuple unpacking is also supported in for-loops:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   let a = [(10, 'a'), (20, 'b'), (30, 'c')]
 
   for (x, c) in a:
@@ -1721,7 +1721,7 @@ References (similar to pointers in other programming languages) are a
 way to introduce many-to-one relationships. This means different references can
 point to and modify the same location in memory.
 
-Nim distinguishes between `traced`:idx: and `untraced`:idx: references.
+Brownie distinguishes between `traced`:idx: and `untraced`:idx: references.
 Untraced references are also called *pointers*. Traced references point to
 objects in a garbage-collected heap, untraced references point to
 manually allocated objects or objects elsewhere in memory. Thus,
@@ -1736,7 +1736,7 @@ meaning to retrieve the item the reference points to. The `.` (access a
 tuple/object field operator) and `[]` (array/string/sequence index operator)
 operators perform implicit dereferencing operations for reference types:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     Node = ref object
       le, ri: Node
@@ -1749,7 +1749,7 @@ operators perform implicit dereferencing operations for reference types:
 
 To allocate a new traced object, the built-in procedure `new` can be used:
 
-  ```nim
+  ```brownie
   var n: Node
   new(n)
   ```
@@ -1766,12 +1766,12 @@ Procedural type
 
 A procedural type is a (somewhat abstract) pointer to a procedure.
 `nil` is an allowed value for a variable of a procedural type.
-Nim uses procedural types to achieve `functional`:idx: programming
+Brownie uses procedural types to achieve `functional`:idx: programming
 techniques.
 
 Example:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   proc greet(name: string): string =
     "Hello, " & name & "!"
 
@@ -1803,13 +1803,13 @@ Examples are provided in the [manual](manual.html#types-distinct-type).
 Modules
 =======
 
-Nim supports splitting a program into pieces with a *module* concept.
+Brownie supports splitting a program into pieces with a *module* concept.
 Each module is in its own file. Modules enable `information hiding`:idx: and
 `separate compilation`:idx:. A module may gain access to the symbols of another
 module by using the `import`:idx: statement. Only top-level symbols that are marked
 with an asterisk (`*`) are exported:
 
-  ```nim
+  ```brownie
   # Module A
   var
     x*, y: int
@@ -1839,17 +1839,17 @@ a symbol is ambiguous, it *must* be qualified. A symbol is ambiguous
 if it is defined in two (or more) different modules and both modules are
 imported by a third one:
 
-  ```nim
+  ```brownie
   # Module A
   var x*: string
   ```
 
-  ```nim
+  ```brownie
   # Module B
   var x*: int
   ```
 
-  ```nim
+  ```brownie
   # Module C
   import A, B
   write(stdout, x) # error: x is ambiguous
@@ -1863,17 +1863,17 @@ imported by a third one:
 But this rule does not apply to procedures or iterators. Here the overloading
 rules apply:
 
-  ```nim
+  ```brownie
   # Module A
   proc x*(a: int): string = $a
   ```
 
-  ```nim
+  ```brownie
   # Module B
   proc x*(a: string): string = $a
   ```
 
-  ```nim
+  ```brownie
   # Module C
   import A, B
   write(stdout, x(3))   # no error: A.x is called
@@ -1891,7 +1891,7 @@ The normal `import` statement will bring in all exported symbols.
 These can be limited by naming symbols that should be excluded using
 the `except` qualifier.
 
-  ```nim
+  ```brownie
   import mymodule except y
   ```
 
@@ -1903,7 +1903,7 @@ We have already seen the simple `import` statement that just imports all
 exported symbols. An alternative that only imports listed symbols is the
 `from import` statement:
 
-  ```nim
+  ```brownie
   from mymodule import x, y, z
   ```
 
@@ -1911,13 +1911,13 @@ The `from` statement can also force namespace qualification on
 symbols, thereby making symbols available, but needing to be qualified
 in order to be used.
 
-  ```nim
+  ```brownie
   from mymodule import x, y, z
 
   x()           # use x without any qualification
   ```
 
-  ```nim
+  ```brownie
   from mymodule import nil
 
   mymodule.x()  # must qualify x with the module name as prefix
@@ -1928,7 +1928,7 @@ in order to be used.
 Since module names are generally long to be descriptive, you can also
 define a shorter alias to use when qualifying symbols.
 
-  ```nim
+  ```brownie
   from mymodule as m import nil
 
   m.x()         # m is aliasing mymodule
@@ -1942,7 +1942,7 @@ The `include` statement does something fundamentally different than
 importing a module: it merely includes the contents of a file. The `include`
 statement is useful to split up a large module into several files:
 
-  ```nim
+  ```brownie
   include fileA, fileB, fileC
   ```
 
@@ -1951,7 +1951,7 @@ statement is useful to split up a large module into several files:
 Part 2
 ======
 
-So, now that we are done with the basics, let's see what Nim offers apart
+So, now that we are done with the basics, let's see what Brownie offers apart
 from a nice syntax for procedural programming: [Part II](tut2.html)
 
 

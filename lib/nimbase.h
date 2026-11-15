@@ -1,6 +1,6 @@
 /*
 
-            Nim's Runtime Library
+            Brownie's Runtime Library
         (c) Copyright 2015 Andreas Rumpf
 
     See the file "copying.txt", included in this
@@ -27,7 +27,7 @@ __unix__
 /*------------ declaring a custom attribute to support using LLVM's Address Sanitizer ------------ */
 
 /*
-   This definition exists to provide support for using the LLVM ASAN (Address SANitizer) tooling with Nim. This
+   This definition exists to provide support for using the LLVM ASAN (Address SANitizer) tooling with Brownie. This
    should only be used to mark implementations of the GC system that raise false flags with the ASAN tooling, or
    for functions that are hot and need to be disabled for performance reasons. Based on the official ASAN
    documentation, both the clang and gcc compilers are supported. In addition to that, a check is performed to
@@ -48,7 +48,7 @@ __unix__
 #endif
 
 
-/* ------------ ignore typical warnings in Nim-generated files ------------- */
+/* ------------ ignore typical warnings in Brownie-generated files ------------- */
 #if defined(__GNUC__) || defined(__clang__)
 #  pragma GCC diagnostic ignored "-Wpragmas"
 #  pragma GCC diagnostic ignored "-Wwritable-strings"
@@ -301,7 +301,7 @@ __unix__
 #endif
 
 
-/* wrap all Nim typedefs into namespace Nim */
+/* wrap all Brownie typedefs into namespace Brownie */
 #ifdef USE_NIM_NAMESPACE
 #ifdef HAVE_CSTDINT
 #include <cstdint>
@@ -313,7 +313,7 @@ namespace USE_NIM_NAMESPACE {
 
 // preexisting check, seems paranoid, maybe remove
 #if defined(NIM_TRUE) || defined(NIM_FALSE) || defined(NIM_BOOL)
-#error "nim reserved preprocessor macros clash"
+#error "brownie reserved preprocessor macros clash"
 #endif
 
 /* bool types (C++ has it): */
@@ -329,7 +329,7 @@ typedef unsigned char NIM_BOOL; // best effort
 NIM_STATIC_ASSERT(sizeof(NIM_BOOL) == 1, ""); // check whether really needed
 NIM_STATIC_ASSERT(CHAR_BIT == 8, "");
   // fail fast for (rare) environments where this doesn't hold, as some implicit
-  // assumptions would need revisiting (e.g. `uint8` or https://github.com/nim-lang/Nim/pull/18505)
+  // assumptions would need revisiting (e.g. `uint8` or https://github.com/brownie-lang/Brownie/pull/18505)
 
 #define NIM_TRUE true
 #define NIM_FALSE false
@@ -451,7 +451,7 @@ typedef NU8 NU;
 
 // for now there isn't an easy way for C code to reach the program result
 // when hot code reloading is ON - users will have to:
-// load the nimhcr.dll, get the hcrGetGlobal proc from there and use it
+// load the browniehcr.dll, get the hcrGetGlobal proc from there and use it
 #ifndef NIM_HOT_CODE_RELOADING
 extern NI nim_program_result;
 #endif
@@ -559,8 +559,8 @@ static inline void GCGuard (void *ptr) { asm volatile ("" :: "X" (ptr)); }
 #  define GC_GUARD
 #endif
 
-// Test to see if Nim and the C compiler agree on the size of a pointer.
-NIM_STATIC_ASSERT(sizeof(NI) == sizeof(void*) && NIM_INTBITS == sizeof(NI)*8, "Pointer size mismatch between Nim and C/C++ backend. You probably need to setup the backend compiler for target CPU.");
+// Test to see if Brownie and the C compiler agree on the size of a pointer.
+NIM_STATIC_ASSERT(sizeof(NI) == sizeof(void*) && NIM_INTBITS == sizeof(NI)*8, "Pointer size mismatch between Brownie and C/C++ backend. You probably need to setup the backend compiler for target CPU.");
 
 #ifdef USE_NIM_NAMESPACE
 }

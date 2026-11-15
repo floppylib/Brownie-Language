@@ -3,12 +3,12 @@
   =====================================================
   Self-contained, no Mathlib. Checked with Lean 4 (v4.32.0).
 
-  Companion to yrc_proof.lean; models the NOVEL part of yrc.nim's
+  Companion to yrc_proof.lean; models the NOVEL part of yrc.brownie's
   collector: cycle detection via a single Tarjan SCC traversal plus one
   linear reverse scan over the condensation, replacing Bacon-style trial
   deletion (three traversals: markGray / scan / collectWhite).
 
-  ## The algorithm (capture / computeDeadness in yrc.nim)
+  ## The algorithm (capture / computeDeadness in yrc.brownie)
 
   `capture` runs an iterative Tarjan DFS from the candidate roots. Each
   visited cell is claimed (dense index in the header), its rc word is

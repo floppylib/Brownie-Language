@@ -1,5 +1,5 @@
 ===================================
-   Nim Compiler User Guide
+   Brownie Compiler User Guide
 ===================================
 
 :Author: Andreas Rumpf
@@ -19,11 +19,11 @@
 Introduction
 ============
 
-This document describes the usage of the *Nim compiler*
-on the different supported platforms. It is not a definition of the Nim
+This document describes the usage of the *Brownie compiler*
+on the different supported platforms. It is not a definition of the Brownie
 programming language (which is covered in the [manual](manual.html)).
 
-Nim is free software; it is licensed under the
+Brownie is free software; it is licensed under the
 [MIT License](https://www.opensource.org/licenses/mit-license.php).
 
 
@@ -34,7 +34,7 @@ Command-line switches
 ---------------------
 All options that take a `PATH` or `DIR` argument are subject to path substitution:
 
-- `$nim`: The global nim prefix path
+- `$brownie`: The global brownie prefix path
 - `$lib`: The stdlib path
 - `$home` and `~`: The user's home path
 - `$config`: The directory of the module currently being compiled
@@ -172,7 +172,7 @@ to override symbols during build time.
 Compile-time symbols are completely **case insensitive** and underscores are
 ignored too. `--define:FOO`:option: and `--define:foo`:option: are identical.
 
-Compile-time symbols starting with the `nim` prefix are reserved for the
+Compile-time symbols starting with the `brownie` prefix are reserved for the
 implementation and should not be used elsewhere.
 
 ==========================       ============================================
@@ -195,36 +195,36 @@ nimBuiltinSetjmp                 Use `__builtin_setjmp()/__builtin_longjmp()` fo
 Configuration files
 -------------------
 
-**Note:** The *project file name* is the name of the ``.nim`` file that is
+**Note:** The *project file name* is the name of the ``.brownie`` file that is
 passed as a command-line argument to the compiler.
 
 
-The `nim`:cmd: executable processes configuration files in the following
+The `brownie`:cmd: executable processes configuration files in the following
 directories (in this order; later files overwrite previous settings):
 
-1) ``$nim/config/nim.cfg``, ``/etc/nim/nim.cfg`` (UNIX) or
-   ``<Nim's installation directory>\config\nim.cfg`` (Windows).
+1) ``$brownie/config/brownie.cfg``, ``/etc/brownie/brownie.cfg`` (UNIX) or
+   ``<Brownie's installation directory>\config\brownie.cfg`` (Windows).
    This file can be skipped with the `--skipCfg`:option: command line option.
 2) If environment variable `XDG_CONFIG_HOME` is defined,
-   ``$XDG_CONFIG_HOME/nim/nim.cfg`` or ``~/.config/nim/nim.cfg`` (POSIX) or
-   ``%APPDATA%/nim/nim.cfg`` (Windows).
+   ``$XDG_CONFIG_HOME/brownie/brownie.cfg`` or ``~/.config/brownie/brownie.cfg`` (POSIX) or
+   ``%APPDATA%/brownie/brownie.cfg`` (Windows).
    This file can be skipped with the `--skipUserCfg`:option: command line
    option.
-3) ``$parentDir/nim.cfg`` where ``$parentDir`` stands for any parent
+3) ``$parentDir/brownie.cfg`` where ``$parentDir`` stands for any parent
    directory of the project file's path.
    These files can be skipped with the `--skipParentCfg`:option:
    command-line option.
-4) ``$projectDir/nim.cfg`` where ``$projectDir`` stands for the project
+4) ``$projectDir/brownie.cfg`` where ``$projectDir`` stands for the project
    file's path.
    This file can be skipped with the `--skipProjCfg`:option:
    command-line option.
 5) A project can also have a project-specific configuration file named
-   ``$project.nim.cfg`` that resides in the same directory as ``$project.nim``.
+   ``$project.brownie.cfg`` that resides in the same directory as ``$project.brownie``.
    This file can be skipped with the `--skipProjCfg`:option:
    command-line option.
 
 
-[NimScript files](nims.html) can also be used for configuration.
+[browniescript files](nims.html) can also be used for configuration.
 
 Command-line settings have priority over configuration file settings.
 
@@ -232,46 +232,46 @@ The default build of a project is a `debug build`:idx:. To compile a
 `release build`:idx: define the `release` symbol:
 
   ```cmd
-  nim c -d:release myproject.nim
+  brownie c -d:release myproject.brownie
   ```
 
 To compile a `dangerous release build`:idx: define the `danger` symbol:
 
   ```cmd
-  nim c -d:danger myproject.nim
+  brownie c -d:danger myproject.brownie
   ```
 
 
 Search path handling
 --------------------
 
-Nim has the concept of a global search path (PATH) that is queried to
+Brownie has the concept of a global search path (PATH) that is queried to
 determine where to find imported modules or include files. If multiple files are
 found an ambiguity error is produced.
 
-`nim dump`:cmd: shows the contents of the PATH.
+`brownie dump`:cmd: shows the contents of the PATH.
 
 However before the PATH is used the current directory is checked for the
 file's existence. So if PATH contains ``$lib`` and ``$lib/bar`` and the
 directory structure looks like this:
 
-    $lib/x.nim
-    $lib/bar/x.nim
-    foo/x.nim
-    foo/main.nim
-    other.nim
+    $lib/x.brownie
+    $lib/bar/x.brownie
+    foo/x.brownie
+    foo/main.brownie
+    other.brownie
 
 And `main` imports `x`, `foo/x` is imported. If `other` imports `x`
-then both ``$lib/x.nim`` and ``$lib/bar/x.nim`` match but ``$lib/x.nim`` is used
+then both ``$lib/x.brownie`` and ``$lib/bar/x.brownie`` match but ``$lib/x.brownie`` is used
 as it is the first match.
 
 
 Generated C code directory
 --------------------------
-The generated files that Nim produces all go into a subdirectory called
+The generated files that Brownie produces all go into a subdirectory called
 ``nimcache``. Its full path is
 
-- ``$XDG_CACHE_HOME/nim/$projectname(_r|_d)`` or ``~/.cache/nim/$projectname(_r|_d)``
+- ``$XDG_CACHE_HOME/brownie/$projectname(_r|_d)`` or ``~/.cache/brownie/$projectname(_r|_d)``
   on Posix
 - ``$HOME\nimcache\$projectname(_r|_d)`` on Windows.
 
@@ -294,20 +294,20 @@ Compiler Selection
 To change the compiler from the default compiler (at the command line):
 
   ```cmd
-  nim c --cc:llvm_gcc --compile_only myfile.nim
+  brownie c --cc:llvm_gcc --compile_only myfile.brownie
   ```
 
-This uses the configuration defined in ``config\nim.cfg`` for `llvm_gcc`:cmd:.
+This uses the configuration defined in ``config\brownie.cfg`` for `llvm_gcc`:cmd:.
 
 If nimcache already contains compiled code from a different compiler for the same project,
 add the `-f`:option: flag to force all files to be recompiled.
 
-The default compiler is defined at the top of ``config\nim.cfg``.
-Changing this setting affects the compiler used by `koch`:cmd: to (re)build Nim.
+The default compiler is defined at the top of ``config\brownie.cfg``.
+Changing this setting affects the compiler used by `kitten`:cmd: to (re)build Brownie.
 
-To use the `CC` environment variable, use `nim c --cc:env myfile.nim`:cmd:.
-To use the `CXX` environment variable, use `nim cpp --cc:env myfile.nim`:cmd:.
-`--cc:env`:option: is available since Nim version 1.4.
+To use the `CC` environment variable, use `brownie c --cc:env myfile.brownie`:cmd:.
+To use the `CXX` environment variable, use `brownie cpp --cc:env myfile.brownie`:cmd:.
+`--cc:env`:option: is available since Brownie version 1.4.
 
 
 Cross-compilation
@@ -316,16 +316,16 @@ Cross-compilation
 To cross compile, use for example:
 
   ```cmd
-  nim c --cpu:i386 --os:linux --compileOnly --genScript myproject.nim
+  brownie c --cpu:i386 --os:linux --compileOnly --genScript myproject.brownie
   ```
 
 Then move the C code and the compile script `compile_myproject.sh`:cmd: to your
 Linux i386 machine and run the script.
 
-Another way is to make Nim invoke a cross compiler toolchain:
+Another way is to make Brownie invoke a cross compiler toolchain:
 
   ```cmd
-  nim c --cpu:arm --os:linux myproject.nim
+  brownie c --cpu:arm --os:linux myproject.brownie
   ```
 
 For cross compilation, the compiler invokes a C compiler named like
@@ -345,9 +345,9 @@ Cross-compilation for Windows
 To cross-compile for Windows from Linux or macOS using the MinGW-w64 toolchain:
 
   ```cmd
-  nim c -d:mingw myproject.nim
-  # `nim r` also works, running the binary via `wine` or `wine64`:
-  nim r -d:mingw --eval:'import os; echo "a" / "b"'
+  brownie c -d:mingw myproject.brownie
+  # `brownie r` also works, running the binary via `wine` or `wine64`:
+  brownie r -d:mingw --eval:'import os; echo "a" / "b"'
   ```
 
 Use `--cpu:i386`:option: or `--cpu:amd64`:option: to switch the CPU architecture.
@@ -369,32 +369,32 @@ There are two ways to compile for Android: terminal programs (Termux) and with
 the NDK (Android Native Development Kit).
 
 The first one is to treat Android as a simple Linux and use
-[Termux](https://wiki.termux.com) to connect and run the Nim compiler
+[Termux](https://wiki.termux.com) to connect and run the Brownie compiler
 directly on android as if it was Linux. These programs are console-only
 programs that can't be distributed in the Play Store.
 
-Use regular `nim c`:cmd: inside termux to make Android terminal programs.
+Use regular `brownie c`:cmd: inside termux to make Android terminal programs.
 
-Normal Android apps are written in Java, to use Nim inside an Android app
+Normal Android apps are written in Java, to use Brownie inside an Android app
 you need a small Java stub that calls out to a native library written in
-Nim using the [NDK](https://developer.android.com/ndk). You can also use
+Brownie using the [NDK](https://developer.android.com/ndk). You can also use
 [native-activity](https://developer.android.com/ndk/samples/sample_na)
 to have the Java stub be auto-generated for you.
 
-Use `nim c -c --cpu:arm --os:android -d:androidNDK --noMain:on`:cmd: to
+Use `brownie c -c --cpu:arm --os:android -d:androidNDK --noMain:on`:cmd: to
 generate the C source files you need to include in your Android Studio
 project. Add the generated C files to CMake build script in your Android
 project. Then do the final compile with Android Studio which uses Gradle
 to call CMake to compile the project.
 
-Because Nim is part of a library it can't have its own C-style `main()`:c:
+Because Brownie is part of a library it can't have its own C-style `main()`:c:
 so you would need to define your own `android_main`:c: and init the Java
 environment, or use a library like SDL2 or GLFM to do it. After the Android
 stuff is done, it's very important to call `NimMain()`:c: in order to
-initialize Nim's garbage collector and to run the top level statements
+initialize Brownie's garbage collector and to run the top level statements
 of your program.
 
-  ```Nim
+  ```Brownie
   proc NimMain() {.importc.}
   proc glfmMain*(display: ptr GLFMDisplay) {.exportc.} =
     NimMain() # initialize garbage collector memory, types and stack
@@ -411,26 +411,26 @@ Cross-compilation for iOS
 To cross-compile for iOS you need to be on a macOS computer and use XCode.
 Normal languages for iOS development are Swift and Objective C. Both of these
 use LLVM and can be compiled into object files linked together with C, C++
-or Objective C code produced by Nim.
+or Objective C code produced by Brownie.
 
-Use `nim c -c --os:ios --noMain:on`:cmd: to generate C files and include them in
+Use `brownie c -c --os:ios --noMain:on`:cmd: to generate C files and include them in
 your XCode project. Then you can use XCode to compile, link, package and
 sign everything.
 
-Because Nim is part of a library it can't have its own C-style `main()`:c: so you
+Because Brownie is part of a library it can't have its own C-style `main()`:c: so you
 would need to define `main` that calls `autoreleasepool` and
 `UIApplicationMain` to do it, or use a library like SDL2 or GLFM. After
 the iOS setup is done, it's very important to call `NimMain()`:c: to
-initialize Nim's garbage collector and to run the top-level statements
+initialize Brownie's garbage collector and to run the top-level statements
 of your program.
 
-  ```Nim
+  ```Brownie
   proc NimMain() {.importc.}
   proc glfmMain*(display: ptr GLFMDisplay) {.exportc.} =
     NimMain() # initialize garbage collector memory, types and stack
   ```
 
-Note: XCode's "make clean" gets confused about the generated nim.c files,
+Note: XCode's "make clean" gets confused about the generated brownie.c files,
 so you need to clean those files manually to do a clean build.
 
 The name `NimMain` can be influenced via the `--nimMainPrefix:prefix` switch.
@@ -441,17 +441,17 @@ Cross-compilation for Nintendo Switch
 =====================================
 
 Simply add `--os:nintendoswitch`:option:
-to your usual `nim c`:cmd: or `nim cpp`:cmd: command and set the `passC`:option:
+to your usual `brownie c`:cmd: or `brownie cpp`:cmd: command and set the `passC`:option:
 and `passL`:option: command line switches to something like:
 
   ```cmd
-  nim c ... --d:nimAllocPagesViaMalloc --mm:orc --passC="-I$DEVKITPRO/libnx/include" ...
+  brownie c ... --d:nimAllocPagesViaMalloc --mm:orc --passC="-I$DEVKITPRO/libnx/include" ...
   --passL="-specs=$DEVKITPRO/libnx/switch.specs -L$DEVKITPRO/libnx/lib -lnx"
   ```
 
-or setup a ``nim.cfg`` file like so:
+or setup a ``brownie.cfg`` file like so:
 
-    #nim.cfg
+    #brownie.cfg
     --mm:orc
     --d:nimAllocPagesViaMalloc
     --define:nimInheritHandles
@@ -465,12 +465,12 @@ The devkitPro setup must be the same as the default with their new installer
 For example, with the above-mentioned config:
 
   ```cmd
-  nim c --os:nintendoswitch switchhomebrew.nim
+  brownie c --os:nintendoswitch switchhomebrew.brownie
   ```
 
 This will generate a file called ``switchhomebrew.elf`` which can then be turned into
 an nro file with the `elf2nro`:cmd: tool in the devkitPro release. Examples can be found at
-[the nim-libnx github repo](https://github.com/jyapayne/nim-libnx.git).
+[the brownie-libnx github repo](https://github.com/jyapayne/brownie-libnx.git).
 
 There are a few things that don't work because the devkitPro libraries don't support them.
 They are:
@@ -486,11 +486,11 @@ They are:
 GPU Compilation
 ===============
 
-Compiling for GPU computation can be achieved with `--cc:nvcc` for CUDA with nvcc, or with `--cc:hipcc` for AMD GPUs with HIP. Both compilers require building for C++ with `nim cpp`.
+Compiling for GPU computation can be achieved with `--cc:nvcc` for CUDA with nvcc, or with `--cc:hipcc` for AMD GPUs with HIP. Both compilers require building for C++ with `brownie cpp`.
 
-Here's a very simple CUDA kernel example using emit, which can be compiled with `nim cpp --cc:nvcc --define:"useMalloc" hello_kernel.nim` assuming you have the CUDA toolkit installed.
+Here's a very simple CUDA kernel example using emit, which can be compiled with `brownie cpp --cc:nvcc --define:"useMalloc" hello_kernel.brownie` assuming you have the CUDA toolkit installed.
 
-```nim
+```brownie
 {.emit: """
 __global__ void add(int a, int b) {
   int c;
@@ -512,19 +512,19 @@ DLL generation
 **Note**: The same rules apply to `lib*.so` shared object files on UNIX. For better
 readability only the DLL version is described here.
 
-Nim supports the generation of DLLs. However, there must be only one
+Brownie supports the generation of DLLs. However, there must be only one
 instance of the GC per process/address space. This instance is contained in
-``nimrtl.dll``. This means that every generated Nim DLL depends
-on ``nimrtl.dll``. To generate the "nimrtl.dll" file, use the command:
+``browniertl.dll``. This means that every generated Brownie DLL depends
+on ``browniertl.dll``. To generate the "browniertl.dll" file, use the command:
 
   ```cmd
-  nim c -d:release lib/nimrtl.nim
+  brownie c -d:release lib/browniertl.brownie
   ```
 
-To link against ``nimrtl.dll`` use the command:
+To link against ``browniertl.dll`` use the command:
 
   ```cmd
-  nim c -d:useNimRtl myprog.nim
+  brownie c -d:useNimRtl myprog.brownie
   ```
 
 
@@ -543,13 +543,13 @@ Define                   Effect
                          `--passC:-ffast-math`:option: (but see issue #10305)
 `danger`                 Turns off all runtime checks and turns on the optimizer.
 `useFork`                Makes `osproc` use `fork`:c: instead of `posix_spawn`:c:.
-`useNimRtl`              Compile and link against ``nimrtl.dll``.
-`useMalloc`              Makes Nim use C's `malloc`:idx: instead of Nim's
+`useNimRtl`              Compile and link against ``browniertl.dll``.
+`useMalloc`              Makes Brownie use C's `malloc`:idx: instead of Brownie's
                          own memory manager, albeit prefixing each allocation with
                          its size to support clearing memory on reallocation.
                          This only works with `--mm:none`:option:,
                          `--mm:arc`:option: and `--mm:orc`:option:.
-`useRealtimeGC`          Enables support of Nim's GC for *soft* realtime
+`useRealtimeGC`          Enables support of Brownie's GC for *soft* realtime
                          systems. See the documentation of the [refc](refc.html)
                          for further information.
 `logGC`                  Enable GC logging to stdout.
@@ -558,7 +558,7 @@ Define                   Effect
 `memProfiler`            Enables memory profiling for the native GC.
 `uClibc`                 Use uClibc instead of libc. (Relevant for Unix-like OSes)
 `checkAbi`               When using types from C headers, add checks that compare
-                         what's in the Nim file with what's in the C header.
+                         what's in the Brownie file with what's in the C header.
                          This may become enabled by default in the future.
 `tempDir`                This symbol takes a string as its value, like
                          `--define:tempDir:/some/temp/path`:option: to override
@@ -569,7 +569,7 @@ Define                   Effect
                          `--define:useShPath:/opt/sh/bin/sh`:option: to override
                          the path for the `sh`:cmd: binary, in cases where it is
                          not located in the default location ``/bin/sh``.
-`noSignalHandler`        Disable the crash handler from ``system.nim``.
+`noSignalHandler`        Disable the crash handler from ``system.brownie``.
 `globalSymbols`          Load all `{.dynlib.}` libraries with the `RTLD_GLOBAL`:c:
                          flag on Posix systems to resolve symbols in subsequently
                          loaded libraries.
@@ -589,8 +589,8 @@ Define                   Effect
 Additional Features
 ===================
 
-This section describes Nim's additional features that are not listed in the
-Nim manual. Some of the features here only make sense for the C code
+This section describes Brownie's additional features that are not listed in the
+Brownie manual. Some of the features here only make sense for the C code
 generator and are subject to change.
 
 
@@ -619,7 +619,7 @@ is raised.
 DynlibOverride
 ==============
 
-By default Nim's `dynlib` pragma causes the compiler to generate
+By default Brownie's `dynlib` pragma causes the compiler to generate
 `GetProcAddress`:cpp: (or their Unix counterparts)
 calls to bind to a DLL. With the `dynlibOverride`:option: command line switch this
 can be prevented and then via `--passL`:option: the static library can be linked
@@ -627,7 +627,7 @@ against. For instance, to link statically against Lua this command might work
 on Linux:
 
   ```cmd
-  nim c --dynlibOverride:lua --passL:liblua.lib program.nim
+  brownie c --dynlibOverride:lua --passL:liblua.lib program.brownie
   ```
 
 
@@ -635,35 +635,35 @@ Backend language options
 ========================
 
 The typical compiler usage involves using the `compile`:option: or `c`:option:
-command to transform a ``.nim`` file into one or more ``.c`` files which are then
+command to transform a ``.brownie`` file into one or more ``.c`` files which are then
 compiled with the platform's C compiler into a static binary. However, there
 are other commands to compile to C++, Objective-C, or JavaScript. More details
-can be read in the [Nim Backend Integration document](backends.html).
+can be read in the [Brownie Backend Integration document](backends.html).
 
 
-Nim documentation tools
+Brownie documentation tools
 =======================
 
-Nim provides the `doc`:idx: command to generate HTML
-documentation from ``.nim`` source files. Only exported symbols will appear in
+Brownie provides the `doc`:idx: command to generate HTML
+documentation from ``.brownie`` source files. Only exported symbols will appear in
 the output. For more details see [the docgen documentation](docgen.html).
 
-Nim idetools integration
+Brownie idetools integration
 ========================
 
-Nim provides language integration with external IDEs through the
+Brownie provides language integration with external IDEs through the
 idetools command. See the documentation of [idetools](idetools.html)
 for further information.
 
 ..
-  Nim interactive mode
+  Brownie interactive mode
   ====================
 
-  The Nim compiler supports an interactive mode. This is also known as
-  a `REPL`:idx: (*read eval print loop*). If Nim has been built with the
+  The Brownie compiler supports an interactive mode. This is also known as
+  a `REPL`:idx: (*read eval print loop*). If Brownie has been built with the
   `-d:nimUseLinenoise` switch, it uses the GNU readline library for terminal
-  input management. To start Nim in interactive mode use the command
-  `nim secret`. To quit use the `quit()` command. To determine whether an input
+  input management. To start Brownie in interactive mode use the command
+  `brownie secret`. To quit use the `quit()` command. To determine whether an input
   line is an incomplete statement to be continued these rules are used:
 
   1. The line ends with ``[-+*/\\<>!\?\|%&$@~,;:=#^]\s*$`` (operator symbol followed by optional whitespace).
@@ -672,44 +672,44 @@ for further information.
      does not work if the line contains more than one `"""`.
 
 
-Nim for embedded systems
+Brownie for embedded systems
 ========================
 
-While the default Nim configuration is targeted for optimal performance on
+While the default Brownie configuration is targeted for optimal performance on
 modern PC hardware and operating systems with ample memory, it is very well
-possible to run Nim code and a good part of the Nim standard libraries on small
+possible to run Brownie code and a good part of the Brownie standard libraries on small
 embedded microprocessors with only a few kilobytes of memory.
 
 A good start is to use the `any` operating target together with the
 `malloc` memory allocator and the `arc` garbage collector. For example:
 
   ```cmd
-  nim c --os:any --mm:arc -d:useMalloc [...] x.nim
+  brownie c --os:any --mm:arc -d:useMalloc [...] x.brownie
   ```
 
 - `--mm:arc`:option: will enable the reference counting memory management instead
-  of the default garbage collector. This enables Nim to use heap memory which
+  of the default garbage collector. This enables Brownie to use heap memory which
   is required for strings and seqs, for example.
 
-- The `--os:any`:option: target makes sure Nim does not depend on any specific
+- The `--os:any`:option: target makes sure Brownie does not depend on any specific
   operating system primitives. Your platform should support only some basic
   ANSI C library `stdlib` and `stdio` functions which should be available
   on almost any platform.
 
-- The `-d:useMalloc`:option: option configures Nim to use only the standard C memory
+- The `-d:useMalloc`:option: option configures Brownie to use only the standard C memory
   manage primitives `malloc()`:c:, `free()`:c:, `realloc()`:c:.
 
 If your platform does not provide these functions it should be trivial to
 provide an implementation for them and link these to your program.
 
 For targets with very restricted memory, it might be beneficial to pass some
-additional flags to both the Nim compiler and the C compiler and/or linker
+additional flags to both the Brownie compiler and the C compiler and/or linker
 to optimize the build for size. For example, the following flags can be used
 when targeting a gcc compiler:
 
 `--opt:size -d:lto -d:strip`:option:
 
-The `--opt:size`:option: flag instructs Nim to optimize code generation for small
+The `--opt:size`:option: flag instructs Brownie to optimize code generation for small
 size (with the help of the C compiler), the `-d:lto`:option: flags enable link-time
 optimization in the compiler and linker, the `-d:strip`:option: strips debug symbols.
 
@@ -720,7 +720,7 @@ program for your target.
 nimAllocPagesViaMalloc
 ----------------------
 
-Nim's default allocator is based on TLSF, this algorithm was designed for embedded
+Brownie's default allocator is based on TLSF, this algorithm was designed for embedded
 devices. This allocator gets blocks/pages of memory via a currently undocumented
 `osalloc` API which usually uses POSIX's `mmap` call. On many environments `mmap`
 is not available but C's `malloc` is. You can use the `nimAllocPagesViaMalloc`
@@ -730,7 +730,7 @@ only supported with `--mm:arc` or `--mm:orc`. (Since version 1.6)
 nimPage256 / nimPage512 / nimPage1k
 ===================================
 
-Adjust the page size for Nim's GC allocator. This enables using
+Adjust the page size for Brownie's GC allocator. This enables using
 `nimAllocPagesViaMalloc` on devices with less RAM. The default
 page size requires too much RAM to work.
 
@@ -755,36 +755,36 @@ to better match some embedded devices.
 Thread stack size
 =================
 
-Nim's thread API provides a simple wrapper around more advanced
+Brownie's thread API provides a simple wrapper around more advanced
 RTOS task features. Customizing the stack size and stack guard size can
 be done by setting `-d:nimThreadStackSize=16384` or `-d:nimThreadStackGuard=32`.
 
 Currently only Zephyr, NuttX and FreeRTOS support these configurations.
 
-Nim for realtime systems
+Brownie for realtime systems
 ========================
 
 See the `--mm:arc` or `--mm:orc` memory management settings in
 [MM](mm.html) for further information.
 
 
-Signal handling in Nim
+Signal handling in Brownie
 ======================
 
-The Nim programming language has no concept of Posix's signal handling
+The Brownie programming language has no concept of Posix's signal handling
 mechanisms. However, the standard library offers some rudimentary support
 for signal handling, in particular, segmentation faults are turned into
 fatal errors that produce a stack trace. This can be disabled with the
 `-d:noSignalHandler`:option: switch.
 
 
-Optimizing for Nim
+Optimizing for Brownie
 ==================
 
-Nim has no separate optimizer, but the C code that is produced is very
+Brownie has no separate optimizer, but the C code that is produced is very
 efficient. Most C compilers have excellent optimizers, so usually it is
-not needed to optimize one's code. Nim has been designed to encourage
-efficient code: The most readable code in Nim is often the most efficient
+not needed to optimize one's code. Brownie has been designed to encourage
+efficient code: The most readable code in Brownie is often the most efficient
 too.
 
 However, sometimes one has to optimize. Do it in the following order:
@@ -801,27 +801,27 @@ This section can only help you with the last item.
 Optimizing string handling
 --------------------------
 
-String assignments are sometimes expensive in Nim: They are required to
+String assignments are sometimes expensive in Brownie: They are required to
 copy the whole string. However, the compiler is often smart enough to not copy
 strings. Due to the argument passing semantics, strings are never copied when
 passed to subroutines. The compiler does not copy strings that are a result of
 a procedure call, because the callee returns a new string anyway.
 Thus it is efficient to do:
 
-  ```Nim
+  ```Brownie
   var s = procA() # assignment will not copy the string; procA allocates a new
                   # string already
   ```
 
 However, it is not efficient to do:
 
-  ```Nim
+  ```Brownie
   var s = varA    # assignment has to copy the whole string into a new buffer!
   ```
 
 For `let` symbols a copy is not always necessary:
 
-  ```Nim
+  ```Brownie
   let s = varA    # may only copy a pointer if it safe to do so
   ```
 
@@ -829,7 +829,7 @@ The compiler optimizes string case statements: A hashing scheme is used for them
 if several different string constants are used. So code like this is reasonably
 efficient:
 
-  ```Nim
+  ```Brownie
   case normalize(k.key)
   of "name": c.name = v
   of "displayname": c.displayName = v

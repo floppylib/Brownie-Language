@@ -1,7 +1,7 @@
 .. default-role:: code
 
 ================================
-  Nim IDE Integration Guide
+  Brownie IDE Integration Guide
 ================================
 
 :Author: Britney Spears
@@ -12,19 +12,19 @@
 
 > "yes, I'm the creator" -- Araq, 2013-07-26 19:28:32.
 
-Note: this is mostly outdated, see instead [nimsuggest](nimsuggest.html)
+Note: this is mostly outdated, see instead [browniesuggest](browniesuggest.html)
 
-Nim differs from many other compilers in that it is really fast,
+Brownie differs from many other compilers in that it is really fast,
 and being so fast makes it suited to provide external queries for
 text editors about the source code being written. Through the
 `idetools` command of [the compiler](nimc.html), any IDE
-can query a `.nim` source file and obtain useful information like
+can query a `.brownie` source file and obtain useful information like
 definition of symbols or suggestions for completion.
 
 This document will guide you through the available options. If you
 want to look at practical examples of idetools support you can look
 at the test files found in the [Test suite] or [various editor
-integrations](https://github.com/Araq/Nim/wiki/Editor-Support)
+integrations](https://github.com/Araq/Brownie/wiki/Editor-Support)
 already available.
 
 
@@ -39,16 +39,16 @@ query location through the `--track` or `--trackDirty` switches.
 The general idetools invocations are:
 
   ```cmd
-  nim idetools --track:FILE,LINE,COL <switches> proj.nim
+  brownie idetools --track:FILE,LINE,COL <switches> proj.brownie
   ```
 
 Or:
 
   ```cmd
-  nim idetools --trackDirty:DIRTY_FILE,FILE,LINE,COL <switches> proj.nim
+  brownie idetools --trackDirty:DIRTY_FILE,FILE,LINE,COL <switches> proj.brownie
   ```
 
-`proj.nim`
+`proj.brownie`
 :   This is the main *project* filename. Most of the time you will
     pass in the same as **FILE**, but for bigger projects this is
     the file which is used as main entry point for the program, the
@@ -69,7 +69,7 @@ Or:
 
 `FILE`
 :   The file you want to perform the query on. Usually you will
-    pass in the same value as **proj.nim**.
+    pass in the same value as **proj.brownie**.
 
 `DIRTY_FILE`
 :   The **FILE** parameter is enough for static analysis, but IDEs
@@ -102,7 +102,7 @@ provide the typical *Jump to definition* where a user puts the
 cursor on a symbol or uses the mouse to select it and is redirected
 to the place where the symbol is located.
 
-Since Nim is implemented in Nim, one of the nice things of
+Since Brownie is implemented in Brownie, one of the nice things of
 this feature is that any user with an IDE supporting it can quickly
 jump around the standard library implementation and see exactly
 what a proc does, learning about the language and seeing real life
@@ -123,7 +123,7 @@ includes/imports) and when the user starts typing something a
 completion box with different options appears.
 
 However such features are not context sensitive and work simply on
-string matching, which can be problematic in Nim especially due
+string matching, which can be problematic in Brownie especially due
 to the case insensitiveness of the language (plus underscores as
 separators!).
 
@@ -185,19 +185,19 @@ If you want to start the server using stdin/stdout as communication
 you need to type:
 
   ```cmd
-  nim serve --server.type:stdin proj.nim
+  brownie serve --server.type:stdin proj.brownie
   ```
 
 If you want to start the server using tcp and a port, you need to type:
 
   ```cmd
-  nim serve --server.type:tcp --server.port:6000 \
-      --server.address:hostname proj.nim
+  brownie serve --server.type:tcp --server.port:6000 \
+      --server.address:hostname proj.brownie
   ```
 
 In both cases the server will start up and await further commands.
 The syntax of the commands you can now send to the server is
-practically the same as running the nim compiler on the commandline,
+practically the same as running the brownie compiler on the commandline,
 you only need to remove the name of the compiler since you are
 already talking to it. The server will answer with as many lines
 of text it thinks necessary plus an empty line to indicate the end
@@ -216,9 +216,9 @@ tab characters (``\t``). The values of each column are:
 1. Three characters indicating the type of returned answer (e.g.
    def for definition, `sug` for suggestion, etc).
 2. Type of the symbol. This can be `skProc`, `skLet`, and just
-   about any of the enums defined in the module `compiler/ast.nim`.
+   about any of the enums defined in the module `compiler/ast.brownie`.
 3. Full qualified path of the symbol. If you are querying a symbol
-   defined in the `proj.nim` file, this would have the form
+   defined in the `proj.brownie` file, this would have the form
    `proj.symbolName`.
 4. Type/signature. For variables and enums this will contain the
    type of the symbol, for procs, methods and templates this will
@@ -251,7 +251,7 @@ skConst
 | **Fourth column**: the type of the const value.
 | **Docstring**: always the empty string.
 
-  ```nim
+  ```brownie
   const SOME_SEQUENCE = @[1, 2]
   --> col 2: $MODULE.SOME_SEQUENCE
       col 3: seq[int]
@@ -266,7 +266,7 @@ skEnumField
 | **Fourth column**: enum type grouping other enum fields.
 | **Docstring**: always the empty string.
 
-  ```nim
+  ```brownie
   Open(filename, fmWrite)
   --> col 2: system.FileMode.fmWrite
       col 3: FileMode
@@ -281,8 +281,8 @@ skForVar
 | **Fourth column**: type of the var.
 | **Docstring**: always the empty string.
 
-  ```nim
-  proc looper(filename = "tests.nim") =
+  ```brownie
+  proc looper(filename = "tests.brownie") =
     for letter in filename:
       echo letter
   --> col 2: $MODULE.looper.letter
@@ -303,7 +303,7 @@ posterior instances of the iterator.
 | **Fourth column**: signature of the iterator including return type.
 | **Docstring**: docstring if available.
 
-  ```nim
+  ```brownie
   let
     text = "some text"
     letters = toSeq(runes(text))
@@ -320,7 +320,7 @@ skLabel
 | **Fourth column**: always the empty string.
 | **Docstring**: always the empty string.
 
-  ```nim
+  ```brownie
   proc test(text: string) =
     var found = -1
     block loops:
@@ -337,7 +337,7 @@ skLet
 | **Fourth column**: the type of the let variable.
 | **Docstring**: always the empty string.
 
-  ```nim
+  ```brownie
   let
     text = "some text"
   --> col 2: $MODULE.text
@@ -358,7 +358,7 @@ posterior instances of the macro.
 | **Fourth column**: signature of the macro including return type.
 | **Docstring**: docstring if available.
 
-  ```nim
+  ```brownie
   proc testMacro() =
     expect(EArithmetic):
   --> col 2: idetools_api.expect
@@ -396,7 +396,7 @@ This may change in the future.
 | **Fourth column**: signature of the method including return type.
 | **Docstring**: docstring if available.
 
-  ```nim
+  ```brownie
   method eval(e: PExpr): int = quit "to override!"
   method eval(e: PLiteral): int = e.x
   method eval(e: PPlusExpr): int = eval(e.a) + eval(e.b)
@@ -414,8 +414,8 @@ skParam
 | **Fourth column**: the type of the parameter.
 | **Docstring**: always the empty string.
 
-  ```nim
-  proc reader(filename = "tests.nim") =
+  ```brownie
+  proc reader(filename = "tests.brownie") =
     let text = readFile(filename)
   --> col 2: $MODULE.reader.filename
       col 3: string
@@ -439,7 +439,7 @@ returned by idetools returns also the pragmas for the proc.
 | **Fourth column**: signature of the proc including return type.
 | **Docstring**: docstring if available.
 
-  ```nim
+  ```brownie
   open(filename, fmWrite)
   --> col 2: system.Open
       col 3: proc (var File, string, FileMode, int): bool
@@ -458,7 +458,7 @@ skResult
 | **Fourth column**: the type of the result.
 | **Docstring**: always the empty string.
 
-  ```nim
+  ```brownie
   proc getRandomValue() : int =
     return 4
   --> col 2: $MODULE.getRandomValue.result
@@ -479,7 +479,7 @@ posterior instances of the template.
 | **Fourth column**: signature of the template including return type.
 | **Docstring**: docstring if available.
 
-  `````nim
+  `````brownie
     let
       text = "some text"
       letters = toSeq(runes(text))
@@ -490,7 +490,7 @@ posterior instances of the template.
 
      Example:
 
-       ```nim
+       ```brownie
        let
          numeric = @[1, 2, 3, 4, 5, 6, 7, 8, 9]
          odd_numbers = toSeq(filter(numeric) do (x: int) -> bool:
@@ -508,7 +508,7 @@ skType
 | **Fourth column**: the type.
 | **Docstring**: always the empty string.
 
-  ```nim
+  ```brownie
   proc writeTempFile() =
     var output: File
   --> col 2: system.File
@@ -524,7 +524,7 @@ skVar
 | **Fourth column**: the type of the var.
 | **Docstring**: always the empty string.
 
-  ```nim
+  ```brownie
   proc writeTempFile() =
     var output: File
     output.open("/tmp/somefile", fmWrite)
@@ -553,8 +553,8 @@ suite is not integrated with the main test suite and you have to
 run it manually. First you have to compile the tester:
 
   ```cmd
-  $ cd my/nim/checkout/tests
-  $ nim c testament/caasdriver.nim
+  $ cd my/brownie/checkout/tests
+  $ brownie c testament/caasdriver.brownie
   ```
 
 Running the `caasdriver` without parameters will attempt to process
@@ -567,7 +567,7 @@ parameter `verbose` to force all output even on successful tests.
 
 The normal operation mode is called `ProcRun` and it involves
 starting a process for each command or query, similar to running
-manually the Nim compiler from the commandline. The `CaasRun`
+manually the Brownie compiler from the commandline. The `CaasRun`
 mode starts a server process to answer all queries. The `SymbolProcRun`
 mode is used by compiler developers.  This means that running all
 tests involves processing all `*.txt` files three times, which

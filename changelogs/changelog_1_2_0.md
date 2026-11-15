@@ -4,7 +4,7 @@
 ## Standard library additions and changes
 - Added overloaded `strformat.fmt` macro that use specified characters as
   delimiter instead of '{' and '}'.
-- Added new procs in `tables.nim`: `OrderedTable.pop`, `CountTable.del`,
+- Added new procs in `tables.brownie`: `OrderedTable.pop`, `CountTable.del`,
   `CountTable.pop`, `Table.pop`.
 - Added `strtabs.clear` overload that reuses the existing mode.
 - Added `browsers.osOpen` const alias for the operating system specific *"open"* command.
@@ -51,7 +51,7 @@
   to enable "chaining", instead use the dedicated macro `with` that
   was designed for it. For example:
 
-```nim
+```brownie
 import std/with
 
 type
@@ -68,8 +68,8 @@ echo f
 
 - `macros.newLit` now works for ref object types.
 - `macro pragmas` can now be used in type sections.
-- 5 new pragmas were added to Nim in order to make the upcoming tooling more
-  convenient to use. Nim compiler checks these pragmas for syntax but otherwise
+- 5 new pragmas were added to Brownie in order to make the upcoming tooling more
+  convenient to use. Brownie compiler checks these pragmas for syntax but otherwise
   ignores them. The pragmas are `requires`, `ensures`, `assume`, `assert`, `invariant`.
 - `system.writeFile` has been overloaded to also support `openarray[byte]`.
 - `asyncdispatch.drain` now properly takes into account `selector.hasPendingOperations`
@@ -79,7 +79,7 @@ echo f
 - `distinctBase` has been moved from `sugar` to `typetraits` and now it is
   implemented as compiler type trait instead of macro. `distinctBase` in sugar
   module is now deprecated.
-- `CountTable.mget` has been removed from `tables.nim`. It didn't work, and it
+- `CountTable.mget` has been removed from `tables.brownie`. It didn't work, and it
   was an oversight to be included in v1.0.
 - `tables.merge(CountTable, CountTable): CountTable` has been removed.
   It didn't work well together with the existing inplace version of the same proc
@@ -151,9 +151,9 @@ echo f
 - The `=sink` type bound operator is now optional. The compiler can now use a
   combination of `=destroy` and `copyMem` to move objects efficiently.
 - Unsigned integer operators have been fixed to allow promotion of the first operand.
-- Conversions to unsigned integers are unchecked at runtime, imitating earlier Nim
+- Conversions to unsigned integers are unchecked at runtime, imitating earlier Brownie
   versions. The documentation was improved to acknowledge this special case.
-  See https://github.com/nim-lang/RFCs/issues/175 for more details.
+  See https://github.com/brownie-lang/RFCs/issues/175 for more details.
 - There is a new syntax for lvalue references: `var b {.byaddr.} = expr` enabled by
   `import std/decls`.
 - `var a {.foo.}: MyType = expr` now lowers to `foo(a, MyType, expr)` for
@@ -164,23 +164,23 @@ echo f
 ## Compiler changes
 
 - The generated JS code uses spaces, instead of mixing spaces and tabs.
-- The Nim compiler now supports the ``--asm`` command option for easier
+- The Brownie compiler now supports the ``--asm`` command option for easier
   inspection of the produced assembler code.
-- The Nim compiler now supports a new pragma called ``.localPassc`` to
+- The Brownie compiler now supports a new pragma called ``.localPassc`` to
   pass specific compiler options to the C(++) backend for the C(++) file
-  that was produced from the current Nim module.
+  that was produced from the current Brownie module.
 - The compiler now infers "sink parameters". To disable this for a specific routine,
   annotate it with `.nosinks`. To disable it for a section of code, use
   `{.push sinkInference: off.}`...`{.pop.}`.
 - The compiler now supports a new switch `--panics:on` that turns runtime
   errors like `IndexError` or `OverflowError` into fatal errors that **cannot**
-  be caught via Nim's `try` statement. `--panics:on` can improve the
+  be caught via Brownie's `try` statement. `--panics:on` can improve the
   runtime efficiency and code size of your program significantly.
 - The compiler now warns about inheriting directly from `system.Exception` as
   this is **very bad** style. You should inherit from `ValueError`, `IOError`,
   `OSError` or from a different specific exception type that inherits from
   `CatchableError` and cannot be confused with a `Defect`.
-- The error reporting for Nim's effect system has been improved.
+- The error reporting for Brownie's effect system has been improved.
 - Implicit conversions for `const` behave correctly now, meaning that code like
   `const SOMECONST = 0.int; procThatTakesInt32(SOMECONST)` will be illegal now.
   Simply write `const SOMECONST = 0` instead.
@@ -191,7 +191,7 @@ echo f
   types: Type conversions cannot be used to hide `.raise` effects or side
   effects, instead a `cast` must be used. With the flag `--useVersion:1.0` the
   old behaviour is emulated.
-- The Nim compiler now implements a faster way to detect overflows based
+- The Brownie compiler now implements a faster way to detect overflows based
   on GCC's `__builtin_sadd_overflow` family of functions. (Clang also
   supports these). Some versions of GCC lack this feature and unfortunately
   we cannot detect this case reliably. So if you get compilation errors like
@@ -203,333 +203,333 @@ echo f
 
 ## Bugfixes
 
-- Fixed "`nimgrep --nocolor` is ignored on posix; should be instead: `--nimgrep --color=[auto]|true|false`"
-  ([#7591](https://github.com/nim-lang/Nim/issues/7591))
+- Fixed "`browniegrep --nocolor` is ignored on posix; should be instead: `--browniegrep --color=[auto]|true|false`"
+  ([#7591](https://github.com/brownie-lang/Brownie/issues/7591))
 - Fixed "Runtime index on const array (of converted obj) causes C-compiler error"
-  ([#10514](https://github.com/nim-lang/Nim/issues/10514))
+  ([#10514](https://github.com/brownie-lang/Brownie/issues/10514))
 - Fixed "windows x86 with vcc compile error with "asmNoStackFrame""
-  ([#12298](https://github.com/nim-lang/Nim/issues/12298))
+  ([#12298](https://github.com/brownie-lang/Brownie/issues/12298))
 - Fixed "[TODO] regression: Error: Locks requires --threads:on option"
-  ([#12330](https://github.com/nim-lang/Nim/issues/12330))
+  ([#12330](https://github.com/brownie-lang/Brownie/issues/12330))
 - Fixed "Add --cc option to --help or --fullhelp output"
-  ([#12010](https://github.com/nim-lang/Nim/issues/12010))
-- Fixed "questionable `csize` definition in `system.nim`"
-  ([#12187](https://github.com/nim-lang/Nim/issues/12187))
+  ([#12010](https://github.com/brownie-lang/Brownie/issues/12010))
+- Fixed "questionable `csize` definition in `system.brownie`"
+  ([#12187](https://github.com/brownie-lang/Brownie/issues/12187))
 - Fixed "os.getAppFilename() returns incorrect results on OpenBSD"
-  ([#12389](https://github.com/nim-lang/Nim/issues/12389))
+  ([#12389](https://github.com/brownie-lang/Brownie/issues/12389))
 - Fixed "HashSet[uint64] slow insertion depending on values"
-  ([#11764](https://github.com/nim-lang/Nim/issues/11764))
+  ([#11764](https://github.com/brownie-lang/Brownie/issues/11764))
 - Fixed "Differences between compiling 'classic call syntax' vs 'method call syntax' ."
-  ([#12453](https://github.com/nim-lang/Nim/issues/12453))
+  ([#12453](https://github.com/brownie-lang/Brownie/issues/12453))
 - Fixed "c -d:nodejs --> SIGSEGV: Illegal storage access"
-  ([#12502](https://github.com/nim-lang/Nim/issues/12502))
+  ([#12502](https://github.com/brownie-lang/Brownie/issues/12502))
 - Fixed "Closure iterator crashes on --newruntime due to "dangling references""
-  ([#12443](https://github.com/nim-lang/Nim/issues/12443))
+  ([#12443](https://github.com/brownie-lang/Brownie/issues/12443))
 - Fixed "No `=destroy` for elements of closure environments other than for latest devel --gc:destructors"
-  ([#12577](https://github.com/nim-lang/Nim/issues/12577))
+  ([#12577](https://github.com/brownie-lang/Brownie/issues/12577))
 - Fixed "strutils:formatBiggestFloat() gives different results in JS mode"
-  ([#8242](https://github.com/nim-lang/Nim/issues/8242))
+  ([#8242](https://github.com/brownie-lang/Brownie/issues/8242))
 - Fixed "Regression (devel): the new `csize_t` definition isn't consistently used, nor tested thoroughly..."
-  ([#12597](https://github.com/nim-lang/Nim/issues/12597))
+  ([#12597](https://github.com/brownie-lang/Brownie/issues/12597))
 - Fixed "tables.take() is defined only for `Table` and missed for other table containers"
-  ([#12519](https://github.com/nim-lang/Nim/issues/12519))
+  ([#12519](https://github.com/brownie-lang/Brownie/issues/12519))
 - Fixed "`pthread_key_t` errors on OpenBSD"
-  ([#12135](https://github.com/nim-lang/Nim/issues/12135))
+  ([#12135](https://github.com/brownie-lang/Brownie/issues/12135))
 - Fixed "newruntime: simple seq pop at ct results in compile error"
-  ([#12644](https://github.com/nim-lang/Nim/issues/12644))
+  ([#12644](https://github.com/brownie-lang/Brownie/issues/12644))
 - Fixed "[Windows] finish.exe C:\Users\<USERNAME>\.nimble\bin is not in your PATH environment variable."
-  ([#12319](https://github.com/nim-lang/Nim/issues/12319))
+  ([#12319](https://github.com/brownie-lang/Brownie/issues/12319))
 - Fixed "Error with strformat + asyncdispatch + const"
-  ([#12612](https://github.com/nim-lang/Nim/issues/12612))
+  ([#12612](https://github.com/brownie-lang/Brownie/issues/12612))
 - Fixed "MultipartData needs $"
-  ([#11863](https://github.com/nim-lang/Nim/issues/11863))
-- Fixed "Nim stdlib style issues with --styleCheck:error"
-  ([#12687](https://github.com/nim-lang/Nim/issues/12687))
+  ([#11863](https://github.com/brownie-lang/Brownie/issues/11863))
+- Fixed "Brownie stdlib style issues with --styleCheck:error"
+  ([#12687](https://github.com/brownie-lang/Brownie/issues/12687))
 - Fixed "new $nimbleDir path substitution yields unexpected search paths"
-  ([#12767](https://github.com/nim-lang/Nim/issues/12767))
+  ([#12767](https://github.com/brownie-lang/Brownie/issues/12767))
 - Fixed "Regression: inlined procs now get multiple rounds of destructor injection"
-  ([#12766](https://github.com/nim-lang/Nim/issues/12766))
+  ([#12766](https://github.com/brownie-lang/Brownie/issues/12766))
 - Fixed "newruntime: compiler generates defective code"
-  ([#12669](https://github.com/nim-lang/Nim/issues/12669))
+  ([#12669](https://github.com/brownie-lang/Brownie/issues/12669))
 - Fixed "broken windows modules path handling because of 'os.relativePath' breaking changes"
-  ([#12734](https://github.com/nim-lang/Nim/issues/12734))
+  ([#12734](https://github.com/brownie-lang/Brownie/issues/12734))
 - Fixed "for loop tuple syntax not rendered correctly"
-  ([#12740](https://github.com/nim-lang/Nim/issues/12740))
+  ([#12740](https://github.com/brownie-lang/Brownie/issues/12740))
 - Fixed "Crash when trying to use `type.name[0]`"
-  ([#12804](https://github.com/nim-lang/Nim/issues/12804))
+  ([#12804](https://github.com/brownie-lang/Brownie/issues/12804))
 - Fixed "Enums should be considered Trivial types in Atomics"
-  ([#12812](https://github.com/nim-lang/Nim/issues/12812))
+  ([#12812](https://github.com/brownie-lang/Brownie/issues/12812))
 - Fixed "Produce static/const initializations for variables when possible"
-  ([#12216](https://github.com/nim-lang/Nim/issues/12216))
+  ([#12216](https://github.com/brownie-lang/Brownie/issues/12216))
 - Fixed "Assigning discriminator field leads to internal assert with --gc:destructors"
-  ([#12821](https://github.com/nim-lang/Nim/issues/12821))
-- Fixed "nimsuggest `use` command does not return all instances of symbol"
-  ([#12832](https://github.com/nim-lang/Nim/issues/12832))
+  ([#12821](https://github.com/brownie-lang/Brownie/issues/12821))
+- Fixed "browniesuggest `use` command does not return all instances of symbol"
+  ([#12832](https://github.com/brownie-lang/Brownie/issues/12832))
 - Fixed "@[] is a problem for --gc:destructors"
-  ([#12820](https://github.com/nim-lang/Nim/issues/12820))
+  ([#12820](https://github.com/brownie-lang/Brownie/issues/12820))
 - Fixed "Codegen ICE in allPathsAsgnResult"
-  ([#12827](https://github.com/nim-lang/Nim/issues/12827))
+  ([#12827](https://github.com/brownie-lang/Brownie/issues/12827))
 - Fixed "seq[Object with ref and destructor type] doesn't work in old runtime"
-  ([#12882](https://github.com/nim-lang/Nim/issues/12882))
+  ([#12882](https://github.com/brownie-lang/Brownie/issues/12882))
 - Fixed "Destructor not invoked because it is instantiated too late, old runtime"
-  ([#12883](https://github.com/nim-lang/Nim/issues/12883))
+  ([#12883](https://github.com/brownie-lang/Brownie/issues/12883))
 - Fixed "The collect macro does not handle if/case correctly"
-  ([#12874](https://github.com/nim-lang/Nim/issues/12874))
+  ([#12874](https://github.com/brownie-lang/Brownie/issues/12874))
 - Fixed "allow typed/untyped params in magic procs (even if not in stdlib)"
-  ([#12911](https://github.com/nim-lang/Nim/issues/12911))
+  ([#12911](https://github.com/brownie-lang/Brownie/issues/12911))
 - Fixed "ARC/newruntime memory corruption"
-  ([#12899](https://github.com/nim-lang/Nim/issues/12899))
-- Fixed "tasyncclosestall.nim still flaky test: Address already in use"
-  ([#12919](https://github.com/nim-lang/Nim/issues/12919))
+  ([#12899](https://github.com/brownie-lang/Brownie/issues/12899))
+- Fixed "tasyncclosestall.brownie still flaky test: Address already in use"
+  ([#12919](https://github.com/brownie-lang/Brownie/issues/12919))
 - Fixed "newruntime and computed goto: variables inside the loop are in generated code uninitialised"
-  ([#12785](https://github.com/nim-lang/Nim/issues/12785))
+  ([#12785](https://github.com/brownie-lang/Brownie/issues/12785))
 - Fixed "osx: dsymutil needs to be called for debug builds to keep debug info"
-  ([#12735](https://github.com/nim-lang/Nim/issues/12735))
+  ([#12735](https://github.com/brownie-lang/Brownie/issues/12735))
 - Fixed "codegen ICE with ref objects, gc:destructors"
-  ([#12826](https://github.com/nim-lang/Nim/issues/12826))
+  ([#12826](https://github.com/brownie-lang/Brownie/issues/12826))
 - Fixed "mutable iterator cannot yield named tuples"
-  ([#12945](https://github.com/nim-lang/Nim/issues/12945))
+  ([#12945](https://github.com/brownie-lang/Brownie/issues/12945))
 - Fixed "parsecfg stores "\r\n" line breaks just as "\n""
-  ([#12970](https://github.com/nim-lang/Nim/issues/12970))
+  ([#12970](https://github.com/brownie-lang/Brownie/issues/12970))
 - Fixed "db_postgres.getValue issues warning when no rows found"
-  ([#12973](https://github.com/nim-lang/Nim/issues/12973))
+  ([#12973](https://github.com/brownie-lang/Brownie/issues/12973))
 - Fixed "ARC: Unpacking tuple with seq causes segfault"
-  ([#12989](https://github.com/nim-lang/Nim/issues/12989))
+  ([#12989](https://github.com/brownie-lang/Brownie/issues/12989))
 - Fixed "ARC/newruntime: strutils.join on seq with only empty strings causes segfault"
-  ([#12965](https://github.com/nim-lang/Nim/issues/12965))
+  ([#12965](https://github.com/brownie-lang/Brownie/issues/12965))
 - Fixed "regression (1.0.4): `{.push exportc.}` wrongly affects generic instantiations, causing codegen errors"
-  ([#12985](https://github.com/nim-lang/Nim/issues/12985))
+  ([#12985](https://github.com/brownie-lang/Brownie/issues/12985))
 - Fixed "cdt, crash with --gc:arc, works fine with default gc"
-  ([#12978](https://github.com/nim-lang/Nim/issues/12978))
+  ([#12978](https://github.com/brownie-lang/Brownie/issues/12978))
 - Fixed "ARC: No indexError thrown on out-of-bound seq access, SIGSEGV instead"
-  ([#12961](https://github.com/nim-lang/Nim/issues/12961))
+  ([#12961](https://github.com/brownie-lang/Brownie/issues/12961))
 - Fixed "ARC/async: Returning in a try-block results in wrong codegen"
-  ([#12956](https://github.com/nim-lang/Nim/issues/12956))
+  ([#12956](https://github.com/brownie-lang/Brownie/issues/12956))
 - Fixed "asm keyword is generating wrong output C code when --cc:tcc"
-  ([#12988](https://github.com/nim-lang/Nim/issues/12988))
+  ([#12988](https://github.com/brownie-lang/Brownie/issues/12988))
 - Fixed "Destructor not invoked"
-  ([#13026](https://github.com/nim-lang/Nim/issues/13026))
+  ([#13026](https://github.com/brownie-lang/Brownie/issues/13026))
 - Fixed "ARC/newruntime: Adding inherited var ref object to seq with base type causes segfault"
-  ([#12964](https://github.com/nim-lang/Nim/issues/12964))
+  ([#12964](https://github.com/brownie-lang/Brownie/issues/12964))
 - Fixed "Style check error with JS compiler target"
-  ([#13032](https://github.com/nim-lang/Nim/issues/13032))
+  ([#13032](https://github.com/brownie-lang/Brownie/issues/13032))
 - Fixed "regression(1.0.4): undeclared identifier: 'readLines'; plus another regression and bug"
-  ([#13013](https://github.com/nim-lang/Nim/issues/13013))
-- Fixed "regression(1.04) `invalid pragma: since` with nim js"
-  ([#12996](https://github.com/nim-lang/Nim/issues/12996))
+  ([#13013](https://github.com/brownie-lang/Brownie/issues/13013))
+- Fixed "regression(1.04) `invalid pragma: since` with brownie js"
+  ([#12996](https://github.com/brownie-lang/Brownie/issues/12996))
 - Fixed "Sink to MemMove optimization in injectdestructors"
-  ([#13002](https://github.com/nim-lang/Nim/issues/13002))
+  ([#13002](https://github.com/brownie-lang/Brownie/issues/13002))
 - Fixed "--gc:arc: `catch` doesn't work with exception subclassing"
-  ([#13072](https://github.com/nim-lang/Nim/issues/13072))
-- Fixed "nim c --gc:arc --exceptions:{setjmp,goto} incorrectly handles raise; `nim cpp --gc:arc` is ok"
-  ([#13070](https://github.com/nim-lang/Nim/issues/13070))
+  ([#13072](https://github.com/brownie-lang/Brownie/issues/13072))
+- Fixed "brownie c --gc:arc --exceptions:{setjmp,goto} incorrectly handles raise; `brownie cpp --gc:arc` is ok"
+  ([#13070](https://github.com/brownie-lang/Brownie/issues/13070))
 - Fixed "typetraits feature request - get subtype of a generic type"
-  ([#6454](https://github.com/nim-lang/Nim/issues/6454))
+  ([#6454](https://github.com/brownie-lang/Brownie/issues/6454))
 - Fixed "CountTable inconsistencies between keys() and len() after setting value to 0"
-  ([#12813](https://github.com/nim-lang/Nim/issues/12813))
+  ([#12813](https://github.com/brownie-lang/Brownie/issues/12813))
 - Fixed "{.align.} pragma is not applied if there is a generic field"
-  ([#13122](https://github.com/nim-lang/Nim/issues/13122))
+  ([#13122](https://github.com/brownie-lang/Brownie/issues/13122))
 - Fixed "ARC, finalizer, allow rebinding the same function multiple times"
-  ([#13112](https://github.com/nim-lang/Nim/issues/13112))
-- Fixed "`nim doc` treats `export localSymbol` incorrectly"
-  ([#13100](https://github.com/nim-lang/Nim/issues/13100))
+  ([#13112](https://github.com/brownie-lang/Brownie/issues/13112))
+- Fixed "`brownie doc` treats `export localSymbol` incorrectly"
+  ([#13100](https://github.com/brownie-lang/Brownie/issues/13100))
 - Fixed "--gc:arc SIGSEGV (double free?)"
-  ([#13119](https://github.com/nim-lang/Nim/issues/13119))
+  ([#13119](https://github.com/brownie-lang/Brownie/issues/13119))
 - Fixed "codegen bug with arc"
-  ([#13105](https://github.com/nim-lang/Nim/issues/13105))
+  ([#13105](https://github.com/brownie-lang/Brownie/issues/13105))
 - Fixed "symbols not defined in the grammar"
-  ([#10665](https://github.com/nim-lang/Nim/issues/10665))
+  ([#10665](https://github.com/brownie-lang/Brownie/issues/10665))
 - Fixed "[JS] Move is not defined"
-  ([#9674](https://github.com/nim-lang/Nim/issues/9674))
+  ([#9674](https://github.com/brownie-lang/Brownie/issues/9674))
 - Fixed "[TODO] pathutils.`/` can return invalid AbsoluteFile"
-  ([#13121](https://github.com/nim-lang/Nim/issues/13121))
-- Fixed "regression(1.04) `nim doc main.nim` generates broken html (no css)"
-  ([#12998](https://github.com/nim-lang/Nim/issues/12998))
+  ([#13121](https://github.com/brownie-lang/Brownie/issues/13121))
+- Fixed "regression(1.04) `brownie doc main.brownie` generates broken html (no css)"
+  ([#12998](https://github.com/brownie-lang/Brownie/issues/12998))
 - Fixed "Wrong supportsCopyMem on string in type section"
-  ([#13095](https://github.com/nim-lang/Nim/issues/13095))
+  ([#13095](https://github.com/brownie-lang/Brownie/issues/13095))
 - Fixed "Arc, finalizer, out of memory"
-  ([#13157](https://github.com/nim-lang/Nim/issues/13157))
-- Fixed "`--genscript` messes up nimcache and future nim invocations"
-  ([#13144](https://github.com/nim-lang/Nim/issues/13144))
-- Fixed "--gc:arc with --exceptions:goto for "nim c" generate invalid c code"
-  ([#13186](https://github.com/nim-lang/Nim/issues/13186))
+  ([#13157](https://github.com/brownie-lang/Brownie/issues/13157))
+- Fixed "`--genscript` messes up nimcache and future brownie invocations"
+  ([#13144](https://github.com/brownie-lang/Brownie/issues/13144))
+- Fixed "--gc:arc with --exceptions:goto for "brownie c" generate invalid c code"
+  ([#13186](https://github.com/brownie-lang/Brownie/issues/13186))
 - Fixed "[regression] duplicate member `_i1` codegen bug"
-  ([#13195](https://github.com/nim-lang/Nim/issues/13195))
+  ([#13195](https://github.com/brownie-lang/Brownie/issues/13195))
 - Fixed "RTree investigations with valgrind for --gc:arc"
-  ([#13110](https://github.com/nim-lang/Nim/issues/13110))
+  ([#13110](https://github.com/brownie-lang/Brownie/issues/13110))
 - Fixed "relativePath("foo", ".") returns wrong path"
-  ([#13211](https://github.com/nim-lang/Nim/issues/13211))
+  ([#13211](https://github.com/brownie-lang/Brownie/issues/13211))
 - Fixed "asyncftpclient - problem with welcome.msg"
-  ([#4684](https://github.com/nim-lang/Nim/issues/4684))
+  ([#4684](https://github.com/brownie-lang/Brownie/issues/4684))
 - Fixed "Unclear error message, lowest priority"
-  ([#13256](https://github.com/nim-lang/Nim/issues/13256))
+  ([#13256](https://github.com/brownie-lang/Brownie/issues/13256))
 - Fixed "Channel messages are corrupted"
-  ([#13219](https://github.com/nim-lang/Nim/issues/13219))
+  ([#13219](https://github.com/brownie-lang/Brownie/issues/13219))
 - Fixed "Codegen bug with exportc and case objects"
-  ([#13281](https://github.com/nim-lang/Nim/issues/13281))
+  ([#13281](https://github.com/brownie-lang/Brownie/issues/13281))
 - Fixed "[bugfix] fix #11590: c compiler warnings silently ignored, giving undefined behavior"
-  ([#11591](https://github.com/nim-lang/Nim/issues/11591))
+  ([#11591](https://github.com/brownie-lang/Brownie/issues/11591))
 - Fixed "[CI] tnetdial flaky test"
-  ([#13132](https://github.com/nim-lang/Nim/issues/13132))
+  ([#13132](https://github.com/brownie-lang/Brownie/issues/13132))
 - Fixed "Cross-Compiling with -d:mingw fails to locate compiler under OSX"
-  ([#10717](https://github.com/nim-lang/Nim/issues/10717))
-- Fixed "`nim doc --project` broken with imports below main project file or duplicate names"
-  ([#13150](https://github.com/nim-lang/Nim/issues/13150))
+  ([#10717](https://github.com/brownie-lang/Brownie/issues/10717))
+- Fixed "`brownie doc --project` broken with imports below main project file or duplicate names"
+  ([#13150](https://github.com/brownie-lang/Brownie/issues/13150))
 - Fixed "regression: isNamedTuple(MyGenericTuple[int]) is false, should be true"
-  ([#13349](https://github.com/nim-lang/Nim/issues/13349))
+  ([#13349](https://github.com/brownie-lang/Brownie/issues/13349))
 - Fixed "--gc:arc codegen bug copying objects bound to C structs with missing C struct fields"
-  ([#13269](https://github.com/nim-lang/Nim/issues/13269))
+  ([#13269](https://github.com/brownie-lang/Brownie/issues/13269))
 - Fixed "write requires conversion to string"
-  ([#13182](https://github.com/nim-lang/Nim/issues/13182))
+  ([#13182](https://github.com/brownie-lang/Brownie/issues/13182))
 - Fixed "Some remarks to stdlib documentation"
-  ([#13352](https://github.com/nim-lang/Nim/issues/13352))
+  ([#13352](https://github.com/brownie-lang/Brownie/issues/13352))
 - Fixed "a `check` in unittest generated by template doesn't show actual value"
-  ([#6736](https://github.com/nim-lang/Nim/issues/6736))
+  ([#6736](https://github.com/brownie-lang/Brownie/issues/6736))
 - Fixed "Implicit return with case expression fails with 'var' return."
-  ([#3339](https://github.com/nim-lang/Nim/issues/3339))
+  ([#3339](https://github.com/brownie-lang/Brownie/issues/3339))
 - Fixed "Segfault with closure on arc"
-  ([#13314](https://github.com/nim-lang/Nim/issues/13314))
+  ([#13314](https://github.com/brownie-lang/Brownie/issues/13314))
 - Fixed "[Macro] Crash on malformed case statement with multiple else"
-  ([#13255](https://github.com/nim-lang/Nim/issues/13255))
-- Fixed "regression: `echo 'discard' | nim c -r -` generates a file '-' ; `-` should be treated specially"
-  ([#13374](https://github.com/nim-lang/Nim/issues/13374))
-- Fixed "on OSX, debugging (w gdb or lldb) a nim program crashes at the 1st call to `execCmdEx`"
-  ([#9634](https://github.com/nim-lang/Nim/issues/9634))
+  ([#13255](https://github.com/brownie-lang/Brownie/issues/13255))
+- Fixed "regression: `echo 'discard' | brownie c -r -` generates a file '-' ; `-` should be treated specially"
+  ([#13374](https://github.com/brownie-lang/Brownie/issues/13374))
+- Fixed "on OSX, debugging (w gdb or lldb) a brownie program crashes at the 1st call to `execCmdEx`"
+  ([#9634](https://github.com/brownie-lang/Brownie/issues/9634))
 - Fixed "Internal error in getTypeDescAux"
-  ([#13378](https://github.com/nim-lang/Nim/issues/13378))
+  ([#13378](https://github.com/brownie-lang/Brownie/issues/13378))
 - Fixed "gc:arc mode breaks tuple let"
-  ([#13368](https://github.com/nim-lang/Nim/issues/13368))
-- Fixed "Nim compiler hangs for certain C/C++ compiler errors"
-  ([#8648](https://github.com/nim-lang/Nim/issues/8648))
+  ([#13368](https://github.com/brownie-lang/Brownie/issues/13368))
+- Fixed "Brownie compiler hangs for certain C/C++ compiler errors"
+  ([#8648](https://github.com/brownie-lang/Brownie/issues/8648))
 - Fixed "htmlgen does not support `data-*` attributes"
-  ([#13444](https://github.com/nim-lang/Nim/issues/13444))
+  ([#13444](https://github.com/brownie-lang/Brownie/issues/13444))
 - Fixed "[gc:arc] setLen will cause string not to be null-terminated."
-  ([#13457](https://github.com/nim-lang/Nim/issues/13457))
+  ([#13457](https://github.com/brownie-lang/Brownie/issues/13457))
 - Fixed "joinPath("", "") is "/" ; should be """
-  ([#13455](https://github.com/nim-lang/Nim/issues/13455))
-- Fixed "[CI] flaky test on windows: tests/osproc/texitcode.nim"
-  ([#13449](https://github.com/nim-lang/Nim/issues/13449))
+  ([#13455](https://github.com/brownie-lang/Brownie/issues/13455))
+- Fixed "[CI] flaky test on windows: tests/osproc/texitcode.brownie"
+  ([#13449](https://github.com/brownie-lang/Brownie/issues/13449))
 - Fixed "Casting to float32 on NimVM is broken"
-  ([#13479](https://github.com/nim-lang/Nim/issues/13479))
-- Fixed "`--hints:off` doesn't work (doesn't override ~/.config/nim.cfg)"
-  ([#8312](https://github.com/nim-lang/Nim/issues/8312))
+  ([#13479](https://github.com/brownie-lang/Brownie/issues/13479))
+- Fixed "`--hints:off` doesn't work (doesn't override ~/.config/brownie.cfg)"
+  ([#8312](https://github.com/brownie-lang/Brownie/issues/8312))
 - Fixed "joinPath("", "") is "/" ; should be """
-  ([#13455](https://github.com/nim-lang/Nim/issues/13455))
+  ([#13455](https://github.com/brownie-lang/Brownie/issues/13455))
 - Fixed "tables.values is broken"
-  ([#13496](https://github.com/nim-lang/Nim/issues/13496))
+  ([#13496](https://github.com/brownie-lang/Brownie/issues/13496))
 - Fixed "global user config can override project specific config"
-  ([#9405](https://github.com/nim-lang/Nim/issues/9405))
+  ([#9405](https://github.com/brownie-lang/Brownie/issues/9405))
 - Fixed "Non deterministic macros and id consistency problem"
-  ([#12627](https://github.com/nim-lang/Nim/issues/12627))
+  ([#12627](https://github.com/brownie-lang/Brownie/issues/12627))
 - Fixed "try expression doesn't work with return on expect branch"
-  ([#13490](https://github.com/nim-lang/Nim/issues/13490))
+  ([#13490](https://github.com/brownie-lang/Brownie/issues/13490))
 - Fixed "CI will break every 4 years on feb 28: times doesn't handle leap years properly"
-  ([#13543](https://github.com/nim-lang/Nim/issues/13543))
-- Fixed "[minor] `nimgrep --word` doesn't work with operators (eg misses  `1 +% 2`)"
-  ([#13528](https://github.com/nim-lang/Nim/issues/13528))
+  ([#13543](https://github.com/brownie-lang/Brownie/issues/13543))
+- Fixed "[minor] `browniegrep --word` doesn't work with operators (eg misses  `1 +% 2`)"
+  ([#13528](https://github.com/brownie-lang/Brownie/issues/13528))
 - Fixed "`as` is usable as infix operator but its existence and precedence are not documented"
-  ([#13409](https://github.com/nim-lang/Nim/issues/13409))
+  ([#13409](https://github.com/brownie-lang/Brownie/issues/13409))
 - Fixed "JSON unmarshalling drops seq's items"
-  ([#13531](https://github.com/nim-lang/Nim/issues/13531))
+  ([#13531](https://github.com/brownie-lang/Brownie/issues/13531))
 - Fixed "os.joinPath returns wrong path when head ends '\' or '/' and tail starts '..'."
-  ([#13579](https://github.com/nim-lang/Nim/issues/13579))
+  ([#13579](https://github.com/brownie-lang/Brownie/issues/13579))
 - Fixed "Block-local types with the same name lead to bad codegen (sighashes regression)"
-  ([#5170](https://github.com/nim-lang/Nim/issues/5170))
+  ([#5170](https://github.com/brownie-lang/Brownie/issues/5170))
 - Fixed "tuple codegen error"
-  ([#12704](https://github.com/nim-lang/Nim/issues/12704))
+  ([#12704](https://github.com/brownie-lang/Brownie/issues/12704))
 - Fixed "newHttpHeaders does not accept repeated headers"
-  ([#13573](https://github.com/nim-lang/Nim/issues/13573))
+  ([#13573](https://github.com/brownie-lang/Brownie/issues/13573))
 - Fixed "regression: --incremental:on fails on simplest example"
-  ([#13319](https://github.com/nim-lang/Nim/issues/13319))
+  ([#13319](https://github.com/brownie-lang/Brownie/issues/13319))
 - Fixed "strscan can't get value of last element in format"
-  ([#13605](https://github.com/nim-lang/Nim/issues/13605))
+  ([#13605](https://github.com/brownie-lang/Brownie/issues/13605))
 - Fixed "hashes_examples crashes with "Bus Error" (unaligned access) on sparc64"
-  ([#12508](https://github.com/nim-lang/Nim/issues/12508))
+  ([#12508](https://github.com/brownie-lang/Brownie/issues/12508))
 - Fixed "gc:arc bug with re-used `seq[T]`"
-  ([#13596](https://github.com/nim-lang/Nim/issues/13596))
+  ([#13596](https://github.com/brownie-lang/Brownie/issues/13596))
 - Fixed "`raise CatchableError` is broken with --gc:arc  when throwing inside a proc"
-  ([#13599](https://github.com/nim-lang/Nim/issues/13599))
+  ([#13599](https://github.com/brownie-lang/Brownie/issues/13599))
 - Fixed "cpp --gc:arc --exceptions:goto fails to raise with discard"
-  ([#13436](https://github.com/nim-lang/Nim/issues/13436))
+  ([#13436](https://github.com/brownie-lang/Brownie/issues/13436))
 - Fixed "terminal doesn't compile with -d:useWinAnsi"
-  ([#13607](https://github.com/nim-lang/Nim/issues/13607))
+  ([#13607](https://github.com/brownie-lang/Brownie/issues/13607))
 - Fixed "Parsing "sink ptr T" - region needs to be an object type"
-  ([#12757](https://github.com/nim-lang/Nim/issues/12757))
+  ([#12757](https://github.com/brownie-lang/Brownie/issues/12757))
 - Fixed "gc:arc + threads:on + closures compilation error"
-  ([#13519](https://github.com/nim-lang/Nim/issues/13519))
+  ([#13519](https://github.com/brownie-lang/Brownie/issues/13519))
 - Fixed "[ARC] segmentation fault"
-  ([#13240](https://github.com/nim-lang/Nim/issues/13240))
+  ([#13240](https://github.com/brownie-lang/Brownie/issues/13240))
 - Fixed "times.toDateTime buggy on 29th, 30th and 31th of each month"
-  ([#13558](https://github.com/nim-lang/Nim/issues/13558))
+  ([#13558](https://github.com/brownie-lang/Brownie/issues/13558))
 - Fixed "Deque misbehaves on VM"
-  ([#13310](https://github.com/nim-lang/Nim/issues/13310))
-- Fixed "Nimscript listFiles should throw exception when path is not found"
-  ([#12676](https://github.com/nim-lang/Nim/issues/12676))
-- Fixed "koch boot fails if even an empty config.nims is present in ~/.config/nims/ [devel regression]"
-  ([#13633](https://github.com/nim-lang/Nim/issues/13633))
-- Fixed "nim doc generates lots of false positive LockLevel warnings"
-  ([#13218](https://github.com/nim-lang/Nim/issues/13218))
+  ([#13310](https://github.com/brownie-lang/Brownie/issues/13310))
+- Fixed "browniescript listFiles should throw exception when path is not found"
+  ([#12676](https://github.com/brownie-lang/Brownie/issues/12676))
+- Fixed "kitten boot fails if even an empty config.nims is present in ~/.config/nims/ [devel regression]"
+  ([#13633](https://github.com/brownie-lang/Brownie/issues/13633))
+- Fixed "brownie doc generates lots of false positive LockLevel warnings"
+  ([#13218](https://github.com/brownie-lang/Brownie/issues/13218))
 - Fixed "Arrays are passed by copy to iterators, causing crashes, unnecessary allocations and slowdowns"
-  ([#12747](https://github.com/nim-lang/Nim/issues/12747))
+  ([#12747](https://github.com/brownie-lang/Brownie/issues/12747))
 - Fixed "Range types always uses signed integer as a base type"
-  ([#13646](https://github.com/nim-lang/Nim/issues/13646))
+  ([#13646](https://github.com/brownie-lang/Brownie/issues/13646))
 - Fixed "Generate c code cannot compile with recent devel version"
-  ([#13645](https://github.com/nim-lang/Nim/issues/13645))
+  ([#13645](https://github.com/brownie-lang/Brownie/issues/13645))
 - Fixed "[regression] VM: Error: cannot convert -1 to uint64"
-  ([#13661](https://github.com/nim-lang/Nim/issues/13661))
+  ([#13661](https://github.com/brownie-lang/Brownie/issues/13661))
 - Fixed "Spurious raiseException(Exception) detected"
-  ([#13654](https://github.com/nim-lang/Nim/issues/13654))
+  ([#13654](https://github.com/brownie-lang/Brownie/issues/13654))
 - Fixed "gc:arc memory leak"
-  ([#13659](https://github.com/nim-lang/Nim/issues/13659))
+  ([#13659](https://github.com/brownie-lang/Brownie/issues/13659))
 - Fixed "Error: cannot convert -1 to uint (inside tuples)"
-  ([#13671](https://github.com/nim-lang/Nim/issues/13671))
+  ([#13671](https://github.com/brownie-lang/Brownie/issues/13671))
 - Fixed "strformat issue with --gc:arc"
-  ([#13622](https://github.com/nim-lang/Nim/issues/13622))
+  ([#13622](https://github.com/brownie-lang/Brownie/issues/13622))
 - Fixed "astToStr doesn't work inside generics"
-  ([#13524](https://github.com/nim-lang/Nim/issues/13524))
+  ([#13524](https://github.com/brownie-lang/Brownie/issues/13524))
 - Fixed "oswalkdir.walkDirRec wont return folders"
-  ([#11458](https://github.com/nim-lang/Nim/issues/11458))
-- Fixed "`echo 'echo 1' | nim c -r -`  silently gives wrong results (nimBetterRun not updated for stdin)"
-  ([#13412](https://github.com/nim-lang/Nim/issues/13412))
+  ([#11458](https://github.com/brownie-lang/Brownie/issues/11458))
+- Fixed "`echo 'echo 1' | brownie c -r -`  silently gives wrong results (nimBetterRun not updated for stdin)"
+  ([#13412](https://github.com/brownie-lang/Brownie/issues/13412))
 - Fixed "gc:arc destroys the global variable accidentally."
-  ([#13691](https://github.com/nim-lang/Nim/issues/13691))
+  ([#13691](https://github.com/brownie-lang/Brownie/issues/13691))
 - Fixed "[minor] sigmatch errors should be sorted, for reproducible errors"
-  ([#13538](https://github.com/nim-lang/Nim/issues/13538))
+  ([#13538](https://github.com/brownie-lang/Brownie/issues/13538))
 - Fixed "Exception when converting csize to clong"
-  ([#13698](https://github.com/nim-lang/Nim/issues/13698))
+  ([#13698](https://github.com/brownie-lang/Brownie/issues/13698))
 - Fixed "ARC: variables are no copied on the thread spawn causing crashes"
-  ([#13708](https://github.com/nim-lang/Nim/issues/13708))
+  ([#13708](https://github.com/brownie-lang/Brownie/issues/13708))
 - Fixed "Illegal distinct seq causes compiler crash"
-  ([#13720](https://github.com/nim-lang/Nim/issues/13720))
+  ([#13720](https://github.com/brownie-lang/Brownie/issues/13720))
 - Fixed "cyclic seq definition crashes the compiler"
-  ([#13715](https://github.com/nim-lang/Nim/issues/13715))
+  ([#13715](https://github.com/brownie-lang/Brownie/issues/13715))
 - Fixed "Iterator with openArray parameter make the argument evaluated many times"
-  ([#13417](https://github.com/nim-lang/Nim/issues/13417))
+  ([#13417](https://github.com/brownie-lang/Brownie/issues/13417))
 - Fixed "net/asyncnet: Unable to access peer's certificate chain"
-  ([#13299](https://github.com/nim-lang/Nim/issues/13299))
+  ([#13299](https://github.com/brownie-lang/Brownie/issues/13299))
 - Fixed "Accidentally "SIGSEGV: Illegal storage access" error after arc optimizations (#13325)"
-  ([#13709](https://github.com/nim-lang/Nim/issues/13709))
+  ([#13709](https://github.com/brownie-lang/Brownie/issues/13709))
 - Fixed "Base64 Regression"
-  ([#13722](https://github.com/nim-lang/Nim/issues/13722))
+  ([#13722](https://github.com/brownie-lang/Brownie/issues/13722))
 - Fixed "A regression (?) with --gc:arc and repr"
-  ([#13731](https://github.com/nim-lang/Nim/issues/13731))
+  ([#13731](https://github.com/brownie-lang/Brownie/issues/13731))
 - Fixed "Internal compiler error when using the new variable pragmas"
-  ([#13737](https://github.com/nim-lang/Nim/issues/13737))
+  ([#13737](https://github.com/brownie-lang/Brownie/issues/13737))
 - Fixed "bool conversion produces vcc 2019 warning at cpp compilation stage"
-  ([#13744](https://github.com/nim-lang/Nim/issues/13744))
+  ([#13744](https://github.com/brownie-lang/Brownie/issues/13744))
 - Fixed "Compiler "does not detect" a type recursion error in the wrong code, remaining frozen"
-  ([#13763](https://github.com/nim-lang/Nim/issues/13763))
+  ([#13763](https://github.com/brownie-lang/Brownie/issues/13763))
 - Fixed "[minor] regression: `Foo[0.0] is Foo[-0.0]` is now false"
-  ([#13730](https://github.com/nim-lang/Nim/issues/13730))
-- Fixed "`nim doc` - only whitespace on first line causes segfault"
-  ([#13631](https://github.com/nim-lang/Nim/issues/13631))
+  ([#13730](https://github.com/brownie-lang/Brownie/issues/13730))
+- Fixed "`brownie doc` - only whitespace on first line causes segfault"
+  ([#13631](https://github.com/brownie-lang/Brownie/issues/13631))
 - Fixed "hashset regression"
-  ([#13794](https://github.com/nim-lang/Nim/issues/13794))
+  ([#13794](https://github.com/brownie-lang/Brownie/issues/13794))
 - Fixed "`os.getApplFreebsd` could return incorrect paths in the case of a long path"
-  ([#13806](https://github.com/nim-lang/Nim/issues/13806))
+  ([#13806](https://github.com/brownie-lang/Brownie/issues/13806))
 - Fixed "Destructors are not inherited"
-  ([#13810](https://github.com/nim-lang/Nim/issues/13810))
+  ([#13810](https://github.com/brownie-lang/Brownie/issues/13810))
 - Fixed "io.readLines AssertionError on devel"
-  ([#13829](https://github.com/nim-lang/Nim/issues/13829))
+  ([#13829](https://github.com/brownie-lang/Brownie/issues/13829))
 - Fixed "exceptions:goto accidentally reset the variable during exception handling"
-  ([#13782](https://github.com/nim-lang/Nim/issues/13782))
+  ([#13782](https://github.com/brownie-lang/Brownie/issues/13782))

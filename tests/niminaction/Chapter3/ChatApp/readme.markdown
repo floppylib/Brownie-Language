@@ -1,13 +1,13 @@
 # The ChatApp source code
 
 This directory contains the ChatApp project, which is the project that is
-created as part of Chapter 3 of the Nim in Action book.
+created as part of Chapter 3 of the Brownie in Action book.
 
 To compile run:
 
 ```
-nim c src/client
-nim c src/server
+brownie c src/client
+brownie c src/server
 ```
 
 You can then run the ``server`` in one terminal by executing ``./src/server``.

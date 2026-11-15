@@ -1,5 +1,5 @@
 ==================================
-Nim Destructors and Move Semantics
+Brownie Destructors and Move Semantics
 ==================================
 
 :Authors: Andreas Rumpf
@@ -13,15 +13,15 @@ Nim Destructors and Move Semantics
 About this document
 ===================
 
-This document describes the ARC/ORC Nim runtime which does
+This document describes the ARC/ORC Brownie runtime which does
 not use classical GC algorithms anymore but is based on destructors and
-move semantics. The advantages are that Nim programs become
+move semantics. The advantages are that Brownie programs become
 oblivious to the involved heap sizes and programs are easier to write to make
 effective use of multi-core machines. As a nice bonus, files and sockets and
 the like can be written not to require manual `close` calls anymore.
 
 This document aims to be a precise specification about how
-move semantics and destructors work in Nim.
+move semantics and destructors work in Brownie.
 
 
 Motivating example
@@ -30,7 +30,7 @@ Motivating example
 With the language mechanisms described here, a custom seq could be
 written as:
 
-  ```nim test
+  ```brownie test
   type
     myseq*[T] = object
       len, cap: int
@@ -108,7 +108,7 @@ written as:
 Lifetime-tracking hooks
 =======================
 
-The memory management for Nim's standard `string` and `seq` types as
+The memory management for Brownie's standard `string` and `seq` types as
 well as other standard collections is performed via so-called
 "Lifetime-tracking hooks", which are particular [type bound operators](
 manual.html#procedures-type-bound-operators).
@@ -132,13 +132,13 @@ to return.
 A `=destroy` hook is allowed to have a parameter of a `var T` or `T` type.
 The prototype of this hook for a type `T` needs to be:
 
-  ```nim
+  ```brownie
   proc `=destroy`(x: T)
   ```
 
 The general pattern in `=destroy` looks like:
 
-  ```nim
+  ```brownie
   proc `=destroy`(x: T) =
     # first check if 'x' was moved to somewhere else:
     if x.field != nil:
@@ -161,13 +161,13 @@ A `=wasMoved` hook sets the object to a state that signifies to the destructor t
 
 The prototype of this hook for a type `T` needs to be:
 
-  ```nim
+  ```brownie
   proc `=wasMoved`(x: var T)
   ```
 
 Usually some pointer field inside the object is set to `nil`:
 
-  ```nim
+  ```brownie
   proc `=wasMoved`(x: var T) =
     x.field = nil
   ```
@@ -187,13 +187,13 @@ provide `=destroy` and `=copy`, the compiler will take care of the rest.
 
 The prototype of this hook for a type `T` needs to be:
 
-  ```nim
+  ```brownie
   proc `=sink`(dest: var T; source: T)
   ```
 
 The general pattern in `=sink` looks like:
 
-  ```nim
+  ```brownie
 
   proc `=sink`(dest: var T; source: T) =
     `=destroy`(dest)
@@ -208,19 +208,19 @@ How self-assignments are handled is explained later in this document.
 `=copy` hook
 ------------
 
-The ordinary assignment in Nim conceptually copies the values. The `=copy` hook
+The ordinary assignment in Brownie conceptually copies the values. The `=copy` hook
 is called for assignments that couldn't be transformed into `=sink`
 operations.
 
 The prototype of this hook for a type `T` needs to be:
 
-  ```nim
+  ```brownie
   proc `=copy`(dest: var T; source: T)
   ```
 
 The general pattern in `=copy` looks like:
 
-  ```nim
+  ```brownie
   proc `=copy`(dest: var T; source: T) =
     # protect against self-assignments:
     if dest.field != source.field:
@@ -232,7 +232,7 @@ The general pattern in `=copy` looks like:
 The `=copy` proc can be marked with the `{.error.}` pragma. Then any assignment
 that otherwise would lead to a copy is prevented at compile-time. This looks like:
 
-  ```nim
+  ```brownie
   proc `=copy`(dest: var T; source: T) {.error.}
   ```
 
@@ -243,14 +243,14 @@ by the compiler. Notice that there is no `=` before the `{.error.}` pragma.
 `=trace` hook
 -------------
 
-A custom **container** type can support Nim's cycle collector `--mm:orc` via
+A custom **container** type can support Brownie's cycle collector `--mm:orc` via
 the `=trace` hook. If the container does not implement `=trace`, cyclic data
 structures which are constructed with the help of the container might leak
 memory or resources, but memory safety is not compromised.
 
 The prototype of this hook for a type `T` needs to be:
 
-  ```nim
+  ```brownie
   proc `=trace`(dest: var T; env: pointer)
   ```
 
@@ -268,7 +268,7 @@ prevent the automatic creation.
 
 The general pattern in using `=destroy` with `=trace` looks like:
 
-  ```nim
+  ```brownie
   type
     Test[T] = object
       size: Natural
@@ -302,13 +302,13 @@ A `=dup` hook duplicates an object. `=dup(x)` can be regarded as an optimization
 
 The prototype of this hook for a type `T` needs to be:
 
-  ```nim
+  ```brownie
   proc `=dup`(x: T): T
   ```
 
 The general pattern in implementing `=dup` looks like:
 
-  ```nim
+  ```brownie
   type
     Ref[T] = object
       data: ptr T
@@ -336,7 +336,7 @@ if the compiler cannot prove that a move would be safe.
 
 For example:
 
-  ```nim
+  ```brownie
   proc main(normalParam: string; sinkParam: sink string) =
     var x = "abc"
     # valid:
@@ -361,7 +361,7 @@ as `let tmp = move(b); b = move(a); a = move(tmp)`.
 This has further consequences:
 
 * Objects that contain pointers that point to the same object are not supported
-  by Nim's model. Otherwise swapped objects would end up in an inconsistent state.
+  by Brownie's model. Otherwise swapped objects would end up in an inconsistent state.
 * Seqs can use `realloc` in the implementation.
 
 
@@ -385,7 +385,7 @@ not a linear type system.
 The employed static analysis is limited and only concerned with local variables;
 however, object and tuple fields are treated as separate entities:
 
-  ```nim
+  ```brownie
   proc consume(x: sink Obj) = discard "no implementation"
 
   proc main =
@@ -397,7 +397,7 @@ however, object and tuple fields are treated as separate entities:
 
 Sometimes it is required to explicitly `move` a value into its final position:
 
-  ```nim
+  ```brownie
   proc main =
     var dest, src: array[10, string]
     # ...
@@ -421,7 +421,7 @@ use `{.push sinkInference: on.}` ... `{.pop.}`.
 The `.nosinks`:idx: pragma can be used to disable this inference
 for a single routine:
 
-  ```nim
+  ```brownie
   proc addX(x: T; child: T) {.nosinks.} =
     x.s.add child
   ```
@@ -531,7 +531,7 @@ The complex case looks like a variant of `x = f(x)`, we consider
 `x = select(rand() < 0.5, x, y)` here:
 
 
-  ```nim
+  ```brownie
   proc select(cond: bool; a, b: sink string): string =
     if cond:
       result = a # moves a into result
@@ -547,7 +547,7 @@ The complex case looks like a variant of `x = f(x)`, we consider
 
 Is transformed into:
 
-  ```nim
+  ```brownie
   proc select(cond: bool; a, b: sink string): string =
     try:
       if cond:
@@ -600,7 +600,7 @@ that the pointer does not outlive its origin. No destructor call is injected
 for expressions of type `lent T` or of type `var T`.
 
 
-  ```nim test
+  ```brownie test
   type
     Tree = object
       kids: seq[Tree]
@@ -631,13 +631,13 @@ for expressions of type `lent T` or of type `var T`.
 The cursor pragma
 =================
 
-Under the `--mm:arc|orc`:option: modes Nim's `ref` type is implemented
+Under the `--mm:arc|orc`:option: modes Brownie's `ref` type is implemented
 via the same runtime "hooks" and thus via reference counting.
 This means that cyclic structures cannot be freed
 immediately (`--mm:orc`:option: ships with a cycle collector).
 With the `cursor` pragma one can break up cycles declaratively:
 
-  ```nim
+  ```brownie
   type
     Node = ref object
       left: Node # owning ref
@@ -651,7 +651,7 @@ Automatic reference counting also has the disadvantage that it introduces overhe
 when iterating over linked structures. The `cursor` pragma can also be used
 to avoid this overhead:
 
-  ```nim
+  ```brownie
   var it {.cursor.} = listRoot
   while it != nil:
     use(it)
@@ -661,7 +661,7 @@ to avoid this overhead:
 In fact, `cursor` more generally prevents object construction/destruction pairs
 and so can also be useful in other contexts. The alternative solution would be to
 use raw pointers (`ptr`) instead which is more cumbersome and also more dangerous
-for Nim's evolution: Later on, the compiler can try to prove `cursor` pragmas
+for Brownie's evolution: Later on, the compiler can try to prove `cursor` pragmas
 to be safe, but for `ptr` the compiler has to remain silent about possible
 problems.
 
@@ -681,7 +681,7 @@ words, we do a compile-time copy-on-write analysis.
 This means that "borrowed" views can be written naturally and without explicit pointer
 indirections:
 
-  ```nim
+  ```brownie
   proc main(tab: Table[string, string]) =
     let v = tab["key"] # inferred as cursor because 'tab' is not mutated.
     # no copy into 'v', no destruction of 'v'.
@@ -711,7 +711,7 @@ Hook generation
 
 The ability to override a hook leads to a phase ordering problem:
 
-  ```nim
+  ```brownie
   type
     Foo[T] = object
 
@@ -745,7 +745,7 @@ The experimental `nodestroy`:idx: pragma inhibits hook injections. This can be
 used to specialize the object traversal in order to avoid deep recursions:
 
 
-  ```nim test
+  ```brownie test
   type Node = ref object
     x, y: int32
     left, right: Node
@@ -783,7 +783,7 @@ The copy operation is deferred until the first write.
 
 For example:
 
-  ```nim
+  ```brownie
   var x = "abc"  # no copy
   var y = x      # no copy
   y[0] = 'h'     # copy
@@ -792,7 +792,7 @@ For example:
 The abstraction fails for `addr x` because whether the address is going to be used for mutations is unknown.
 `prepareMutation` needs to be called before the "address of" operation. For example:
 
-  ```nim
+  ```brownie
   var x = "abc"
   var y = x
 

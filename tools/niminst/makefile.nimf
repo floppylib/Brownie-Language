@@ -1,16 +1,16 @@
 #? stdtmpl(subsChar='?') | standard
 #proc generateMakefile(c: ConfigData): string =
-#  result = "# Generated from niminst\n" &
-#           "# Template is in tools/niminst/makefile.nimf\n" &
-#           "# To regenerate run ``niminst csource`` or ``koch csource``\n"
+#  result = "# Generated from brownieinst\n" &
+#           "# Template is in tools/brownieinst/makefile.nimf\n" &
+#           "# To regenerate run ``brownieinst csource`` or ``kitten csource``\n"
 
 CC ??= gcc
 CFLAGS += -Ic_code ?{c.ccompiler.flags}
 LDFLAGS += ?{c.linker.flags}
 binDir = ?{firstBinPath(c).toUnix}
 
-koch := $(shell sh -c 'test -s ../koch.nim && echo "yes"')
-ifeq ($(koch),yes)
+kitten := $(shell sh -c 'test -s ../kitten.brownie && echo "yes"')
+ifeq ($(kitten),yes)
   binDir = ../bin
 endif
 

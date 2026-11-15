@@ -4,7 +4,7 @@ Advanced commands:
   //compileToOC, objc       compile project to Objective C code
   //js                      compile project to Javascript
   //nif                     compile project to NIF
-  //e                       run a Nimscript file
+  //e                       run a browniescript file
   //book                    generate documentation site from a directory with Markdown files
   //md2html                 convert a Markdown file to HTML
                             use `--docCmd:skip` to skip compiling snippets
@@ -22,7 +22,7 @@ Advanced commands:
                             see also: --dump.format:json (useful with: `| jq`)
   //check                   checks the project for syntax and semantics
                             (can be combined with --defusages)
-  //track                   goto-definition / find-usages via `nim ic`
+  //track                   goto-definition / find-usages via `brownie ic`
 
 Runtime checks (see -x):
   --objChecks:on|off        turn obj conversion checks on|off
@@ -52,7 +52,7 @@ Advanced options:
                             `std` uses `file(line, col)`, `gcc` uses the
                             GCC/Emacs style `file:line:col:`
   --processing:dots|filenames|off
-                            show files as they're being processed by nim compiler
+                            show files as they're being processed by brownie compiler
   --unitsep:on|off          use the ASCII unit separator (31) between error
                             messages, useful for IDE-like tooling
   --declaredLocs:on|off     show declaration locations in messages
@@ -74,9 +74,9 @@ Advanced options:
   --warningAsError:X:on|off
                             turn specific warning X into an error on|off
   --styleCheck:off|hint|error
-                            produce hints or errors for Nim identifiers that
-                            do not adhere to Nim's official style guide
-                            https://nim-lang.org/docs/nep1.html
+                            produce hints or errors for Brownie identifiers that
+                            do not adhere to Brownie's official style guide
+                            https://brownie-lang.org/docs/nep1.html
   --styleCheck:usages       only enforce consistent spellings of identifiers,
                             do not enforce the style on declarations
   --showAllMismatches:on|off
@@ -84,16 +84,16 @@ Advanced options:
                             resolution
   --lib:PATH                set the system library path
   --import:PATH             add an automatically imported module
-                            see also `patchFile` in nimscript which offers more flexibility.
+                            see also `patchFile` in browniescript which offers more flexibility.
   --include:PATH            add an automatically included module
   --nimcache:PATH           set the path used for generated files
-                            see also https://nim-lang.org/docs/nimc.html#compiler-usage-generated-c-code-directory
-  -c, --compileOnly:on|off  compile Nim files only; do not assemble or link
+                            see also https://brownie-lang.org/docs/nimc.html#compiler-usage-generated-c-code-directory
+  -c, --compileOnly:on|off  compile Brownie files only; do not assemble or link
   --mergeableCcode:on|off
                             generate C code that does not depend on the target's
                             C compiler settings so that it can be shared among
-                            targets (used by niminst)
-  --noLinking:on|off        compile Nim and generated files but do not link
+                            targets (used by brownieinst)
+  --noLinking:on|off        compile Brownie and generated files but do not link
   --noMain:on|off           do not generate a main procedure
   --genScript:on|off        generate a compile script (in the 'nimcache'
                             subdirectory named 'compile_$$project$$scriptext'),
@@ -102,7 +102,7 @@ Advanced options:
   --os:SYMBOL               set the target operating system (cross-compilation)
   --cpu:SYMBOL              set the target processor (cross-compilation)
   --debuginfo:on|off        enables debug information
-  --mangle:nim|cpp          selects `nim` or `cpp` style name mangling, defaults to `cpp`
+  --mangle:brownie|cpp          selects `brownie` or `cpp` style name mangling, defaults to `cpp`
   -t, --passC:OPTION        pass an option to the C compiler
   -l, --passL:OPTION        pass an option to the linker
   --cc:SYMBOL               specify the C compiler
@@ -111,7 +111,7 @@ Advanced options:
   --clib:LIBNAME            link an additional C library
                             (you should omit platform-specific extensions)
   --project                 document the whole project (doc)
-  --docRoot:path            `nim doc --docRoot:/foo --project --outdir:docs /foo/sub/main.nim`
+  --docRoot:path            `brownie doc --docRoot:/foo --project --outdir:docs /foo/sub/main.brownie`
                             generates: docs/sub/main.html
                             if path == @pkg, will use nimble file enclosing dir
                             if path == @path, will use first matching dir in `--path`
@@ -119,12 +119,12 @@ Advanced options:
                             best match among @pkg,@path.
                             if these are nonexistent, will use project path
   -b, --backend:c|cpp|js|objc
-                            sets backend to use with commands like `nim doc` or `nim r`
+                            sets backend to use with commands like `brownie doc` or `brownie r`
   --docCmd:cmd              if `cmd == skip`, skips runnableExamples
                             else, runs runnableExamples with given options, e.g.:
                             `--docCmd:"-d:foo --threads:on"`
   --docSeeSrcUrl:url        activate 'see source' for doc command
-                            (see doc.item.seesrc in config/nimdoc.cfg)
+                            (see doc.item.seesrc in config/browniedoc.cfg)
   --docInternal             also generate documentation for non-exported symbols
   --raw                     turn off markup rendering for JSON docs
   --lineDir:on|off          generation of #line directive on|off
@@ -140,7 +140,7 @@ Advanced options:
   --excessiveStackTrace:on|off
                             stack traces use full file paths
   --stackTraceMsgs:on|off   enable user defined stack frame msgs via `setFrameMsg`
-  --skipCfg:on|off          do not read the nim installation's configuration file
+  --skipCfg:on|off          do not read the brownie installation's configuration file
   --skipUserCfg:on|off      do not read the user's configuration file
   --skipParentCfg:on|off    do not read the parent dirs' configuration files
   --skipProjCfg:on|off      do not read the project's configuration file
@@ -157,7 +157,7 @@ Advanced options:
   --clearNimblePath         empty the list of Nimble package search paths
   --cppCompileToNamespace:namespace
                             use the provided namespace for the generated C++ code,
-                            if no namespace is provided "Nim" will be used
+                            if no namespace is provided "Brownie" will be used
   --nimMainPrefix:prefix    use `{prefix}NimMain` instead of `NimMain` in the produced
                             C/C++ code
   --expandMacro:MACRO       dump every generated AST from MACRO
@@ -177,7 +177,7 @@ Advanced options:
   --parallelBuild:0|1|...   perform a parallel build
                             value = number of processors (0 for auto-detect)
   --incremental:on|off      only recompile the changed modules (experimental!)
-  --verbosity:0|1|2|3       set Nim's verbosity level (1 is default)
+  --verbosity:0|1|2|3       set Brownie's verbosity level (1 is default)
   --errorMax:N              stop compilation after N errors; 0 means unlimited
   --maxLoopIterationsVM:N   set max iterations for all VM loops
   --maxCallDepthVM:N        set max call depth in the VM

@@ -5,14 +5,14 @@
 
 - `-d:nimStrictDelete` becomes the default. An index error is produced when the index passed to `system.delete` is out of bounds. Use `-d:nimAuditDelete` to mimic the old behavior for backward compatibility.
 
-- The default user-agent in `std/httpclient` has been changed to `Nim-httpclient/<version>` instead of `Nim httpclient/<version>` which was incorrect according to the HTTP spec.
+- The default user-agent in `std/httpclient` has been changed to `Brownie-httpclient/<version>` instead of `Brownie httpclient/<version>` which was incorrect according to the HTTP spec.
 
 - Methods now support implementations based on a VTable by using `--experimental:vtables`. Methods are then confined to the same module where their type has been defined.
 
 - With `-d:nimPreviewNonVarDestructor`, non-var destructors become the default.
 
 - A bug where tuple unpacking assignment with a longer tuple on the RHS than the LHS was allowed has been fixed, i.e. code like:
-  ```nim
+  ```brownie
   var a, b: int
   (a, b) = (1, 2, 3, 4)
   ```
@@ -38,7 +38,7 @@
 - Partial generic instantiation of routines is no longer allowed. Previously
   it compiled in niche situations due to bugs in the compiler.
 
-  ```nim
+  ```brownie
   proc foo[T, U](x: T, y: U) = echo (x, y)
   proc foo[T, U](x: var T, y: U) = echo "var ", (x, y)
 
@@ -52,7 +52,7 @@
   declared in them can no longer be used outside or in the value of
   other constants.
 
-  ```nim
+  ```brownie
   const foo = (var a = 1; a)
   const bar = a # error
   let baz = a # error
@@ -121,7 +121,7 @@ is often an easy workaround.
 
 - `noInit` can be used in types and fields to disable member initializers in the C++ backend.
 
-- C++ custom constructors initializers see https://nim-lang.org/docs/manual_experimental.html#constructor-initializer
+- C++ custom constructors initializers see https://brownie-lang.org/docs/manual_experimental.html#constructor-initializer
 
 - `member` can be used to attach a procedure to a C++ type.
 
@@ -129,13 +129,13 @@ is often an easy workaround.
 
 - Tuple unpacking changes:
   - Tuple unpacking assignment now supports using underscores to discard values.
-    ```nim
+    ```brownie
     var a, c: int
     (a, _, c) = (1, 2, 3)
     ```
   - Tuple unpacking variable declarations now support type annotations, but
     only for the entire tuple.
-    ```nim
+    ```brownie
     let (a, b): (int, int) = (1, 2)
     let (a, (b, c)): (byte, (float, cstring)) = (1, (2, "abc"))
     ```
@@ -153,7 +153,7 @@ is often an easy workaround.
   injected symbol would replace a captured symbol not bound by `bind` and
   the experimental switch isn't enabled.
 
-  ```nim
+  ```brownie
   const value = "captured"
   template foo(x: int, body: untyped): untyped =
     let value {.inject.} = "injected"
@@ -209,7 +209,7 @@ is often an easy workaround.
   (unless the other switch is enabled) and so doesn't reflect the regular
   behavior of the switch.
 
-  ```nim
+  ```brownie
   const value = "captured"
   template foo(x: int, body: untyped): untyped =
     let value {.inject.} = "injected"
@@ -245,4 +245,4 @@ is often an easy workaround.
 
 ## Tool changes
 
-- koch now allows bootstrapping with `-d:nimHasLibFFI`, replacing the older option of building the compiler directly w/ the `libffi` nimble package.
+- kitten now allows bootstrapping with `-d:nimHasLibFFI`, replacing the older option of building the compiler directly w/ the `libffi` nimble package.

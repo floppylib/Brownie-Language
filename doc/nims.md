@@ -1,22 +1,22 @@
 ================================
-          NimScript
+          browniescript
 ================================
 
 .. default-role:: code
 .. include:: rstcommon.rst
 
-Strictly speaking, `NimScript` is the subset of Nim that can be evaluated
-by Nim's builtin virtual machine (VM). This VM is used for Nim's compiletime
+Strictly speaking, `browniescript` is the subset of Brownie that can be evaluated
+by Brownie's builtin virtual machine (VM). This VM is used for Brownie's compiletime
 function evaluation features.
 
-The `nim`:cmd: executable processes the ``.nims`` configuration files in
+The `brownie`:cmd: executable processes the ``.nims`` configuration files in
 the following directories (in this order; later files overwrite
 previous settings):
 
 1) If environment variable `XDG_CONFIG_HOME` is defined,
-   ``$XDG_CONFIG_HOME/nim/config.nims`` or
-   ``~/.config/nim/config.nims`` (POSIX) or
-   ``%APPDATA%/nim/config.nims`` (Windows). This file can be skipped
+   ``$XDG_CONFIG_HOME/brownie/config.nims`` or
+   ``~/.config/brownie/config.nims`` (POSIX) or
+   ``%APPDATA%/brownie/config.nims`` (Windows). This file can be skipped
    with the `--skipUserCfg`:option: command line option.
 2) ``$parentDir/config.nims`` where ``$parentDir`` stands for any
    parent directory of the project file's path. These files can be
@@ -26,19 +26,19 @@ previous settings):
    command line option.
 4) A project can also have a project specific configuration file named
    ``$project.nims`` that resides in the same directory as
-   ``$project.nim``. This file can be skipped with the same
+   ``$project.brownie``. This file can be skipped with the same
    `--skipProjCfg`:option: command line option.
 
-For available procs and implementation details see [nimscript](nimscript.html).
+For available procs and implementation details see [browniescript](browniescript.html).
 
 
 Limitations
 ===========
 
-NimScript is subject to some limitations caused by the implementation of the VM
+browniescript is subject to some limitations caused by the implementation of the VM
 (virtual machine):
 
-* Nim's FFI (foreign function interface) is not available in NimScript. This
+* Brownie's FFI (foreign function interface) is not available in browniescript. This
   means that any stdlib module which relies on `importc` can not be used in
   the VM.
 
@@ -100,25 +100,25 @@ At least the following standard library modules are available:
 * [std/wordwrap](wordwrap.html)
 * [xmlparser](xmlparser.html)
 
-In addition to the standard Nim syntax ([system](system.html) module),
+In addition to the standard Brownie syntax ([system](system.html) module),
 NimScripts support the procs and templates defined in the
-[nimscript](nimscript.html) module too.
+[browniescript](browniescript.html) module too.
 
 See also:
-* [Check the tests for more information about modules compatible with NimScript](
-  https://github.com/nim-lang/Nim/blob/devel/tests/test_nimscript.nims)
+* [Check the tests for more information about modules compatible with browniescript](
+  https://github.com/brownie-lang/Brownie/blob/devel/tests/test_nimscript.nims)
 
 
-NimScript as a configuration file
+browniescript as a configuration file
 =================================
 
 A command-line switch `--FOO`:option: is written as `switch("FOO")` in
-NimScript. Similarly, command-line `--FOO:VAL`:option: translates to
+browniescript. Similarly, command-line `--FOO:VAL`:option: translates to
 `switch("FOO", "VAL")`.
 
 Here are few examples of using the `switch` proc:
 
-  ```nim
+  ```brownie
   # command-line: --opt:size
   switch("opt", "size")
   # command-line: --define:release or -d:release
@@ -130,10 +130,10 @@ Here are few examples of using the `switch` proc:
   ```
 
 NimScripts also support `--`:option: templates for convenience, which look
-like command-line switches written as-is in the NimScript file. So the
+like command-line switches written as-is in the browniescript file. So the
 above example can be rewritten as:
 
-  ```nim
+  ```brownie
   --opt:size
   --define:release
   --forceBuild
@@ -145,14 +145,14 @@ NimScripts using `switch` or `--`, as shown in above examples. Few
 `-d:lto_incremental`:option: cannot be set in NimScripts.
 
 
-NimScript as a build tool
+browniescript as a build tool
 =========================
 
-The `task` template that the `system` module defines allows a NimScript
+The `task` template that the `system` module defines allows a browniescript
 file to be used as a build tool. The following example defines a
 task `build` that is an alias for the `c`:option: command:
 
-  ```nim
+  ```brownie
   task build, "builds an example":
     setCommand "c"
   ```
@@ -163,7 +163,7 @@ In fact, as a convention the following tasks should be available:
 =========     ===================================================
 Task          Description
 =========     ===================================================
-`help`        List all the available NimScript tasks along with their docstrings.
+`help`        List all the available browniescript tasks along with their docstrings.
 `build`       Build the project with the required
               backend (`c`:option:, `cpp`:option: or `js`:option:).
 `tests`       Runs the tests belonging to the project.
@@ -178,43 +178,43 @@ OS's native package managers.
 Nimble integration
 ==================
 
-See the [Nimble readme](https://github.com/nim-lang/nimble#readme)
+See the [Nimble readme](https://github.com/brownie-lang/nimble#readme)
 for more information.
 
 
-Standalone NimScript
+Standalone browniescript
 ====================
 
-NimScript can also be used directly as a portable replacement for Bash and
-Batch files. Use `nim myscript.nims`:cmd: to run ``myscript.nims``. For example,
+browniescript can also be used directly as a portable replacement for Bash and
+Batch files. Use `brownie myscript.nims`:cmd: to run ``myscript.nims``. For example,
 installation of Nimble could be accomplished with this simple script:
 
-  ```nim
+  ```brownie
   mode = ScriptMode.Verbose
 
   var id = 0
   while dirExists("nimble" & $id):
     inc id
 
-  exec "git clone https://github.com/nim-lang/nimble.git nimble" & $id
+  exec "git clone https://github.com/brownie-lang/nimble.git nimble" & $id
 
   withDir "nimble" & $id & "/src":
-    exec "nim c nimble"
+    exec "brownie c nimble"
 
   mvFile "nimble" & $id & "/src/nimble".toExe, "bin/nimble".toExe
   ```
 
-On Unix, you can also use the shebang `#!/usr/bin/env nim`, as long as your filename
+On Unix, you can also use the shebang `#!/usr/bin/env brownie`, as long as your filename
 ends with ``.nims``:
 
-  ```nim
-  #!/usr/bin/env nim
+  ```brownie
+  #!/usr/bin/env brownie
   mode = ScriptMode.Silent
 
   echo "hello world"
   ```
 
-Use `#!/usr/bin/env -S nim e --hints:off` to disable hints and relax the file extension constraint.
+Use `#!/usr/bin/env -S brownie e --hints:off` to disable hints and relax the file extension constraint.
 
 
 Benefits
@@ -223,18 +223,18 @@ Benefits
 Cross-Platform
 --------------
 
-It is a cross-platform scripting language that can run where Nim can run,
+It is a cross-platform scripting language that can run where Brownie can run,
 e.g. you can not run Batch or PowerShell on Linux or Mac,
 the Bash for Linux might not run on Mac,
 there are no unit tests tools for Batch, etc.
 
-NimScript can detect on which platform, operating system,
+browniescript can detect on which platform, operating system,
 architecture, and even which Linux distribution is running on,
 allowing the same script to support a lot of systems.
 
 See the following (incomplete) example:
 
-  ```nim
+  ```brownie
   import std/distros
 
   # Architectures.
@@ -266,23 +266,23 @@ See the following (incomplete) example:
 Uniform Syntax
 --------------
 
-The syntax, style, and rest of the ecosystem is the same as for compiled Nim,
+The syntax, style, and rest of the ecosystem is the same as for compiled Brownie,
 that means there is nothing new to learn, no context switch for developers.
 
 
 Powerful Metaprogramming
 ------------------------
 
-NimScript can use Nim's templates, macros, types, concepts, effect tracking system, and more,
-you can create modules that work on compiled Nim and also on interpreted NimScript.
+browniescript can use Brownie's templates, macros, types, concepts, effect tracking system, and more,
+you can create modules that work on compiled Brownie and also on interpreted browniescript.
 
 `func` will still check for side effects, `debugEcho` also works as expected,
 making it ideal for functional scripting metaprogramming.
 
 This is an example of a third party module that uses macros and templates to
-translate text strings on unmodified NimScript:
+translate text strings on unmodified browniescript:
 
-  ```nim
+  ```brownie
   import nimterlingua
   nimterlingua("translations.cfg")
   echo "cat"  # Run with -d:RU becomes "kot", -d:ES becomes "gato", ...
@@ -305,12 +305,12 @@ translations.cfg
 Graceful Fallback
 -----------------
 
-Some features of compiled Nim may not work on NimScript,
+Some features of compiled Brownie may not work on browniescript,
 but often a graceful and seamless fallback degradation is used.
 
-See the following NimScript:
+See the following browniescript:
 
-  ```nim
+  ```brownie
   if likely(true):
     discard
   elif unlikely(false):
@@ -324,29 +324,29 @@ See the following NimScript:
 
 
 `likely()`, `unlikely()`, `static:` and `{.compiletime.}`
-will produce no code at all when run on NimScript,
+will produce no code at all when run on browniescript,
 but still no error nor warning is produced and the code just works.
 
 Evolving Scripting language
 ---------------------------
 
-NimScript evolves together with Nim,
-[occasionally new features might become available on NimScript](
-https://github.com/nim-lang/Nim/pulls?q=nimscript+is%3Amerged),
-adapted from compiled Nim or added as new features on both.
+browniescript evolves together with Brownie,
+[occasionally new features might become available on browniescript](
+https://github.com/brownie-lang/Brownie/pulls?q=browniescript+is%3Amerged),
+adapted from compiled Brownie or added as new features on both.
 
 Scripting Language with a Package Manager
 -----------------------------------------
 
-You can create your own modules to be compatible with NimScript,
+You can create your own modules to be compatible with browniescript,
 and check [Nimble](https://nimble.directory)
-to search for third party modules that may work on NimScript.
+to search for third party modules that may work on browniescript.
 
 DevOps Scripting
 ----------------
 
-You can use NimScript to deploy to production, run tests, build projects, do benchmarks,
+You can use browniescript to deploy to production, run tests, build projects, do benchmarks,
 generate documentation, and all kinds of DevOps/SysAdmin specific tasks.
 
-* [An example of a third party NimScript that can be used as a project-agnostic
+* [An example of a third party browniescript that can be used as a project-agnostic
   tool.](https://github.com/kaushalmodi/nim_config#list-available-tasks)

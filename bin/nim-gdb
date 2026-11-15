@@ -3,23 +3,23 @@
 # Exit if anything fails
 set -e
 
-which nim > /dev/null || (echo "nim not in PATH"; exit 1)
+which brownie > /dev/null || (echo "brownie not in PATH"; exit 1)
 which gdb > /dev/null || (echo "gdb not in PATH"; exit 1)
 which readlink > /dev/null || (echo "readlink not in PATH."; exit 1)
 
 if [[ $(uname -s) == Darwin || $(uname -s) == *BSD ]]; then
-  NIM_SYSROOT=$(dirname $(dirname $(readlink -f $(which nim))))
+  BROWNIE_SYSROOT=$(dirname $(dirname $(readlink -f $(which brownie))))
 else
-  NIM_SYSROOT=$(dirname $(dirname $(readlink -e $(which nim))))
+  BROWNIE_SYSROOT=$(dirname $(dirname $(readlink -e $(which brownie))))
 fi
 
 # Find out where the pretty printer Python module is
-GDB_PYTHON_MODULE_PATH="$NIM_SYSROOT/tools/debug/nim-gdb.py"
+GDB_PYTHON_MODULE_PATH="$BROWNIE_SYSROOT/tools/debug/brownie-gdb.py"
 
 # Run GDB with the additional arguments that load the pretty printers
-# Set the environment variable `NIM_GDB` to overwrite the call to a
+# Set the environment variable `BROWNIE_GDB` to overwrite the call to a
 # different/specific command (defaults to `gdb`).
-NIM_GDB="${NIM_GDB:-gdb}"
+BROWNIE_GDB="${BROWNIE_GDB:-gdb}"
 # exec replaces the new process of bash with gdb. It is always good to
 # have fewer processes.
-exec "${NIM_GDB}" -eval-command="source $GDB_PYTHON_MODULE_PATH" "$@"
+exec "${BROWNIE_GDB}" -eval-command="source $GDB_PYTHON_MODULE_PATH" "$@"

@@ -1,6 +1,6 @@
 #
 #
-#            Nim's Runtime Library
+#            Brownie's Runtime Library
 #        (c) Copyright 2015 Rokas Kupstys
 #
 #    See the file "copying.txt", included in this

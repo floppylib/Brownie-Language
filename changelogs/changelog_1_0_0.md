@@ -13,7 +13,7 @@
 
 - The language definition and compiler are now stricter about ``gensym``'ed
   symbols in hygienic templates. See the section in the
-  [manual](https://nim-lang.org/docs/manual.html#templates-hygiene-in-templates)
+  [manual](https://brownie-lang.org/docs/manual.html#templates-hygiene-in-templates)
   for further details. Use the compiler switch `--oldgensym:on` for a
   transition period.
 
@@ -21,17 +21,17 @@
 ### Breaking changes in the standard library
 
 - We removed `unicode.Rune16` without any deprecation period as the name
-  was wrong (see the [RFC](https://github.com/nim-lang/RFCs/issues/151) for details)
+  was wrong (see the [RFC](https://github.com/brownie-lang/RFCs/issues/151) for details)
   and we didn't find any usage of it in the wild. If you still need it, add this
   piece of code to your project:
-```nim
+```brownie
 type
   Rune16* = distinct int16
 ```
 
-- `exportc` now uses C instead of C++ mangling with `nim cpp`, matching behavior
+- `exportc` now uses C instead of C++ mangling with `brownie cpp`, matching behavior
   of `importc`, see #10578.
-  Use the new `exportcpp` to mangle as C++ when using `nim cpp`.
+  Use the new `exportcpp` to mangle as C++ when using `brownie cpp`.
 
 
 ### Breaking changes in the compiler
@@ -57,7 +57,7 @@ type
 
 ## Library changes
 
-- Added `os.delEnv` and `nimscript.delEnv`. (#11466)
+- Added `os.delEnv` and `browniescript.delEnv`. (#11466)
 
 - Enabled Oid usage in hashtables. (#11472)
 
@@ -99,7 +99,7 @@ type
 
 - Inline iterators returning `lent T` types are now supported, similarly to
   iterators returning `var T`:
-```nim
+```brownie
 iterator myitems[T](x: openarray[T]): lent T
 iterator mypairs[T](x: openarray[T]): tuple[idx: int, val: lent T]
 ```
@@ -118,14 +118,14 @@ iterator mypairs[T](x: openarray[T]): tuple[idx: int, val: lent T]
 
 ### Tool changes
 
-- The Nim compiler now does not recompile the Nim project via ``nim c -r`` if
-  no dependent Nim file changed. This feature can be overridden by
+- The Brownie compiler now does not recompile the Brownie project via ``brownie c -r`` if
+  no dependent Brownie file changed. This feature can be overridden by
   the ``--forceBuild`` command line option.
-- The Nim compiler now warns about unused module imports. You can use a
+- The Brownie compiler now warns about unused module imports. You can use a
   top level ``{.used.}`` pragma in the module that you want to be importable
   without producing this warning.
 - The "testament" testing tool's name was changed
-  from `tester` to `testament` and is generally available as a tool to run Nim
+  from `tester` to `testament` and is generally available as a tool to run Brownie
   tests automatically.
 
 

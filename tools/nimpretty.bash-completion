@@ -1,4 +1,4 @@
-# bash completion for nimpretty                          -*- shell-script -*-
+# bash completion for browniepretty                          -*- shell-script -*-
 
 __is_short_or_long()
 {
@@ -116,7 +116,7 @@ _nimpretty()
     # printf "\n[DBUG] curr:$curr|prev:$prev|words(${#words[*]}):${words[*]}\n"
 
     # Asking for a subcommand
-    if false && __ask_for_subcmd nimpretty nimpretty $i_curr "${words[@]}"
+    if false && __ask_for_subcmd browniepretty browniepretty $i_curr "${words[@]}"
     then
         subcmds=""
 	return 0
@@ -126,7 +126,7 @@ _nimpretty()
     if false
     then
 	return 124
-    elif false && __ask_for_subcmd_opts nimpretty compileToC $i_curr "${words[@]}"
+    elif false && __ask_for_subcmd_opts browniepretty compileToC $i_curr "${words[@]}"
     then
 	opts=() \
 	    && candids=()	
@@ -262,6 +262,6 @@ _nimpretty()
     return 0
 
 } &&
-    complete -F _nimpretty nimpretty
+    complete -F _nimpretty browniepretty
 
 # ex: filetype=sh

@@ -1,6 +1,6 @@
 # Utilities used in CI pipelines and tooling to avoid duplication.
 # Avoid top-level statements.
-# Prefer nim scripts whenever possible.
+# Prefer brownie scripts whenever possible.
 # functions starting with `_` are considered internal, less stable.
 
 echo_run () {
@@ -33,17 +33,17 @@ nimIsCiSkip(){
 
 nimInternalInstallDepsWindows(){
   echo_run mkdir dist
-  echo_run curl -L https://nim-lang.org/download/mingw64.7z -o dist/mingw64.7z
-  echo_run curl -L https://nim-lang.org/download/dlls.zip -o dist/dlls.zip
+  echo_run curl -L https://brownie-lang.org/download/mingw64.7z -o dist/mingw64.7z
+  echo_run curl -L https://brownie-lang.org/download/dlls.zip -o dist/dlls.zip
   echo_run 7z x dist/mingw64.7z -odist
   echo_run 7z x dist/dlls.zip -obin
 }
 
 nimInternalBuildKochAndRunCI(){
-  echo_run nim c koch
-  if ! echo_run ./koch runCI; then
+  echo_run brownie c kitten
+  if ! echo_run ./kitten runCI; then
     echo_run echo "runCI failed"
-    echo_run nim r tools/ci_testresults.nim
+    echo_run brownie r tools/ci_testresults.brownie
     return 1
   fi
 }
@@ -91,7 +91,7 @@ _nimBuildCsourcesIfNeeded(){
   echo_run $makeX -C $nim_csourcesDir -j $((nCPU + 2)) -l $nCPU "$@"
   # keep $nim_csources in case needed to investigate bootstrap issues
   # without having to rebuild
-  echo_run cp bin/nim $nim_csources
+  echo_run cp bin/brownie $nim_csources
 }
 
 nimCiSystemInfo(){
@@ -139,9 +139,9 @@ nimBuildCsourcesIfNeeded(){
       _nimBuildCsourcesIfNeeded "$@"
     fi
 
-    echo_run rm -f bin/nim
+    echo_run rm -f bin/brownie
       # fixes bug #17913, but it's unclear why it's needed, maybe specific to MacOS Big Sur 11.3 on M1 arch?
-    echo_run cp $nim_csources bin/nim
+    echo_run cp $nim_csources bin/brownie
     echo_run $nim_csources -v
   )
 }

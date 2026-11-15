@@ -1,5 +1,5 @@
 =======================
-Nim Tutorial (Part III)
+Brownie Tutorial (Part III)
 =======================
 
 :Author: Arne Döring
@@ -15,9 +15,9 @@ Introduction
 
 >  "With Great Power Comes Great Responsibility." -- Spider Man's Uncle
 
-This document is a tutorial about Nim's macro system.
+This document is a tutorial about Brownie's macro system.
 A macro is a function that is executed at compile-time and transforms
-a Nim syntax tree into a different tree.
+a Brownie syntax tree into a different tree.
 
 Examples of things that can be implemented in macros:
 
@@ -53,7 +53,7 @@ Untyped Arguments
 
 Untyped macro arguments are passed to the macro before they are
 semantically checked. This means the syntax tree that is passed down
-to the macro does not need to make sense for Nim yet, the only
+to the macro does not need to make sense for Brownie yet, the only
 limitation is that it needs to be parsable. Usually, the macro does
 not check the argument either but uses it in the transformation's
 result somehow. The result of a macro expansion is always checked
@@ -61,7 +61,7 @@ by the compiler, so apart from weird error messages, nothing bad
 can happen.
 
 The downside for an `untyped` argument is that these do not play
-well with Nim's overloading resolution.
+well with Brownie's overloading resolution.
 
 The upside for untyped arguments is that the syntax tree is
 quite predictable and less complex compared to its `typed`
@@ -91,7 +91,7 @@ in the expression `foo(x)`, `x` needs to be an integer constant,
 but in the macro body `arg` is just like a normal parameter of type
 `int`.
 
-  ```nim
+  ```brownie
   import std/macros
 
   macro myMacro(arg: static[int]): untyped =
@@ -108,7 +108,7 @@ It is possible to pass the last argument of a call expression in a
 separate code block with indentation. For example, the following code
 example is a valid (but not a recommended) way to call `echo`:
 
-  ```nim
+  ```brownie
   echo "Hello ":
     let a = "Wor"
     let b = "ld!"
@@ -122,11 +122,11 @@ complexity can be passed to macros with this notation.
 The Syntax Tree
 ---------------
 
-In order to build a Nim syntax tree one needs to know how Nim source
+In order to build a Brownie syntax tree one needs to know how Brownie source
 code is represented as a syntax tree, and how such a tree needs to
-look like so that the Nim compiler will understand it. The nodes of the
-Nim syntax tree are documented in the [macros](macros.html) module.
-But a more interactive way to explore the Nim
+look like so that the Brownie compiler will understand it. The nodes of the
+Brownie syntax tree are documented in the [macros](macros.html) module.
+But a more interactive way to explore the Brownie
 syntax tree is with `macros.treeRepr`, it converts a syntax tree
 into a multi-line string for printing on the console. It can be used
 to explore how the argument expressions are represented in tree form
@@ -134,7 +134,7 @@ and for debug printing of generated syntax tree. `dumpTree` is a
 predefined macro that just prints its argument in a tree representation,
 but does nothing else. Here is an example of such a tree representation:
 
-  ```nim
+  ```brownie
   dumpTree:
     var mt: MyType = MyType(a:123.456, b:"abcdef")
 
@@ -166,7 +166,7 @@ macro evaluation should be caught and create a nice error message.
 the checks need to be more complex, arbitrary error messages can
 be created with the `macros.error` proc.
 
-  ```nim
+  ```brownie
   macro myAssert(arg: untyped): untyped =
     arg.expectKind nnkInfix
   ```
@@ -187,7 +187,7 @@ tree with calls to `newTree` and `newLit` the macro
 Backticks are used to insert code from `NimNode` symbols into the
 generated expression.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   import std/macros
   macro a(i) = quote do:
     let `i` = 0
@@ -198,7 +198,7 @@ generated expression.
 
 A custom prefix operator can be defined whenever backticks are needed.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   import std/macros
   macro a(i) = quote("@") do:
     assert @i == 0
@@ -209,7 +209,7 @@ A custom prefix operator can be defined whenever backticks are needed.
 
 The injected symbol needs accent quoted when it resolves to a symbol.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   import std/macros
   macro a(i) = quote("@") do:
     let `@i` = 0
@@ -224,7 +224,7 @@ expressions trees of type `NimNode` so that it is safe to inject
 them into the tree.
 
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   import std/macros
 
   type
@@ -248,7 +248,7 @@ them into the tree.
 
 The call to `myMacro` will generate the following code:
 
-  ```nim
+  ```brownie
   echo "Hallo"
   echo MyType(a: 123.456'f64, b: "abcdef")
   ```
@@ -263,7 +263,7 @@ do is to build a simple example of the macro usage, and then just
 print the argument. This way it is possible to get an idea of what a
 correct argument should look like.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   import std/macros
 
   macro myAssert(arg: untyped): untyped =
@@ -288,7 +288,7 @@ operator (node kind is "Infix"), as well as that the two operands are
 at index 1 and 2. With this information, the actual macro can be
 written.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   import std/macros
 
   macro myAssert(arg: untyped): untyped =
@@ -317,7 +317,7 @@ actually generated, the statement `echo result.repr` can be used, in
 the last line of the macro. It is also the statement that has been
 used to get this output.
 
-  ```nim
+  ```brownie
   if not (a != b):
     raise newException(AssertionDefect, $a & " != " & $b)
   ```
@@ -331,7 +331,7 @@ It is possible to create more complex macros by combining different
 use `newStmtList` to build your macro iteratively, and `ident` in cases
 in which you wish to create an identifier from a string, as shown below.
 
-  ```nim
+  ```brownie
   import std/macros
 
   macro createProcedures() =
@@ -370,7 +370,7 @@ Limitations
 -----------
 
 Since macros are evaluated in the compiler in the NimVM, macros share
-all the limitations of the NimVM. They have to be implemented in pure Nim
+all the limitations of the NimVM. They have to be implemented in pure Brownie
 code. Macros can start external processes on the shell, but they
 cannot call C functions except those that are built in the
 compiler.
@@ -387,7 +387,7 @@ possible with it.
 Strformat
 ---------
 
-In the Nim standard library, the `strformat` library provides a
+In the Brownie standard library, the `strformat` library provides a
 macro that parses a string literal at compile time. Parsing a string
 in a macro like here is generally not recommended. The parsed AST
 cannot have type information, and parsing implemented on the VM is
@@ -396,21 +396,21 @@ recommended way. But still `strformat` is a good example for a
 practical use case for a macro that is slightly more complex than the
 `assert` macro.
 
-[Strformat](https://github.com/nim-lang/Nim/blob/devel/lib/pure/strformat.nim)
+[Strformat](https://github.com/brownie-lang/Brownie/blob/devel/lib/pure/strformat.brownie)
 
 Ast Pattern Matching
 --------------------
 
 Ast Pattern Matching is a macro library to aid in writing complex
 macros. This can be seen as a good example of how to repurpose the
-Nim syntax tree with new semantics.
+Brownie syntax tree with new semantics.
 
-[Ast Pattern Matching](https://github.com/nim-lang/ast-pattern-matching)
+[Ast Pattern Matching](https://github.com/brownie-lang/ast-pattern-matching)
 
 OpenGL Sandbox
 --------------
 
-This project has a working Nim to GLSL compiler written entirely in
+This project has a working Brownie to GLSL compiler written entirely in
 macros. It scans recursively through all used function symbols to
 compile them so that cross library functions can be executed on the GPU.
 

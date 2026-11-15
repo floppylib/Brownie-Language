@@ -1,15 +1,15 @@
 This directory contains the test cases.
 
-Each test must have a filename of the form: ``t*.nim``
+Each test must have a filename of the form: ``t*.brownie``
 
-**Note:** [Testament](https://nim-lang.github.io/Nim/testament.html) is only aware of tests under a directory (eg `tests/foo/`) and will ignore
-top-level tests like `tests/tbar.nim`.
+**Note:** [Testament](https://brownie-lang.github.io/Brownie/testament.html) is only aware of tests under a directory (eg `tests/foo/`) and will ignore
+top-level tests like `tests/tbar.brownie`.
 
 # Specs
 
 Each test can contain a spec in a ``discard """ ... """`` block.
 
-**Check out the [``parseSpec`` procedure](https://github.com/nim-lang/Nim/blob/devel/testament/specs.nim#L315) in the ``specs`` module for a full and reliable reference**
+**Check out the [``parseSpec`` procedure](https://github.com/brownie-lang/Brownie/blob/devel/testament/specs.brownie#L315) in the ``specs`` module for a full and reliable reference**
 
 ## action
 
@@ -30,10 +30,10 @@ There are certain spec keys that imply ``run``, including ``output`` and
 # Categories
 
 Each folder under this directory represents a test category, which can be
-tested by running `koch tests pcat <category>` (or `cat` to avoid parallel
+tested by running `kitten tests pcat <category>` (or `cat` to avoid parallel
 testing, which is slower).
 
 The folder ``dll`` contains simple DLL tests.
 
 The folder ``realtimeGC`` contains a test for validating that the realtime GC
-can run properly without linking against the nimrtl.dll/so.
+can run properly without linking against the browniertl.dll/so.

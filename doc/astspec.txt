@@ -1,12 +1,12 @@
-The AST in Nim
+The AST in Brownie
 ==============
 
-This section describes how the AST is modelled with Nim's type system.
+This section describes how the AST is modelled with Brownie's type system.
 The AST consists of nodes (``NimNode``) with a variable number of
 children. Each node has a field named ``kind`` which describes what the node
 contains:
 
-  ```nim
+  ```brownie
   type
     NimNodeKind = enum     ## kind of a node; only explanatory
       nnkNone,             ## invalid node kind
@@ -36,7 +36,7 @@ contains:
 For the ``NimNode`` type, the ``[]`` operator has been overloaded:
 ``n[i]`` is ``n``'s ``i``-th child.
 
-To specify the AST for the different Nim constructs, the notation
+To specify the AST for the different Brownie constructs, the notation
 ``nodekind(son1, son2, ...)`` or ``nodekind(value)`` or
 ``nodekind(field=value)`` is used.
 
@@ -47,11 +47,11 @@ a child can never be nil.
 Leaf nodes/Atoms
 ================
 A leaf of the AST often corresponds to a terminal symbol in the concrete
-syntax. Note that the default ``float`` in Nim maps to ``float64`` such that
+syntax. Note that the default ``float`` in Brownie maps to ``float64`` such that
 the default AST for a float is ``nnkFloat64Lit`` as below.
 
 =================                =============================================
-Nim expression                   Corresponding AST
+Brownie expression                   Corresponding AST
 =================                =============================================
 ``42``                           ``nnkIntLit(intVal = 42)``
 ``42'i8``                        ``nnkInt8Lit(intVal = 42)``
@@ -86,13 +86,13 @@ Command call
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   echo "abc", "xyz"
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkCommand(
     nnkIdent("echo"),
     nnkStrLit("abc"),
@@ -106,13 +106,13 @@ Call with ``()``
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   echo("abc", "xyz")
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkCall(
     nnkIdent("echo"),
     nnkStrLit("abc"),
@@ -126,13 +126,13 @@ Infix operator call
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   "abc" & "xyz"
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkInfix(
     nnkIdent("&"),
     nnkStrLit("abc"),
@@ -145,13 +145,13 @@ precedence.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   5 + 3 * 4
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkInfix(
     nnkIdent("+"),
     nnkIntLit(5),
@@ -170,13 +170,13 @@ behaves as a
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   `+`(3, 4)
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkCall(
     nnkAccQuoted(
       nnkIdent("+")
@@ -191,13 +191,13 @@ Prefix operator call
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   ? "xyz"
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkPrefix(
     nnkIdent("?"),
     nnkStrLit("abc")
@@ -208,18 +208,18 @@ AST:
 Postfix operator call
 ---------------------
 
-**Note:** There are no postfix operators in Nim. However, the
+**Note:** There are no postfix operators in Brownie. However, the
 ``nnkPostfix`` node is used for the *asterisk export marker* ``*``:
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   identifier*
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkPostfix(
     nnkIdent("*"),
     nnkIdent("identifier")
@@ -232,13 +232,13 @@ Call with named arguments
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   writeLine(file=stdout, "hallo")
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkCall(
     nnkIdent("writeLine"),
     nnkExprEqExpr(
@@ -258,13 +258,13 @@ This is used, for example, in the ``bindSym`` examples
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   echo"abc"
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkCallStrLit(
     nnkIdent("echo"),
     nnkRStrLit("hello")
@@ -276,13 +276,13 @@ Dereference operator ``[]``
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   x[]
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkDerefExpr(nnkIdent("x"))
   ```
 
@@ -292,13 +292,13 @@ Addr operator
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   addr(x)
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkAddr(nnkIdent("x"))
   ```
 
@@ -308,13 +308,13 @@ Cast operator
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   cast[T](x)
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkCast(nnkIdent("T"), nnkIdent("x"))
   ```
 
@@ -324,17 +324,17 @@ Object access operator ``.``
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   x.y
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkDotExpr(nnkIdent("x"), nnkIdent("y"))
   ```
 
-If you use Nim's flexible calling syntax (as in ``x.len()``), the result is the
+If you use Brownie's flexible calling syntax (as in ``x.len()``), the result is the
 same as above but wrapped in an ``nnkCall``.
 
 
@@ -343,13 +343,13 @@ Array access operator ``[]``
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   x[y]
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkBracketExpr(nnkIdent("x"), nnkIdent("y"))
   ```
 
@@ -361,13 +361,13 @@ Parentheses for affecting operator precedence use the ``nnkPar`` node.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   (a + b) * c
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkInfix(nnkIdent("*"),
     nnkPar(
       nnkInfix(nnkIdent("+"), nnkIdent("a"), nnkIdent("b"))),
@@ -381,7 +381,7 @@ Nodes for tuple construction are built with the ``nnkTupleConstr`` node.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   (1, 2, 3)
   (a: 1, b: 2, c: 3)
   ()
@@ -389,7 +389,7 @@ Concrete syntax:
 
 AST:
 
-  ```nim
+  ```brownie
   nnkTupleConstr(nnkIntLit(1), nnkIntLit(2), nnkIntLit(3))
   nnkTupleConstr(
     nnkExprColonExpr(nnkIdent("a"), nnkIntLit(1)),
@@ -402,14 +402,14 @@ Since the one tuple would be syntactically identical to parentheses
 with an expression in them, the parser expects a trailing comma for
 them. For tuple constructors with field names, this is not necessary.
 
-  ```nim
+  ```brownie
   (1,)
   (a: 1)
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkTupleConstr(nnkIntLit(1))
   nnkTupleConstr(
     nnkExprColonExpr(nnkIdent("a"), nnkIntLit(1)))
@@ -422,13 +422,13 @@ Curly braces are used as the set constructor.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   {1, 2, 3}
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkCurly(nnkIntLit(1), nnkIntLit(2), nnkIntLit(3))
   ```
 
@@ -436,13 +436,13 @@ When used as a table constructor, the syntax is different.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   {a: 3, b: 5}
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkTableConstr(
     nnkExprColonExpr(nnkIdent("a"), nnkIntLit(3)),
     nnkExprColonExpr(nnkIdent("b"), nnkIntLit(5))
@@ -457,13 +457,13 @@ Brackets are used as the array constructor.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   [1, 2, 3]
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkBracket(nnkIntLit(1), nnkIntLit(2), nnkIntLit(3))
   ```
 
@@ -477,13 +477,13 @@ AST, construction with ``..`` as an infix operator should be used instead.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   1..3
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkInfix(
     nnkIdent(".."),
     nnkIntLit(1),
@@ -493,7 +493,7 @@ AST:
 
 Example code:
 
-  ```nim
+  ```brownie
   macro genRepeatEcho() =
     result = newNimNode(nnkStmtList)
 
@@ -522,13 +522,13 @@ The representation of the ``if`` expression is subtle, but easy to traverse.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   if cond1: expr1 elif cond2: expr2 else: expr3
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkIfExpr(
     nnkElifExpr(cond1, expr1),
     nnkElifExpr(cond2, expr2),
@@ -545,7 +545,7 @@ comments are ignored.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   ## This is a comment
   ## This is part of the first comment
   stmt1
@@ -554,7 +554,7 @@ Concrete syntax:
 
 AST:
 
-  ```nim
+  ```brownie
   nnkCommentStmt() # only appears once for the first two lines!
   stmt1
   nnkCommentStmt() # another nnkCommentStmt because there is another comment
@@ -564,19 +564,19 @@ AST:
 Pragmas
 -------
 
-One of Nim's cool features is pragmas, which allow fine-tuning of various
+One of Brownie's cool features is pragmas, which allow fine-tuning of various
 aspects of the language. They come in all types, such as adorning procs and
 objects, but the standalone ``emit`` pragma shows the basics with the AST.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   {.emit: "#include <stdio.h>".}
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkPragma(
     nnkExprColonExpr(
       nnkIdent("emit"),
@@ -590,13 +590,13 @@ the declaration of new pragmas is essentially the same:
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   {.pragma: cdeclRename, cdecl.}
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkPragma(
     nnkExprColonExpr(
       nnkIdent("pragma"), # this is always first when declaring a new pragma
@@ -617,7 +617,7 @@ there is no ``else`` branch, no ``nnkElse`` child exists.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   if cond1:
     stmt1
   elif cond2:
@@ -630,7 +630,7 @@ Concrete syntax:
 
 AST:
 
-  ```nim
+  ```brownie
   nnkIfStmt(
     nnkElifBranch(cond1, stmt1),
     nnkElifBranch(cond2, stmt2),
@@ -651,13 +651,13 @@ Assignment
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   x = 42
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkAsgn(nnkIdent("x"), nnkIntLit(42))
   ```
 
@@ -669,7 +669,7 @@ Statement list
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   stmt1
   stmt2
   stmt3
@@ -677,7 +677,7 @@ Concrete syntax:
 
 AST:
 
-  ```nim
+  ```brownie
   nnkStmtList(stmt1, stmt2, stmt3)
   ```
 
@@ -687,7 +687,7 @@ Case statement
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   case expr1
   of expr2, expr3..expr4:
     stmt1
@@ -701,7 +701,7 @@ Concrete syntax:
 
 AST:
 
-  ```nim
+  ```brownie
   nnkCaseStmt(
     expr1,
     nnkOfBranch(expr2, nnkRange(expr3, expr4), stmt1),
@@ -719,14 +719,14 @@ While statement
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   while expr1:
     stmt1
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkWhileStmt(expr1, stmt1)
   ```
 
@@ -736,14 +736,14 @@ For statement
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   for ident1, ident2 in expr1:
     stmt1
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkForStmt(ident1, ident2, expr1, stmt1)
   ```
 
@@ -753,7 +753,7 @@ Try statement
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   try:
     stmt1
   except e1, e2:
@@ -768,7 +768,7 @@ Concrete syntax:
 
 AST:
 
-  ```nim
+  ```brownie
   nnkTryStmt(
     stmt1,
     nnkExceptBranch(e1, e2, stmt2),
@@ -784,13 +784,13 @@ Return statement
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   return expr1
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkReturnStmt(expr1)
   ```
 
@@ -800,7 +800,7 @@ Yield statement
 
 Like ``return``, but with ``nnkYieldStmt`` kind.
 
-  ```nim
+  ```brownie
   nnkYieldStmt(expr1)
   ```
 
@@ -810,7 +810,7 @@ Discard statement
 
 Like ``return``, but with ``nnkDiscardStmt`` kind.
 
-  ```nim
+  ```brownie
   nnkDiscardStmt(expr1)
   ```
 
@@ -820,13 +820,13 @@ Continue statement
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   continue
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkContinueStmt()
   ```
 
@@ -835,13 +835,13 @@ Break statement
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   break otherLocation
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkBreakStmt(nnkIdent("otherLocation"))
   ```
 
@@ -852,13 +852,13 @@ Block statement
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   block name:
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkBlockStmt(nnkIdent("name"), nnkStmtList(...))
   ```
 
@@ -869,7 +869,7 @@ Asm statement
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   asm """
     some asm
   """
@@ -877,7 +877,7 @@ Concrete syntax:
 
 AST:
 
-  ```nim
+  ```brownie
   nnkAsmStmt(
     nnkEmpty(), # for pragmas
     nnkTripleStrLit("some asm"),
@@ -887,18 +887,18 @@ AST:
 Import section
 --------------
 
-Nim's ``import`` statement actually takes different variations depending
+Brownie's ``import`` statement actually takes different variations depending
 on what keywords are present. Let's start with the simplest form.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   import std/math
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkImportStmt(nnkIdent("math"))
   ```
 
@@ -906,13 +906,13 @@ With ``except``, we get ``nnkImportExceptStmt``.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   import std/math except pow
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkImportExceptStmt(nnkIdent("math"),nnkIdent("pow"))
   ```
 
@@ -921,13 +921,13 @@ we use ``nnkImportStmt`` with ``as`` as an infix operator.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   import std/strutils as su
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkImportStmt(
     nnkInfix(
       nnkIdent("as"),
@@ -944,13 +944,13 @@ If we use ``from ... import``, the result is different, too.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   from std/math import pow
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkFromStmt(nnkIdent("math"), nnkIdent("pow"))
   ```
 
@@ -965,13 +965,13 @@ the ``export`` syntax is pretty straightforward.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   export unsigned
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkExportStmt(nnkIdent("unsigned"))
   ```
 
@@ -980,13 +980,13 @@ Similar to the ``import`` statement, the AST is different for
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   export math except pow # we're going to implement our own exponentiation
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkExportExceptStmt(nnkIdent("math"),nnkIdent("pow"))
   ```
 
@@ -997,13 +997,13 @@ Like a plain ``import`` statement but with ``nnkIncludeStmt``.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   include blocks
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkIncludeStmt(nnkIdent("blocks"))
   ```
 
@@ -1012,13 +1012,13 @@ Var section
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   var a = 3
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkVarSection(
     nnkIdentDefs(
       nnkIdent("a"),
@@ -1044,13 +1044,13 @@ This is equivalent to ``var``, but with ``nnkLetSection`` rather than
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   let a = 3
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkLetSection(
     nnkIdentDefs(
       nnkIdent("a"),
@@ -1065,13 +1065,13 @@ Const section
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   const a = 3
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkConstSection(
     nnkConstDef( # not nnkConstDefs!
       nnkIdent("a"),
@@ -1089,13 +1089,13 @@ and ``const``.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   type A = int
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkTypeSection(
     nnkTypeDef(
       nnkIdent("A"),
@@ -1110,13 +1110,13 @@ in ``nnkDistinctTy``.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   type MyInt = distinct int
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   # ...
   nnkTypeDef(
     nnkIdent("MyInt"),
@@ -1131,13 +1131,13 @@ If a type section uses generic parameters, they are treated here:
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   type A[T] = expr1
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkTypeSection(
     nnkTypeDef(
       nnkIdent("A"),
@@ -1160,13 +1160,13 @@ is to work with objects.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   type IO = object of RootObj
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   # ...
   nnkTypeDef(
     nnkIdent("IO"),
@@ -1181,12 +1181,12 @@ AST:
   )
   ```
 
-Nim's object syntax is rich. Let's take a look at an involved example in
+Brownie's object syntax is rich. Let's take a look at an involved example in
 its entirety to see some of the complexities.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   type Obj[T] {.inheritable.} = object
     name: string
     case isFat: bool
@@ -1198,7 +1198,7 @@ Concrete syntax:
 
 AST:
 
-  ```nim
+  ```brownie
   # ...
   nnkPragmaExpr(
     nnkIdent("Obj"),
@@ -1262,14 +1262,14 @@ Using an ``enum`` is similar to using an ``object``.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   type X = enum
     First
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   # ...
   nnkEnumTy(
     nnkEmpty(),
@@ -1281,14 +1281,14 @@ The usage of ``concept`` (experimental) is similar to objects.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   type Con = concept x,y,z
     (x & y & z) is string
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   # ...
   nnkTypeClassTy( # note this isn't nnkConceptTy!
     nnkArgList(
@@ -1303,13 +1303,13 @@ Static types, like ``static[int]``, use ``nnkIdent`` wrapped in
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   type A[T: static[int]] = object
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   # ... within nnkGenericParams
   nnkIdentDefs(
     nnkIdent("T"),
@@ -1325,7 +1325,7 @@ In general, declaring types mirrors this syntax (i.e., ``nnkStaticTy`` for
 ``static``, etc.). Examples follow (exceptions marked by ``*``):
 
 =============                =============================================
-Nim type                     Corresponding AST
+Brownie type                     Corresponding AST
 =============                =============================================
 ``static``                   ``nnkStaticTy``
 ``tuple``                    ``nnkTupleTy``
@@ -1347,13 +1347,13 @@ Generic parameters are treated in the type, not the ``proc`` itself.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   type MyProc[T] = proc(x: T) {.nimcall.}
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   # ...
   nnkTypeDef(
     nnkIdent("MyProc"),
@@ -1378,13 +1378,13 @@ without any child nodes. The ``tuple`` type class is represented by
 has an ``nnkEmpty`` node in place of the ``nnkFormalParams`` node of a
 concrete ``proc`` or ``iterator`` type node.
 
-  ```nim
+  ```brownie
   type TypeClass = proc {.nimcall.} | ref | tuple
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkTypeDef(
     nnkIdent("TypeClass"),
     nnkEmpty(),
@@ -1408,13 +1408,13 @@ Mixin statement
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   mixin x
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkMixinStmt(nnkIdent("x"))
   ```
 
@@ -1423,13 +1423,13 @@ Bind statement
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   bind x
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkBindStmt(nnkIdent("x"))
   ```
 
@@ -1441,13 +1441,13 @@ a feel for how procedure calls are broken down.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   proc hello*[T: SomeInteger](x: int = 3, y: float32): int {.inline.} = discard
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkProcDef(
     nnkPostfix(nnkIdent("*"), nnkIdent("hello")), # the exported proc name
     nnkEmpty(), # patterns for term rewriting in templates and macros (not procs)
@@ -1477,19 +1477,19 @@ AST:
   )
   ```
 
-There is another consideration. Nim has flexible type identification for
+There is another consideration. Brownie has flexible type identification for
 its procs. Even though ``proc(a: int, b: int)`` and ``proc(a, b: int)``
 are equivalent in the code, the AST is a little different for the latter.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   proc(a, b: int)
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   # ...AST as above...
   nnkFormalParams(
     nnkEmpty(), # no return here
@@ -1508,13 +1508,13 @@ is different from that of a var section.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   proc hello(): var int
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   # ...
   nnkFormalParams(
     nnkVarTy(
@@ -1531,13 +1531,13 @@ replacing ``nnkProcDef``.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   iterator nonsense[T](x: seq[T]): float {.closure.} = ...
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkIteratorDef(
     nnkIdent("nonsense"),
     nnkEmpty(),
@@ -1552,13 +1552,13 @@ A converter is similar to a proc.
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   converter toBool(x: float): bool
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkConverterDef(
     nnkIdent("toBool"),
     # ...
@@ -1576,13 +1576,13 @@ the ``nnkEmpty()`` as the second argument to ``nnkProcDef`` and
 
 Concrete syntax:
 
-  ```nim
+  ```brownie
   template optOpt{expr1}(a: int): int
   ```
 
 AST:
 
-  ```nim
+  ```brownie
   nnkTemplateDef(
     nnkIdent("optOpt"),
     nnkStmtList( # instead of nnkEmpty()
@@ -1604,12 +1604,12 @@ Macros behave like templates, but ``nnkTemplateDef`` is replaced with
 Hidden Standard Conversion
 --------------------------
 
-  ```nim
+  ```brownie
   var f: float = 1
   ```
 
 The type of "f" is ``float`` but the type of "1" is actually ``int``. Inserting 
-``int`` into a ``float`` is a type error. Nim inserts the ``nnkHiddenStdConv``  
+``int`` into a ``float`` is a type error. Brownie inserts the ``nnkHiddenStdConv``  
 node around the ``nnkIntLit`` node so that the new node has the correct type of 
 ``float``. This works for any auto converted nodes and makes the conversion 
 explicit.

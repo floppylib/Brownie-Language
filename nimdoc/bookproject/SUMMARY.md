@@ -13,6 +13,6 @@
     - [Subpage 2](./sections/2/page3/subpage2.md)
 
 - [API docs](./api/theindex.html)
-- [nim-lang.org](https://nim-lang.org)
+- [brownie-lang.org](https://brownie-lang.org)
 - [Four-oh-four](./nosuchpage.md)
 

@@ -1,17 +1,17 @@
-include "lib/system/compilation.nim"
+include "lib/system/compilation.brownie"
 version = $NimMajor & "." & $NimMinor & "." & $NimPatch
 author = "Andreas Rumpf"
-description = "Nim package providing the compiler binary"
+description = "Brownie package providing the compiler binary"
 license = "MIT"
 
-bin = @["compiler/nim", "nimsuggest/nimsuggest"]
-skipFiles = @["build_all.bat" , "build_all.sh" , "build_nimble.bat" , "build_nimble.sh" , "changelog.md" , "koch.nim.cfg" , "nimblemeta.json" , "readme.md" , "security.md" ]
-skipDirs = @["build" , "changelogs" , "ci" , "csources_v4" , "drnim" , "nimdoc", "testament"]
+bin = @["compiler/brownie", "browniesuggest/browniesuggest"]
+skipFiles = @["build_all.bat" , "build_all.sh" , "build_nimble.bat" , "build_nimble.sh" , "changelog.md" , "kitten.brownie.cfg" , "nimblemeta.json" , "readme.md" , "security.md" ]
+skipDirs = @["build" , "changelogs" , "ci" , "csources_v4" , "drbrownie" , "browniedoc", "testament"]
 
 before install:
   when defined(windows):
-    if not "bin\nim.exe".fileExists:
+    if not "bin\brownie.exe".fileExists:
       exec "build_all.bat"
   else:
-    if not "bin/nim".fileExists:
+    if not "bin/brownie".fileExists:
       exec "./build_all.sh"

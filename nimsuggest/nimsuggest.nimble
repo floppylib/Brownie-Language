@@ -1,8 +1,8 @@
-include "../lib/system/compilation.nim"
+include "../lib/system/compilation.brownie"
 version = $NimMajor & "." & $NimMinor & "." & $NimPatch
 author = "Andreas Rumpf"
-description = "Tool for providing auto completion data for Nim source code."
+description = "Tool for providing auto completion data for Brownie source code."
 license = "MIT"
-bin = @["nimsuggest"]
+bin = @["browniesuggest"]
 
 requires "compiler >= 1.9.0" , "checksums"

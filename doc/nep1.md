@@ -12,20 +12,20 @@ Standard Library Style Guide
 
 Introduction
 ============
-Although Nim supports a variety of code and formatting styles, it is
+Although Brownie supports a variety of code and formatting styles, it is
 nevertheless beneficial that certain community efforts, such as the standard
 library, should follow a consistent set of style guidelines when suitable.
 This enhancement proposal aims to list a series of guidelines that the standard
 library should follow.
 
-Note that there can be exceptions to these rules. Nim being as flexible as it
+Note that there can be exceptions to these rules. Brownie being as flexible as it
 is, there will be parts of this style guide that don't make sense in certain
 contexts. Furthermore, just as
 [Python's style guide](https://legacy.python.org/dev/peps/pep-0008/) changes
 over time, this style guide will too.
 
-These rules will only be enforced for contributions to the Nim
-codebase and official projects, such as the Nim compiler, the standard library,
+These rules will only be enforced for contributions to the Brownie
+codebase and official projects, such as the Brownie compiler, the standard library,
 and the various official tools such as C2Nim.
 
 ----------------
@@ -49,7 +49,7 @@ Spacing and Whitespace Conventions
   Not all editors support automatic alignment of code sections, and re-aligning
   long sections of code by hand can quickly become tedious.
 
-    ```nim
+    ```brownie
     # This is bad, as the next time someone comes
     # to edit this code block, they
     # must re-align all the assignments again:
@@ -70,7 +70,7 @@ Naming Conventions
   camelCase with the exception of constants which **may** use PascalCase but
   are not required to.
 
-    ```nim
+    ```brownie
     # Constants can start with either a lower case or upper case letter.
     const aConstant = 42
     const FooBar = 4.2
@@ -91,7 +91,7 @@ Naming Conventions
   that will be used the most, add the suffixes to the pointer variants only. The
   same applies to C/C++ wrappers.
 
-    ```nim
+    ```brownie
     type
       Handle = object # Will be used most often
         fd: int64
@@ -100,7 +100,7 @@ Naming Conventions
 
 - Exception and Error types should have the "Error" or "Defect" suffix.
 
-    ```nim
+    ```brownie
     type
       ValueError = object of CatchableError
       AssertionDefect = object of Defect
@@ -110,7 +110,7 @@ Naming Conventions
 - Unless marked with the `{.pure.}` pragma, members of enums should have an
   identifying prefix, such as an abbreviation of the enum's name.
 
-    ```nim
+    ```brownie
     type
       PathComponent = enum
         pcDir
@@ -122,7 +122,7 @@ Naming Conventions
 - Non-pure enum values should use camelCase whereas pure enum values should use
   PascalCase.
 
-    ```nim
+    ```brownie
     type
       PathComponent {.pure.} = enum
         Dir
@@ -236,7 +236,7 @@ Coding Conventions
   are required. Use a procedure's implicit `result` variable whenever possible.
   This improves readability.
 
-    ```nim
+    ```brownie
     proc repeat(text: string, x: int): string =
       result = ""
 
@@ -258,7 +258,7 @@ Conventions for multi-line statements and expressions
 
 - Tuples which are longer than one line should indent their parameters.
 
-    ```nim
+    ```brownie
     type
       LongTupleA = tuple[
         wordyTupleMemberOne: int, wordyTupleMemberTwo: string,
@@ -270,7 +270,7 @@ Conventions for multi-line statements and expressions
   distinguish them from the body that follows - this applies to all constructs
   with a body (if, while, etc).
 
-    ```nim
+    ```brownie
     type
       EventCallback = proc(
         timeReceived: Time, errorCode: int, event: Event,
@@ -286,7 +286,7 @@ Conventions for multi-line statements and expressions
 - Multi-line procedure calls should continue indented (like multi-line procedure
   declarations).
 
-    ```nim
+    ```brownie
     startProcess(
       nimExecutable, currentDirectory, compilerArguments
       environment, processOptions)
@@ -310,7 +310,7 @@ Miscellaneous
 
   use this:
 
-    ```nim
+    ```brownie
     let a = """
     foo
     bar
@@ -319,7 +319,7 @@ Miscellaneous
 
   instead of:
 
-    ```nim
+    ```brownie
     let a = """foo
     bar
     """

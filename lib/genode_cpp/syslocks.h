@@ -1,6 +1,6 @@
 /*
  *
- *           Nim's Runtime Library
+ *           Brownie's Runtime Library
  *       (c) Copyright 2017 Emery Hemingway
  *
  *   See the file "copying.txt", included in this
@@ -15,12 +15,12 @@
 #include <base/semaphore.h>
 #include <base/mutex.h>
 
-namespace Nim {
+namespace Brownie {
 	struct SysLock;
 	struct SysCond;
 }
 
-struct Nim::SysLock
+struct Brownie::SysLock
 {
 	Genode::Mutex _mutex_a, _mutex_b;
 	bool         _locked;
@@ -56,7 +56,7 @@ struct Nim::SysLock
 	}
 };
 
-struct Nim::SysCond
+struct Brownie::SysCond
 {
 	Genode::Semaphore _semaphore;
 

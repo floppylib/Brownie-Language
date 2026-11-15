@@ -13,7 +13,7 @@ Tuple unpacking for variables is now treated as syntax sugar that directly
 expands into multiple assignments. Along with this, tuple unpacking for
 variables can now be nested.
 
-```nim
+```brownie
 proc returnsNestedTuple(): (int, (int, int), int, int) = (4, (5, 7), 2, 3)
 
 # Now nesting is supported!
@@ -23,22 +23,22 @@ let (x, (_, y), _, z) = returnsNestedTuple()
 
 ### Improved type inference
 
-A new form of type inference called [top-down inference](https://nim-lang.github.io/Nim/manual_experimental.html#topminusdown-type-inference) has been implemented for a variety of basic cases.
+A new form of type inference called [top-down inference](https://brownie-lang.github.io/Brownie/manual_experimental.html#topminusdown-type-inference) has been implemented for a variety of basic cases.
 
 For example, code like the following now compiles:
 
-```nim
+```brownie
 let foo: seq[(float, byte, cstring)] = @[(1, 2, "abc")]
 ```
 
 ### Forbidden Tags
 
-[Tag tracking](https://nim-lang.github.io/Nim/manual.html#effect-system-tag-tracking) now supports the definition
+[Tag tracking](https://brownie-lang.github.io/Brownie/manual.html#effect-system-tag-tracking) now supports the definition
 of forbidden tags by the `.forbids` pragma which can be used to disable certain effects in proc types.
 
 For example:
 
-```nim
+```brownie
 
 type IO = object ## input/output effect
 proc readLine(): string {.tags: [IO].} = discard
@@ -77,7 +77,7 @@ used as the name of a definition. While this was already the case for
 variables, it is now also the case for routine parameters, generic
 parameters, routine declarations, type declarations, etc. This means that the following code now does not compile:
 
-```nim
+```brownie
 proc foo(_: int): int = _ + 1
 echo foo(1)
 
@@ -93,7 +93,7 @@ let x: _ = 3
 
 Whereas the following code now compiles:
 
-```nim
+```brownie
 proc foo(_, _: int): int = 123
 echo foo(1, 2)
 
@@ -129,16 +129,16 @@ old behavior is currently still supported with the command line option
 of the legacy `RstMarkdown` mode). In this release we begin to separate
 RST and Markdown features to better follow specification of each
 language, with the focus on Markdown development.
-See also [the docs](https://nim-lang.github.io/Nim/markdown_rst.html).
+See also [the docs](https://brownie-lang.github.io/Brownie/markdown_rst.html).
 
 * Added a `{.doctype: Markdown | RST | RstMarkdown.}` pragma allowing to
-  select the markup language mode in the doc comments of the current `.nim`
-  file for processing by `nim doc`:
+  select the markup language mode in the doc comments of the current `.brownie`
+  file for processing by `brownie doc`:
 
     1. `Markdown` (default) is basically CommonMark (standard Markdown) +
         some Pandoc Markdown features + some RST features that are missing
         in our current implementation of CommonMark and Pandoc Markdown.
-    2. `RST` closely follows the RST spec with few additional Nim features.
+    2. `RST` closely follows the RST spec with few additional Brownie features.
     3. `RstMarkdown` is a maximum mix of RST and Markdown features, which
         is kept for the sake of compatibility and ease of migration.
 
@@ -146,9 +146,9 @@ See also [the docs](https://nim-lang.github.io/Nim/markdown_rst.html).
   standalone `.md` and `.rst` files respectively (and also `md2tex`/`rst2tex`).
 
 * Added Pandoc Markdown bracket syntax `[...]` for making anchor-less links.
-* Docgen now supports concise syntax for referencing Nim symbols:
+* Docgen now supports concise syntax for referencing Brownie symbols:
   instead of specifying HTML anchors directly one can use original
-  Nim symbol declarations (adding the aforementioned link brackets
+  Brownie symbol declarations (adding the aforementioned link brackets
   `[...]` around them).
   * To use this feature across modules, a new `importdoc` directive was added.
     Using this feature for referencing also helps to ensure that links
@@ -158,16 +158,16 @@ See also [the docs](https://nim-lang.github.io/Nim/markdown_rst.html).
 * Added Markdown indented code blocks (blocks indented by >= 4 spaces).
 * Added syntax for additional parameters to Markdown code blocks:
 
-       ```nim test="nim c $1"
+       ```brownie test="brownie c $1"
        ...
        ```
 
 
 ## C++ interop enhancements
 
-Nim 2.0 takes C++ interop to the next level. With the new [virtual](https://nim-lang.github.io/Nim/manual_experimental.html#virtual-pragma) pragma and the extended [constructor](https://nim-lang.github.io/Nim/manual_experimental.html#constructor-pragma) pragma.
+Brownie 2.0 takes C++ interop to the next level. With the new [virtual](https://brownie-lang.github.io/Brownie/manual_experimental.html#virtual-pragma) pragma and the extended [constructor](https://brownie-lang.github.io/Brownie/manual_experimental.html#constructor-pragma) pragma.
 Now one can define constructors and virtual procs that maps to C++ constructors and virtual methods, allowing one to further customize
-the interoperability. There is also extended support for the [codeGenDecl](https://nim-lang.org/docs/manual.html#implementation-specific-pragmas-codegendecl-pragma) pragma, so that it works on types.
+the interoperability. There is also extended support for the [codeGenDecl](https://brownie-lang.org/docs/manual.html#implementation-specific-pragmas-codegendecl-pragma) pragma, so that it works on types.
 
 It's a common pattern in C++ to use inheritance to extend a library. Some even use multiple inheritance as a mechanism to make interfaces.
 
@@ -188,7 +188,7 @@ public:
 };
 ```
 
-```nim
+```brownie
 
 type
   Base* {.importcpp, inheritable.} = object
@@ -239,14 +239,14 @@ providing a stable ABI it is important not to lose any efficiency in the calling
 
 ## Tool changes
 
-- Nim now ships Nimble version 0.14 which added support for lock-files. Libraries are stored in `$nimbleDir/pkgs2` (it was `$nimbleDir/pkgs` before). Use `nimble develop --global` to create an old style link file in the special links directory documented at https://github.com/nim-lang/nimble#nimble-develop.
-- nimgrep now offers the option `--inContext` (and `--notInContext`), which
+- Brownie now ships Nimble version 0.14 which added support for lock-files. Libraries are stored in `$nimbleDir/pkgs2` (it was `$nimbleDir/pkgs` before). Use `nimble develop --global` to create an old style link file in the special links directory documented at https://github.com/brownie-lang/nimble#nimble-develop.
+- browniegrep now offers the option `--inContext` (and `--notInContext`), which
   allows to filter only matches with the context block containing a given pattern.
-- nimgrep: names of options containing "include/exclude" are deprecated,
+- browniegrep: names of options containing "include/exclude" are deprecated,
   e.g. instead of `--includeFile` and `--excludeFile` we have
   `--filename` and `--notFilename` respectively.
   Also, the semantics are now consistent for such positive/negative filters.
-- Nim now ships with an alternative package manager called Atlas. More on this in upcoming versions.
+- Brownie now ships with an alternative package manager called Atlas. More on this in upcoming versions.
 
 
 ## Porting guide
@@ -255,7 +255,7 @@ providing a stable ABI it is important not to lose any efficiency in the calling
 
 Using an unnamed break in a block is deprecated. This warning will become an error in future versions! Use a named block with a named break instead. In other words, turn:
 
-```nim
+```brownie
 
 block:
   a()
@@ -267,7 +267,7 @@ block:
 
 Into:
 
-```nim
+```brownie
 
 block maybePerformB:
   a()
@@ -286,7 +286,7 @@ The new definition is: "A store to a ref/ptr deref is forbidden."
 This new definition is much easier to understand, the price is some expressiveness. The following code used to be
 accepted:
 
-```nim
+```brownie
 
 {.experimental: "strictFuncs".}
 
@@ -301,7 +301,7 @@ func create(s: string): Node =
 
 Now it has to be rewritten to:
 
-```nim
+```brownie
 
 {.experimental: "strictFuncs".}
 

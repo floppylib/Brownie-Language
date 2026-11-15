@@ -1,4 +1,4 @@
-include "../lib/system/compilation.nim"
+include "../lib/system/compilation.brownie"
 version = $NimMajor & "." & $NimMinor & "." & $NimPatch
 author = "Andreas Rumpf"
 description = "Compiler package providing the compiler sources as a library."
@@ -25,4 +25,4 @@ before install:
   for d in dirs:
     cpDir(d, "compiler" / d)
 
-requires "nim"
+requires "brownie"

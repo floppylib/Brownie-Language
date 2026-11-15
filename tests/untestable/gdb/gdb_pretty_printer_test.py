@@ -1,14 +1,14 @@
 import gdb
 import re
 import sys
-# this test should test the gdb pretty printers of the nim
+# this test should test the gdb pretty printers of the brownie
 # library. But be aware this test is not complete. It only tests the
 # command line version of gdb. It does not test anything for the
 # machine interface of gdb. This means if if this test passes gdb
 # frontends might still be broken.
 
 gdb.execute("set python print-stack full")
-gdb.execute("source ../../../tools/debug/nim-gdb.py")
+gdb.execute("source ../../../tools/debug/brownie-gdb.py")
 # debug all instances of the generic function `myDebug`, should be 14
 gdb.execute("rbreak myDebug")
 gdb.execute("run")
@@ -32,9 +32,9 @@ outputs = [
   '("hello", 42)'
 ]
 
-argRegex = re.compile(r"^.* = (?:No suitable Nim \$ operator found for type: \w+\s*)*(.*)$")
+argRegex = re.compile(r"^.* = (?:No suitable Brownie \$ operator found for type: \w+\s*)*(.*)$")
 # Remove this error message which can pop up
-noSuitableRegex = re.compile(r"(No suitable Nim \$ operator found for type: \w+\s*)")
+noSuitableRegex = re.compile(r"(No suitable Brownie \$ operator found for type: \w+\s*)")
 
 for i, expected in enumerate(outputs):
   gdb.write(f"\x1b[38;5;105m{i+1}) expecting: {expected}: \x1b[0m", gdb.STDLOG)

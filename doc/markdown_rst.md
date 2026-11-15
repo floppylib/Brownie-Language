@@ -1,5 +1,5 @@
 ==========================================
-Nim-flavored Markdown and reStructuredText
+Brownie-flavored Markdown and reStructuredText
 ==========================================
 
 :Author: Andrey Makarov
@@ -21,7 +21,7 @@ Command line usage
 Usage (to convert Markdown into HTML):
 
   ```cmd
-  nim md2html markdown_rst.md
+  brownie md2html markdown_rst.md
   ```
 
 Output:
@@ -31,28 +31,28 @@ Output:
 The `md2tex`:option: command is invoked identically to `md2html`:option:,
 but outputs a ``.tex`` file instead of ``.html``.
 
-These tools embedded into Nim compiler; the compiler can output
+These tools embedded into Brownie compiler; the compiler can output
 the result to HTML [^html] or Latex [^latex].
 
-[^html]: commands `nim doc`:cmd: for ``*.nim`` files and
-   `nim rst2html`:cmd: for ``*.rst`` files
+[^html]: commands `brownie doc`:cmd: for ``*.brownie`` files and
+   `brownie rst2html`:cmd: for ``*.rst`` files
 
-[^latex]: commands `nim doc2tex`:cmd: for ``*.nim`` and
-   `nim rst2tex`:cmd: for ``*.rst``.
+[^latex]: commands `brownie doc2tex`:cmd: for ``*.brownie`` and
+   `brownie rst2tex`:cmd: for ``*.rst``.
 
 Full list of supported commands:
 
 ===================   =======================   ============   ==============
 command               runs on...                input format   output format
 ===================   =======================   ============   ==============
-`nim md2html`:cmd:    standalone md files       ``.md``        ``.html`` HTML
-`nim book`:cmd:       directory with md files   same           same
-`nim md2tex`:cmd:     same                      same           ``.tex`` LaTeX
-`nim rst2html`:cmd:   standalone rst files      ``.rst``       ``.html`` HTML
-`nim rst2tex`:cmd:    same                      same           ``.tex`` LaTeX
-`nim doc`:cmd:        documentation comments    ``.nim``       ``.html`` HTML
-`nim doc2tex`:cmd:    same                      same           ``.tex`` LaTeX
-`nim jsondoc`:cmd:    same                      same           ``.json`` JSON
+`brownie md2html`:cmd:    standalone md files       ``.md``        ``.html`` HTML
+`brownie book`:cmd:       directory with md files   same           same
+`brownie md2tex`:cmd:     same                      same           ``.tex`` LaTeX
+`brownie rst2html`:cmd:   standalone rst files      ``.rst``       ``.html`` HTML
+`brownie rst2tex`:cmd:    same                      same           ``.tex`` LaTeX
+`brownie doc`:cmd:        documentation comments    ``.brownie``       ``.html`` HTML
+`brownie doc2tex`:cmd:    same                      same           ``.tex`` LaTeX
+`brownie jsondoc`:cmd:    same                      same           ``.json`` JSON
 ===================   =======================   ============   ==============
 
 
@@ -71,7 +71,7 @@ Features
 --------
 
 A large subset is implemented with some [limitations] and
-[additional Nim-specific features].
+[additional Brownie-specific features].
 
 Supported common RST/Markdown features:
 
@@ -127,7 +127,7 @@ Markdown-specific features
   code blocks can be provided (e.g. `test` or `number-lines`) but with
   a one-line syntax like this:
 
-      ```nim test number-lines=10
+      ```brownie test number-lines=10
       echo "ok"
       ```
 * Markdown links ``[...](...)``
@@ -141,7 +141,7 @@ Markdown-specific features
 * using ``1`` as auto-enumerator in enumerated lists like RST ``#``
   (auto-enumerator ``1`` can not be used with ``#`` in the same list)
 
-Additional Nim-specific features
+Additional Brownie-specific features
 --------------------------------
 
 * referencing to definitions in external files, see
@@ -149,12 +149,12 @@ Additional Nim-specific features
 * directives: ``code-block`` [^Sphinx], ``title``,
   ``index`` [^Sphinx]
 * predefined roles
-  - ``:nim:`` (default), ``:c:`` (C programming language),
+  - ``:brownie:`` (default), ``:c:`` (C programming language),
     ``:python:``, ``:yaml:``, ``:java:``, ``:cpp:`` (C++), ``:csharp`` (C#).
     That is every language that [highlite](highlite.html) supports.
     They turn on appropriate syntax highlighting in inline code.
 
-    .. Note:: default role for Nim files is ``:nim:``,
+    .. Note:: default role for Brownie files is ``:brownie:``,
               for ``*.rst`` it's currently ``:literal:``.
 
   - generic command line highlighting roles:
@@ -167,7 +167,7 @@ Additional Nim-specific features
   - ``:tok:``, a role for highlighting of programming language tokens
 * ***triple emphasis*** (bold and italic) using \*\*\*
 * ``:idx:`` role for \`interpreted text\` to include the link to this
-  text into an index (example: [Nim index]).
+  text into an index (example: [Brownie index]).
 * double slash `//` in option lists serves as a prefix for any option that
   starts from a word (without any leading symbols like `-`, `--`, `/`):
 
@@ -181,23 +181,23 @@ Additional Nim-specific features
 [^Sphinx]: similar but different from the directives of
    Python [Sphinx directives] and [Sphinx roles] extensions
 
-.. Note:: By default Nim has ``roSupportMarkdown`` and
+.. Note:: By default Brownie has ``roSupportMarkdown`` and
    ``roSupportRawDirective`` turned **on**.
 
-.. warning:: Using Nim-specific features can cause other Markdown and
+.. warning:: Using Brownie-specific features can cause other Markdown and
   RST implementations to fail on your document.
 
 Referencing
 ===========
 
-To be able to copy and share links Nim generates anchors for all
+To be able to copy and share links Brownie generates anchors for all
 main document elements:
 
 * headlines (including document title)
 * footnotes
 * explicitly set anchors: RST internal cross-references and
   inline internal targets
-* Nim symbols (external referencing), see [Nim DocGen Tools Guide] for details.
+* Brownie symbols (external referencing), see [Brownie DocGen Tools Guide] for details.
 
 But direct use of those anchors have 2 problems:
 
@@ -207,13 +207,13 @@ But direct use of those anchors have 2 problems:
    links inside your project if e.g. spelling has changed for a heading
    or you use a wrong relative path to your document.
 
-That's why Nim implementation has syntax for using
+That's why Brownie implementation has syntax for using
 *original* labels for referencing.
 Such referencing can be either local/internal or external:
 
 * Local referencing (inside any given file) is defined by
   RST standard or Pandoc Markdown User guide.
-* External (cross-document) referencing is a Nim-specific feature,
+* External (cross-document) referencing is a Brownie-specific feature,
   though it's not really different from local referencing by its syntax.
 
 Markup local referencing
@@ -246,8 +246,8 @@ Ref. [Some headline]
 ```
 
 ```cmd
-nim md2html --index:only file1.md  # creates ``htmldocs/file1.idx``
-nim md2html file2.md               # creates ``htmldocs/file2.html``
+brownie md2html --index:only file1.md  # creates ``htmldocs/file1.idx``
+brownie md2html file2.md               # creates ``htmldocs/file2.html``
 ```
 
 To allow cross-references between any files in any order (especially, if
@@ -255,10 +255,10 @@ circular references are present), it's strongly recommended
 to make a run for creating all the indexes first:
 
 ```cmd
-nim md2html --index:only file1.md  # creates ``htmldocs/file1.idx``
-nim md2html --index:only file2.md  # creates ``htmldocs/file2.idx``
-nim md2html file1.md               # creates ``htmldocs/file1.html``
-nim md2html file2.md               # creates ``htmldocs/file2.html``
+brownie md2html --index:only file1.md  # creates ``htmldocs/file1.idx``
+brownie md2html --index:only file2.md  # creates ``htmldocs/file2.idx``
+brownie md2html file1.md               # creates ``htmldocs/file1.html``
+brownie md2html file2.md               # creates ``htmldocs/file2.html``
 ```
 
 and then one can freely reference any objects as if these 2 documents
@@ -307,7 +307,7 @@ This parser has 2 modes for inline markup:
          >>baz
 
      is a single 3rd-level quote `foo bar baz` in original Markdown, while
-     in Nim we naturally see it as 3rd-level quote `foo` + 1st level `bar` +
+     in Brownie we naturally see it as 3rd-level quote `foo` + 1st level `bar` +
      2nd level `baz`:
 
      >>> foo
@@ -337,10 +337,10 @@ Limitations
 Additional resources
 --------------------
 
-* See [Nim DocGen Tools Guide](docgen.html) for the details about
-  `nim doc`:cmd: command and idiosyncrasies of documentation markup in
-  ``.nim`` files and Nim programming language projects.
-* See also documentation for [rst module](rst.html) -- Nim RST/Markdown parser.
+* See [Brownie DocGen Tools Guide](docgen.html) for the details about
+  `brownie doc`:cmd: command and idiosyncrasies of documentation markup in
+  ``.brownie`` files and Brownie programming language projects.
+* See also documentation for [rst module](rst.html) -- Brownie RST/Markdown parser.
 
 .. _Markdown Basic Syntax: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
 .. _CommonMark Spec: https://spec.commonmark.org/0.30
@@ -349,6 +349,6 @@ Additional resources
 .. _RST specification: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html
 .. _RST directives list: https://docutils.sourceforge.io/docs/ref/rst/directives.html
 .. _RST roles list: https://docutils.sourceforge.io/docs/ref/rst/roles.html
-.. _Nim index: https://nim-lang.org/docs/theindex.html
+.. _Nim index: https://brownie-lang.org/docs/theindex.html
 .. _Sphinx directives: https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
 .. _Sphinx roles: https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html

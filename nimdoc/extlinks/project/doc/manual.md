@@ -2,7 +2,7 @@
 Nothing User Manual
 ===================
 
-.. importdoc:: ../main.nim, .. / sub / submodule.nim, ../../util.nim
+.. importdoc:: ../main.brownie, .. / sub / submodule.brownie, ../../util.brownie
 
 First section
 =============
@@ -10,7 +10,7 @@ First section
 Second *section* &
 ==================
 
-Ref. [`</a>`] or [submoduleInt] from [module nimdoc/extlinks/project/sub/submodule].
+Ref. [`</a>`] or [submoduleInt] from [module browniedoc/extlinks/project/sub/submodule].
 
 Ref. [proc mainfunction*(): int].
 

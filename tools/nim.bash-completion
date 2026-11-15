@@ -1,4 +1,4 @@
-# bash completion for nim                             -*- shell-script -*-
+# bash completion for brownie                             -*- shell-script -*-
 
 __is_short_or_long()
 {
@@ -117,7 +117,7 @@ _nim()
     # printf "\n[DBUG] curr:$curr|prev:$prev|words(${#words[*]}):${words[*]}\n"
 
     # Asking for a subcommand
-    if __ask_for_subcmd nim nim $i_curr "${words[@]}"
+    if __ask_for_subcmd brownie brownie $i_curr "${words[@]}"
     then
         subcmds=""
 	# basic
@@ -150,7 +150,7 @@ _nim()
     then
 	return 124
 	
-    elif false && __ask_for_subcmd_opts nim compileToC $i_curr "${words[@]}"
+    elif false && __ask_for_subcmd_opts brownie compileToC $i_curr "${words[@]}"
     then # for future use
 	opts=() \
 	    && candids=()
@@ -496,6 +496,6 @@ _nim()
     return 0
 
 } &&
-    complete -F _nim nim
+    complete -F _nim brownie
 
 # ex: filetype=sh

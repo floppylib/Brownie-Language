@@ -3,7 +3,7 @@
 The existing Packages CI matrix also maintains a cache of bare Git repositories.
 It records the Git downloads made by the real package tests, including dependencies
 installed by package-specific tasks. There is no separate dependency list to keep
-in sync with `testament/important_packages.nim`.
+in sync with `testament/important_packages.brownie`.
 
 Each OS, architecture and package batch has its own snapshot. A successful `devel`
 run creates one when the package list, batch assignments, Nimble pin or cache
@@ -13,13 +13,13 @@ packages are tested at HEAD. No second copy of the package tests is added to a r
 
 PR jobs restore the latest matching snapshot from the base/default branch under
 GitHub's normal cache access rules. A snapshot from older inputs can seed a new
-one. Only trusted `nim-lang/Nim` `devel` jobs save snapshots or clone new mirrors;
+one. Only trusted `brownie-lang/Brownie` `devel` jobs save snapshots or clone new mirrors;
 PR cache misses go directly upstream. The cache actions are optional: a cache
 service outage does not stop the package tests.
 
 ## Why bare repositories
 
-`package_source_cache.nim` is compiled with the CI bootstrap compiler and installs
+`package_source_cache.brownie` is compiled with the CI bootstrap compiler and installs
 a job-local Git wrapper and remote helper. Git URL rewriting sends network reads
 to bare mirrors, served by `git upload-pack`.
 This supports Nimble's shallow clones and fetches. Atlas's static Git HTTP server
@@ -50,7 +50,7 @@ This is a source download cache, not an offline package environment.
 The `package-sources-v2` namespace uses the standard library's SHA-1 digest of each
 upstream URL for mirror filenames. The stored origin URL is still validated before
 use. The new namespace avoids restoring the Python helper's SHA-256 filenames.
-Only the bare mirrors are cached; the Nim executables and session files are built
+Only the bare mirrors are cached; the Brownie executables and session files are built
 fresh and need no Nimble dependencies.
 
 Actions caches cannot be overwritten. Each saved snapshot includes the workflow
@@ -65,13 +65,13 @@ after saving `INPUT-snapshot-100-1` and then `INPUT-snapshot-101-1`, a request f
 `INPUT-lookup-102-1` restores snapshot 101. It cannot hit snapshot 100 as an exact
 key. Thus a scheduled/manual refresh is visible to subsequent jobs even when the
 input files have not changed. The input hash includes the package list, batching,
-package-test driver, `koch.nim` (including the Nimble pin), helper and workflow.
+package-test driver, `kitten.brownie` (including the Nimble pin), helper and workflow.
 
 ## Local checks
 
 ```
-nim c -d:release --out:bin/package_source_cache ci/package_source_cache.nim
-nim c -r --out:bin/test_package_source_cache ci/test_package_source_cache.nim bin/package_source_cache
+brownie c -d:release --out:bin/package_source_cache ci/package_source_cache.brownie
+brownie c -r --out:bin/test_package_source_cache ci/test_package_source_cache.brownie bin/package_source_cache
 actionlint .github/workflows/ci_packages.yml
 ```
 

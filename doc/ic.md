@@ -9,13 +9,13 @@ changed.
 
 .. code-block:: cmd
 
-  nim c   --ic:on  myproject.nim
-  nim cpp --ic:on  myproject.nim
+  brownie c   --ic:on  myproject.brownie
+  brownie cpp --ic:on  myproject.brownie
 
 It is a switch on the normal compile commands, not a command of its own, so
 everything else keeps working unchanged: ``cpp`` and ``objc`` backends, ``-r``,
-``-d:release``, ``--exceptions:``, and a project-wide opt-in from ``nim.cfg`` /
-``config.nims``. The older spelling ``nim ic`` still works and drives the same
+``-d:release``, ``--exceptions:``, and a project-wide opt-in from ``brownie.cfg`` /
+``config.nims``. The older spelling ``brownie ic`` still works and drives the same
 code, but it is the C backend only and cannot run the binary it built.
 
 This document describes **how IC works today**, including the edge cases
@@ -28,20 +28,20 @@ Overview
 ========
 
 The pipeline has two halves driven by one process (the *driver*, `commandIc` in
-``compiler/deps.nim``) that constructs a dependency graph, writes a build file,
+``compiler/deps.brownie``) that constructs a dependency graph, writes a build file,
 and hands it to ``nifmake``:
 
 1. **Frontend** — per module:
-   - ``nifler parse --deps`` turns ``.nim`` source into a parsed NIF
+   - ``nifler parse --deps`` turns ``.brownie`` source into a parsed NIF
      (``.p.nif``) plus a static dependency list (``.deps.nif``).
-   - ``nim m`` (the *semantic* step, `cmdM`) reads the parsed NIF + the
+   - ``brownie m`` (the *semantic* step, `cmdM`) reads the parsed NIF + the
      precompiled NIFs of the module's imports, type-checks, and writes the
      **semmed NIF** (``.nif``) plus invalidation sidecars (see *Cookies*).
-2. **Backend** — ``nim nifc`` (`cmdNifC`, ``compiler/nifbackend.nim``) reads the
+2. **Backend** — ``brownie nifc`` (`cmdNifC`, ``compiler/nifbackend.brownie``) reads the
    semmed NIFs, generates C, compiles and links.
 
-``nifmake`` orders the steps by their input/output files: every `nim m` runs
-before the `nim nifc` step that consumes its NIF, and a step re-fires only when
+``nifmake`` orders the steps by their input/output files: every `brownie m` runs
+before the `brownie nifc` step that consumes its NIF, and a step re-fires only when
 one of its inputs is newer than its outputs. The driver invokes ``nifmake run
 --parallel`` by default, so independent steps at the same DAG depth fan out
 across cores; pass ``-d:icNoParallel`` to serialize (readable child output when
@@ -67,13 +67,13 @@ under the nimcache directory:
 | ---- | -------- | ------- |
 | ``<s>.p.nif`` | nifler | parsed AST (syntactic) |
 | ``<s>.deps.nif`` | nifler | **static** import list (syntactic `import`s) |
-| ``<s>.s.deps.nif`` | `nim m` | **real** post-sem imports (incl. macro-generated); see *Discovery* |
-| ``<s>.nif`` | `nim m` | semmed module (symbols resolved, typed) |
-| ``<s>.iface.nif`` | `nim m` | **iface cookie**: hash of the importer-visible surface |
-| ``<s>.impl.nif`` | `nim m` | **impl cookie**: hash of the entire content (bodies included) |
-| ``<s>.edges.nif`` | `nim m` | **NeedsImpl edges**: modules whose bodies this sem consumed |
-| ``<s>.c.nif`` | `nim nifc` | the C text as a NIF, with def/ref markers for DCE & dedup |
-| ``ic_config.cfg.nif`` | driver | precompiled config replayed by every child (`icconfig.nim`) |
+| ``<s>.s.deps.nif`` | `brownie m` | **real** post-sem imports (incl. macro-generated); see *Discovery* |
+| ``<s>.nif`` | `brownie m` | semmed module (symbols resolved, typed) |
+| ``<s>.iface.nif`` | `brownie m` | **iface cookie**: hash of the importer-visible surface |
+| ``<s>.impl.nif`` | `brownie m` | **impl cookie**: hash of the entire content (bodies included) |
+| ``<s>.edges.nif`` | `brownie m` | **NeedsImpl edges**: modules whose bodies this sem consumed |
+| ``<s>.c.nif`` | `brownie nifc` | the C text as a NIF, with def/ref markers for DCE & dedup |
+| ``ic_config.cfg.nif`` | driver | precompiled config replayed by every child (`icconfig.brownie`) |
 | ``ic.version`` | driver | format stamp; a mismatch wipes the cache (`icFormatVersion`) |
 
 NIF symbols and ownership
@@ -82,7 +82,7 @@ NIF symbols and ownership
 (See ``../nifspec/doc/nif-spec.md``.) A global symbol is
 ``<ident>.<disamb>.<moduleSuffix>``. For a **generic instantiation** the
 `<disamb>` is not a counter but a *content hash* — `setInstanceDisamb`
-(``modulegraphs.nim``) MD5s the generic's identity plus the `typeKey` of every
+(``modulegraphs.brownie``) MD5s the generic's identity plus the `typeKey` of every
 concrete type argument, masks it to 30 bits and tags it with `InstanceDisambBit`.
 So the only part of the name that varies between two modules making the **same**
 instantiation (`seq[Foo]`) is the `<moduleSuffix>`. Two consequences drive the
@@ -133,7 +133,7 @@ tooling; they are not a trace of call-site overload resolution.
 Shared compile-time counters
 ============================
 
-``CacheCounter`` state cannot live in the memory of a single ``nim m`` process:
+``CacheCounter`` state cannot live in the memory of a single ``brownie m`` process:
 sibling modules are compiled by separate, possibly parallel processes and would
 allocate from the same initial state (#26201). Instead the counters are stored in
 ``<nimcache>/ic.counters``, guarded by the OS file lock ``ic.counters.lock``.
@@ -147,7 +147,7 @@ and the numbers each module's process was handed. A re-semmed module is handed
 the same numbers again, so a no-op rebuild (e.g. a touched file) reproduces its
 artifacts; a module that needs more numbers than before gets fresh ones above
 the high-water mark and can never collide with a value that an unchanged, cached
-module already embeds. Values are therefore unique but, unlike under ``nim c``,
+module already embeds. Values are therefore unique but, unlike under ``brownie c``,
 neither dense nor ordered by import order, and a clean build need not reproduce
 the values of an incremental one.
 
@@ -155,34 +155,34 @@ The driver: graph construction (`commandIc`)
 ============================================
 
 1. Stamp/​wipe the cache by ``icFormatVersion``.
-2. Seed the graph with the root module and **`system.nim`**. `system`'s entire
-   import closure is folded into one node (one `nim m` invocation) — see
+2. Seed the graph with the root module and **`system.brownie`**. `system`'s entire
+   import closure is folded into one node (one `brownie m` invocation) — see
    *single-writer* below.
 3. ``traverseDeps`` runs ``nifler`` per module and reads ``.deps.nif`` to add
    import edges.
 4. **SCC grouping**: strongly-connected import cycles are collapsed (Tarjan).
-   A singleton compiles as ``nim m <mod>``; a cycle compiles as one
-   ``nim m <rep> --icGroup:<member>…`` that builds every member *from source* in
+   A singleton compiles as ``brownie m <mod>``; a cycle compiles as one
+   ``brownie m <rep> --icGroup:<member>…`` that builds every member *from source* in
    one process (resolving the recursion in memory) and writes each member's NIF.
    Only edges *leaving* the component become build-graph inputs.
 5. **Discovery fixpoint**: write the build file, run ``nifmake``; if it fails,
    re-derive the graph from every module's ``.s.deps.nif`` (adding nodes/edges
    for imports the static scanner missed), and retry. See *Discovery*.
-6. The backend step (`nim nifc`) depends on every module's semmed NIF, so
+6. The backend step (`brownie nifc`) depends on every module's semmed NIF, so
    ``nifmake`` runs it last.
 
 Invalidation: the cookie system
 ================================
 
 A dependent must re-sem only when a dependency's relevant surface changed. Two
-hashes per module (``ast2nif.nim``):
+hashes per module (``ast2nif.brownie``):
 
 - **iface cookie** (``.iface.nif``): hashes only the *importer-visible* surface —
   exported declarations' **signatures** (for *all* routine kinds: plain procs,
   templates, macros, generics, `inline` procs alike), full content for
   consts/types, plus import/export/replay/hook records. Routine **bodies are
   excluded.** It also chains in the iface cookies of its own dependencies, so a
-  surface change anywhere in the import closure propagates. A `nim m` rule for a
+  surface change anywhere in the import closure propagates. A `brownie m` rule for a
   module depends on its dependencies' iface cookies, so a body-only edit moves no
   iface cookie and stops the re-sem cascade.
 - **impl cookie** (``.impl.nif``): hashes the *entire* serialized content (private
@@ -211,7 +211,7 @@ Discovery of macro-generated imports
 The static scanner only sees syntactic `import`s. A macro can synthesize one
 (chronicles does `parseStmt("import chronicles/textlines")` driven by the
 `chronicles_sinks` define). Such an import is invisible until sem runs the macro.
-Each `nim m` records the imports it *actually* resolved (via the
+Each `brownie m` records the imports it *actually* resolved (via the
 ``semdata.addImportFileDep`` hook → ``graph.importDeps`` → ``ast2nif.writeSemDeps``)
 into ``<s>.s.deps.nif``; a child that fails on a not-yet-built import flushes it
 before erroring. The driver re-derives the graph from those sidecars — adding the
@@ -221,8 +221,8 @@ an earlier `icmissing.txt` side channel.)
 The backend: per-module `nifc` stages
 =====================================
 
-Codegen is no longer one whole-program process. ``nim nifc`` (`cmdNifC`,
-``compiler/nifbackend.nim``) is invoked once per **stage** via
+Codegen is no longer one whole-program process. ``brownie nifc`` (`cmdNifC`,
+``compiler/nifbackend.brownie``) is invoked once per **stage** via
 ``--icBackendStage:<stage>``; `commandIc` emits these as ordinary `nifmake` rules
 so "which TUs rebuild" is just "which rules `nifmake` re-fires from input mtimes"
 — exactly as the frontend already works. There are four stages:
@@ -265,7 +265,7 @@ Edge cases (and why the machinery exists)
 =========================================
 
 - **Single-writer.** Instance type-ids are minted in process-local order, so if
-  two `nim m` processes both write a module's NIF (e.g. a stdlib module pulled
+  two `brownie m` processes both write a module's NIF (e.g. a stdlib module pulled
   into `system`'s from-source closure *and* given its own rule), the second
   overwrites with different ids and every module checked against the first carries
   dangling refs ("symbol has no offset"). Fixed by folding `system`'s closure into
@@ -285,23 +285,23 @@ Edge cases (and why the machinery exists)
 - **Methods/RTTI ownership.** RTTI and type-bound hooks are emit-everywhere at
   `cg` and deduplicated by the `merge` stage, like generic instances; the main
   module's `cg` owns the whole-program method dispatchers.
-- **Config cost.** Each child re-parsing `nim.cfg` + re-running `config.nims` in
+- **Config cost.** Each child re-parsing `brownie.cfg` + re-running `config.nims` in
   the VM was ~80 ms; replaced by a precompiled `ic_config.cfg.nif` replayed in
-  `loadConfigs` (`compiler/icconfig.nim`).
-- **`koch bootic`** bootstraps the compiler through `--ic:on` (a 3-iteration
+  `loadConfigs` (`compiler/icconfig.brownie`).
+- **`kitten bootic`** bootstraps the compiler through `--ic:on` (a 3-iteration
   fixed-point check). It writes its binary to ``bin/nim_ic`` and never clobbers
-  ``bin/nim``.
+  ``bin/brownie``.
 
 Resolved by the rewrite
 -----------------------
 
 The whole-program backend's hand-rolled mini-`nifmake` — `computeModuleReuse`,
 `enforceDefRetention`, `redirectToLiveModule`, the cached-defs/claim bookkeeping
-and the standalone `dce.nim` — **is gone**. Reuse is now just per-rule `nifmake`
+and the standalone `dce.brownie` — **is gone**. Reuse is now just per-rule `nifmake`
 mtime checks, and the single-writer decision is the `merge` stage. The old
 **cross-mm / `--force` `var not init`** hazard dissolved with it: every codegen
 rule's config (including `--mm`) is a declared `nifmake` input, so a stale-config
-TU is simply rebuilt rather than mixed in. `koch bootic` is green under both `orc`
+TU is simply rebuilt rather than mixed in. `kitten bootic` is green under both `orc`
 and `--mm:refc`.
 
 Known residual hack
@@ -315,7 +315,7 @@ Known residual hack
 Status and performance
 ======================
 
-IC self-builds the compiler (`koch bootic`'s byte-identical fixed-point
+IC self-builds the compiler (`kitten bootic`'s byte-identical fixed-point
 check) under both `orc` and `--mm:refc`, and passes the external-package CI set.
 
 Cold full bootstrap on a 32-core box (`-d:release`, **no edits** — IC's worst
@@ -323,12 +323,12 @@ case, since incremental reuse is not exercised):
 
 | | wall | notes |
 | - | ---- | ----- |
-| `koch boot` (classic) | ~1m00s | reference |
-| `koch bootic` (`--ic:on`) | ~1m39s | **~1.66×** |
+| `kitten boot` (classic) | ~1m00s | reference |
+| `kitten bootic` (`--ic:on`) | ~1m39s | **~1.66×** |
 
 This is down from ~7.5× in the whole-program-backend era. IC does modestly more
 aggregate work (more processes, NIF re-parsing of imports per process), but on a
-many-core box that overhead is absorbed by the parallel `nim m`/`nifc` fan-out,
+many-core box that overhead is absorbed by the parallel `brownie m`/`nifc` fan-out,
 and the C compile+link floor is shared with the classic backend. On few-core
 machines the cold gap is correspondingly wider — IC trades single-build latency
 for incremental latency.
@@ -347,7 +347,7 @@ classic path, not new machinery.
 Design notes and open decisions
 ===============================
 
-The per-module backend (above) mirrors Nimony's ``src/nimony/deps.nim``: the
+The per-module backend (above) mirrors Nimony's ``src/nimony/deps.brownie``: the
 backend stopped re-implementing `nifmake`; each stage is a build rule, so reuse is
 just mtime checks and the merge stage is the only cross-module coordination.
 
@@ -364,7 +364,7 @@ Settled vs. open:
   (above) folds away with a full frontend/nifler split; dead `when` imports could
   also be pruned during the `.s.deps` re-derivation.
 
-Validation bar (held on every change): `koch bootic` must reach its byte-identical
+Validation bar (held on every change): `kitten bootic` must reach its byte-identical
 fixed point, and binary size must not regress (DCE parity), across the
 external-package CI set.
 
@@ -373,7 +373,7 @@ Further possible improvements
 
 A warm-edit profiling pass (2026-07-02, self-compiling the compiler into a
 dedicated `--nimcache`, editing one private proc body — `internalErrorImpl` — in
-the hub module `compiler/msgs.nim`) surfaced where a **hub-module** warm rebuild
+the hub module `compiler/msgs.brownie`) surfaced where a **hub-module** warm rebuild
 actually spends its time. The result refines the "a body-only edit re-fires one
 module" claim above: that holds for the *backend*, but the *frontend* can still
 cascade.
@@ -389,9 +389,9 @@ widely-imported module is not, and the cost is almost entirely frontend re-sem.
   re-sems, even though the symbol it actually consumed is unchanged (e.g. a
   dependent that expanded the `internalError` *template* needs the template body,
   which is untouched; it does **not** need `internalErrorImpl`'s body). In the
-  msgs edit this re-fires **57** `nim m` processes. A `.s.bif` mtime diff *hides*
+  msgs edit this re-fires **57** `brownie m` processes. A `.s.bif` mtime diff *hides*
   this — `.s.bif` is content-stable, so a re-semmed-but-identical module keeps its
-  timestamp; count actual `nim m` PIDs to see the fan-out.
+  timestamp; count actual `brownie m` PIDs to see the fan-out.
 
   The precise fix is **per-symbol NeedsImpl gating**: record which *symbols'*
   bodies a dependent consumed (the recording site `modulegraphs.recordIcImplDep`
@@ -424,7 +424,7 @@ widely-imported module is not, and the cost is almost entirely frontend re-sem.
   fire-all-every-edit `emit` barrier (see below) this halved backend CPU
   (user-time `51s → 24s` on the msgs edit); wall-clock barely moved because the
   frontend dominates, but the reduced CPU/RAM contention matters when an editor is
-  running alongside. `koch ic` stays byte-identical.
+  running alongside. `kitten ic` stays byte-identical.
 
 - **Do NOT make the merge decision content-stable.** A tempting frontend to the
   above: `emit` re-fires for *every* live module whenever `merge` rewrites the
@@ -440,7 +440,7 @@ widely-imported module is not, and the cost is almost entirely frontend re-sem.
 Where a cold build's time is (measured)
 ---------------------------------------
 
-Numbers from `-d:icBNodeProf` (`compiler/icprof.nim`; each process appends a
+Numbers from `-d:icBNodeProf` (`compiler/icprof.brownie`; each process appends a
 line to `$NIM_IC_BNODE_PROF` tagged `stage=<name>`), on Atlas, 204 modules,
 cold, 2026-08-31. They are recorded here because two obvious optimisations
 were tried against them and did not pay.
@@ -449,14 +449,14 @@ Per stage, summed process wall, parallel build of 9.66s elapsed:
 
 | stage | procs | wall |
 | ----- | ----- | ---- |
-| frontend (`nim m`) | 181 | 10.60s |
+| frontend (`brownie m`) | 181 | 10.60s |
 | lower | 14 | 4.49s |
 | cg | 14 | 4.50s |
 | merge | 1 | 0.20s |
 | emit | 14 | 0.42s |
 | link (the whole C compile + link) | 1 | 1.65s |
 
-A `nim m` process splits as: startup 2%, loading imported `.s.bif` 46%,
+A `brownie m` process splits as: startup 2%, loading imported `.s.bif` 46%,
 writing its own `.s.bif` 18%, sem + parse 34% — two thirds of the frontend is
 artifact I/O. The loading is not concentrated anywhere (`BifLoad` 695ms,
 `PosIndex` 519ms, `ModuleId` 841ms, `TopLevel` 1459ms = offers 569 + export
@@ -494,32 +494,32 @@ Code, logic & debugging
 ========================
 
 Core modules:
-- **`compiler/deps.nim`** — graph construction, SCC grouping, discovery fixpoint,
+- **`compiler/deps.brownie`** — graph construction, SCC grouping, discovery fixpoint,
   build-file generation; `commandIc`.
-- **`compiler/ast2nif.nim`** — AST↔NIF, the cookie hashes (`cookieSd`,
+- **`compiler/ast2nif.brownie`** — AST↔NIF, the cookie hashes (`cookieSd`,
   `writeIfaceCookie`, `writeImplCookie`, `writeEdgesFile`, `writeSemDeps`).
-- **`compiler/nifbackend.nim`** — the per-module backend stages (`generateCgStage`,
+- **`compiler/nifbackend.brownie`** — the per-module backend stages (`generateCgStage`,
   `generateMergeStage`, `generateEmitStage`, `generateLinkStage`).
-- **`compiler/cnif.nim`** — `.c.nif` artifact read/write, `computeMergeDecision`,
+- **`compiler/cnif.brownie`** — `.c.nif` artifact read/write, `computeMergeDecision`,
   `renderCFromArtifact`.
-- **`compiler/icconfig.nim`** — precompiled config.
-- **`compiler/pipelines.nim`** / **`modulegraphs.nim`** — pipeline integration and
+- **`compiler/icconfig.brownie`** — precompiled config.
+- **`compiler/pipelines.brownie`** / **`modulegraphs.brownie`** — pipeline integration and
   the graph state (`importDeps`, `icImplDeps`, `icCnifFiles`, `instDisambs`, …).
 
 Manual workflow:
-- Frontend a module: ``nim m --nimcache:nifcache path/to/mod.nim`` (writes
+- Frontend a module: ``brownie m --nimcache:nifcache path/to/mod.brownie`` (writes
   ``.nif`` + cookies + ``.s.deps``).
-- Backend is stage-based (a bare ``nim nifc main.nim`` errors — there is no
+- Backend is stage-based (a bare ``brownie nifc main.brownie`` errors — there is no
   whole-program fallback). The exact per-stage commands `nifmake` runs are in the
   ``*.backend.build.nif`` build file; rerun one directly against an existing cache,
-  e.g. ``nim nifc --nimcache:nifcache --icBackendStage:cg --icBackendModule:<suffix> main.nim``
+  e.g. ``brownie nifc --nimcache:nifcache --icBackendStage:cg --icBackendModule:<suffix> main.brownie``
   to regenerate one module's ``.c.nif``, then ``--icBackendStage:merge`` /
   ``:emit`` / ``:link``.
 - NIF and ``.c.nif`` files are text — open/grep them directly; ``diff`` two
   successive ``.nif`` to see why a module rebuilt.
-- Force a re-sem: delete the module's ``.nif`` and rerun `nim m`.
+- Force a re-sem: delete the module's ``.nif`` and rerun `brownie m`.
 - A stale-cache crash after editing the serialization layout means bumping
-  ``icFormatVersion`` (`compiler/options.nim`).
+  ``icFormatVersion`` (`compiler/options.brownie`).
 
 See also
 ========
@@ -532,9 +532,9 @@ Testing IC
 
 Two mechanisms, at very different scales.
 
-**`tests/ic` — metamorphic tests.** A `t*.nim` whose body contains `#? metamorphic`
+**`tests/ic` — metamorphic tests.** A `t*.brownie` whose body contains `#? metamorphic`
 drives a sequence of cross-module edits through the IC driver in one fixed build
-directory (see `testament/categories.nim`, `runMetamorphicIcTest`). Directives:
+directory (see `testament/categories.brownie`, `runMetamorphicIcTest`). Directives:
 
 | directive | effect |
 | --------- | ------ |
@@ -547,20 +547,20 @@ Step attributes: ``expect: <stdout>``, ``fails: <substring>`` (BOTH compilers mu
 reject it, with that text), ``noop``, ``body-edit``, ``iface-edit``,
 ``modules: <n>``, ``clean``, ``no-oracle``.
 
-Every successful step is **also compiled with `nim c` and run, and the two
+Every successful step is **also compiled with `brownie c` and run, and the two
 outputs must agree**. That oracle is the only check in the suite that is not
 IC-against-IC: `clean == incremental`, `noop changes nothing` and the cookie
 invariants are all satisfied by an IC that is *consistently* wrong, which is how
 two silent miscompilations survived (a NIF-loaded module's `sfInjectDestructors`
 was lost, so top-level destructors were never injected; `nfFirstWrite`/`nfLastRead`
 had nowhere to live on a serialized sym node, so every first assignment to a
-destructor-bearing local became `=sink` over zeroed memory). `koch bootic` has the
+destructor-bearing local became `=sink` over zeroed memory). `kitten bootic` has the
 same blind spot — it proves the compiler reproduces *itself*.
 
 **`testament --ic` — the whole corpus.** Appends `--ic:on` to every C and C++
 test compile, so IC inherits the existing ~10k programs and their expected
 output instead of the handful written for it by hand. Because it is a switch and
-not a command, a test that overrides the command wholesale (`cmd: "nim cpp -r
+not a command, a test that overrides the command wholesale (`cmd: "brownie cpp -r
 $file"`) simply gains the switch — no verb rewriting, and the C++ corpus comes
 along for free. Each also gets a private nimcache; without one they would share
 a cache and thrash it.
@@ -580,7 +580,7 @@ Measured on `tests/destructor` (97 test runs, 32-core box):
 
 | | cold | warm |
 | - | ---- | ---- |
-| `nim c` | 35s | 32s |
+| `brownie c` | 35s | 32s |
 | `--ic:on` | ~3m30 | **9.8s** |
 
 The warm number is the developer loop and it is 3.2x faster than the classic
@@ -598,14 +598,14 @@ test twice in a row makes the second run's `nimout` empty.
 The C++ backend
 ===============
 
-``nim cpp --ic:on`` works, and `tests/cpp` passes under it. Three things had to
+``brownie cpp --ic:on`` works, and `tests/cpp` passes under it. Three things had to
 change for that, and they are worth knowing because they are the shape of every
 "C++ needs the whole program" problem the per-module backend has:
 
-* **The driver must name the right file.** ``deps.nim`` DECLARES each module's
+* **The driver must name the right file.** ``deps.brownie`` DECLARES each module's
   translation unit to ``nifmake`` without loading a single module, so it cannot
   ask ``cgen.getCFile``; ``options.icCFileExt`` mirrors that formula at backend
-  granularity (``.nim.cpp`` / ``.nim.m`` / ``.nim.c``).
+  granularity (``.brownie.cpp`` / ``.brownie.m`` / ``.brownie.c``).
 
 * **C++ has no designated initializers**, so the RTTI record is a bare variable
   that ``DatInit`` fills field by field. That bare ``TNimTypeV2 x;`` is a

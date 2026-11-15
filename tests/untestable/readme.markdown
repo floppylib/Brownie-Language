@@ -5,5 +5,5 @@ for various reasons:
 - tests that are extremely slow or require large amounts of memory or storage
 - tests that spawn local daemons
 
-Integration tests can become stale very quickly. Automated ./koch tests are
+Integration tests can become stale very quickly. Automated ./kitten tests are
 strongly recommended.

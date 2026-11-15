@@ -6,7 +6,7 @@ rule: If `result` does not refer to a location pointing to the heap
 (that is in `result = X` the `X` involves a `ptr` or `ref` access)
 then it has to be derived from the routine's first parameter:
 
-  ```nim
+  ```brownie
   proc forward[T](x: var T): var T =
     result = x # ok, derived from the first parameter.
 

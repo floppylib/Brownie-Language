@@ -1,5 +1,5 @@
 ====================
-Nim Standard Library
+Brownie Standard Library
 ====================
 
 :Author: Andreas Rumpf
@@ -9,7 +9,7 @@ Nim Standard Library
 .. include:: rstcommon.rst
 .. contents::
 
-Nim's library is divided into *pure libraries*, *impure libraries*, and *wrappers*.
+Brownie's library is divided into *pure libraries*, *impure libraries*, and *wrappers*.
 
 Pure libraries do not depend on any external ``*.dll`` or ``lib*.so`` binary
 while impure libraries do. A wrapper is an impure library that is a very
@@ -21,7 +21,7 @@ Read [this document](apis.html) for a quick overview of the API design.
 Nimble
 ======
 
-Nim's standard library only covers the basics, check
+Brownie's standard library only covers the basics, check
 out https://nimble.directory/ for a list of 3rd party packages.
 
 
@@ -54,25 +54,25 @@ Core
 
 * [effecttraits](effecttraits.html)
   Access to the inferred .raises effects
-  for Nim's macro system.
+  for Brownie's macro system.
 
 * [endians](endians.html)
   Helpers that deal with different byte orders.
 
 * [locks](locks.html)
-  Locks and condition variables for Nim.
+  Locks and condition variables for Brownie.
 
 * [macrocache](macrocache.html)
   Provides an API for macros to collect compile-time information across modules.
 
 * [macros](macros.html)
-  Contains the AST API and documentation of Nim for writing macros.
+  Contains the AST API and documentation of Brownie for writing macros.
 
 * [rlocks](rlocks.html)
-  Reentrant locks for Nim.
+  Reentrant locks for Brownie.
 
 * [typeinfo](typeinfo.html)
-  Provides (unsafe) access to Nim's run-time type information.
+  Provides (unsafe) access to Brownie's run-time type information.
 
 * [typetraits](typetraits.html)
   Compile-time reflection procs for working with types.
@@ -117,7 +117,7 @@ Collections
   Efficient implementation of a set of ints as a sparse bit set.
 
 * [lists](lists.html)
-  Nim linked list support. Contains singly and doubly linked lists and
+  Brownie linked list support. Contains singly and doubly linked lists and
   circular lists ("rings").
 
 * [options](options.html)
@@ -132,7 +132,7 @@ Collections
   in particular, concatenation is done in O(1) instead of O(n).
 
 * [sets](sets.html)
-  Nim hash set support.
+  Brownie hash set support.
 
 * [strtabs](strtabs.html)
   The `strtabs` module implements an efficient hash table that is a mapping
@@ -140,7 +140,7 @@ Collections
   style-insensitive modes.
 
 * [tables](tables.html)
-  Nim hash table support. Contains tables, ordered tables, and count tables.
+  Brownie hash table support. Contains tables, ordered tables, and count tables.
 
 
 String handling
@@ -172,7 +172,7 @@ String handling
 * [strformat](strformat.html)
   Macro based standard string interpolation/formatting. Inspired by
   Python's f-strings.\
-  **Note:** if you need templating, consider using Nim
+  **Note:** if you need templating, consider using Brownie
   [Source Code Filters (SCF)](filters.html).
 
 * [strmisc](strmisc.html)
@@ -195,7 +195,7 @@ String handling
   Based on Python's Unidecode module.
 
 * [widestrs](widestrs.html)
-  Nim support for C/C++'s wide strings.
+  Brownie support for C/C++'s wide strings.
 
 * [wordwrap](wordwrap.html)
   An algorithm for word-wrapping Unicode strings.
@@ -229,7 +229,7 @@ Generic Operating System Services
   Its primary purpose is to produce output for Nimble packages,
   but it also contains the widely used **Distribution** enum
   that is useful for writing platform-specific code.
-  See [packaging](packaging.html) for hints on distributing Nim using OS packages.
+  See [packaging](packaging.html) for hints on distributing Brownie using OS packages.
 
 * [dynlib](dynlib.html)
   Accessing symbols from shared libraries.
@@ -268,7 +268,7 @@ Generic Operating System Services
 * [streams](streams.html)
   A stream interface and two implementations thereof:
   the `FileStream` and the `StringStream` which implement the stream
-  interface for Nim file objects (`File`) and strings. Other modules
+  interface for Brownie file objects (`File`) and strings. Other modules
   may provide other implementations for this standard stream interface.
 
 * [symlinks](symlinks.html)
@@ -386,10 +386,10 @@ Threading
   Basic primitives for creating parallel programs.
 
 * [threadpool](threadpool.html)
-  Implements Nim's [spawn](manual_experimental.html#parallel-amp-spawn).
+  Implements Brownie's [spawn](manual_experimental.html#parallel-amp-spawn).
 
 * [typedthreads](typedthreads.html)
-  Basic Nim thread support.
+  Basic Brownie thread support.
 
 
 Parsers
@@ -410,7 +410,7 @@ Parsers
   parser. The configuration file's syntax is similar to the Windows ``.ini``
   format, but much more powerful, as it is not a line based parser. String
   literals, raw string literals, and triple quote string literals are supported
-  as in the Nim programming language.
+  as in the Brownie programming language.
 
 * [parsecsv](parsecsv.html)
   The `parsecsv` module implements a simple high-performance CSV parser.
@@ -486,7 +486,7 @@ Hashing
   A Base64 encoder and decoder.
 
 * [hashes](hashes.html)
-  Efficient computations of hash values for diverse Nim types.
+  Efficient computations of hash values for diverse Brownie types.
 
 * [md5](md5.html)
   The MD5 checksum algorithm.
@@ -508,7 +508,7 @@ Serialization
   using JSON.
 
 * [marshal](marshal.html)
-  Contains procs for serialization and deserialization of arbitrary Nim
+  Contains procs for serialization and deserialization of arbitrary Brownie
   data structures.
 
 
@@ -526,13 +526,13 @@ Miscellaneous
   Color handling.
 
 * [coro](coro.html)
-  Experimental coroutines in Nim.
+  Experimental coroutines in Brownie.
 
 * [decls](decls.html)
   Syntax sugar for some declarations.
 
 * [enumerate](enumerate.html)
-  `enumerate` syntactic sugar based on Nim's macro system.
+  `enumerate` syntactic sugar based on Brownie's macro system.
 
 * [importutils](importutils.html)
   Utilities related to import and symbol resolution.
@@ -544,7 +544,7 @@ Miscellaneous
   Turns access violations or segfaults into a `NilAccessDefect` exception.
 
 * [sugar](sugar.html)
-  Nice syntactic sugar based on Nim's macro system.
+  Nice syntactic sugar based on Brownie's macro system.
 
 * [unittest](unittest.html)
   Implements a Unit testing DSL.

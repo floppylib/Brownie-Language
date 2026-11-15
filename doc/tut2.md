@@ -1,5 +1,5 @@
 ======================
-Nim Tutorial (Part II)
+Brownie Tutorial (Part II)
 ======================
 
 :Author: Andreas Rumpf
@@ -15,7 +15,7 @@ Introduction
 
 > "Repetition renders the ridiculous reasonable." -- Norman Wildberger
 
-This document is a tutorial for the advanced constructs of the *Nim*
+This document is a tutorial for the advanced constructs of the *Brownie*
 programming language. **Note that this document is somewhat obsolete as the**
 [manual](manual.html) **contains many more examples of the advanced language
 features.**
@@ -24,7 +24,7 @@ features.**
 Pragmas
 =======
 
-Pragmas are Nim's method to give the compiler additional information/
+Pragmas are Brownie's method to give the compiler additional information/
 commands without introducing a massive number of new keywords. Pragmas are
 enclosed in the special `{.` and `.}` curly dot brackets. This tutorial
 does not cover pragmas. See the [manual](manual.html#pragmas) or [user guide](
@@ -35,7 +35,7 @@ pragmas.
 Object Oriented Programming
 ===========================
 
-While Nim's support for object oriented programming (OOP) is minimalistic,
+While Brownie's support for object oriented programming (OOP) is minimalistic,
 powerful OOP techniques can be used. OOP is seen as *one* way to design a
 program, not *the only* way. Often a procedural approach leads to simpler
 and more efficient code. In particular, preferring composition over inheritance
@@ -45,7 +45,7 @@ is often the better design.
 Inheritance
 -----------
 
-Inheritance in Nim is entirely optional. To enable inheritance with
+Inheritance in Brownie is entirely optional. To enable inheritance with
 runtime type information the object needs to inherit from
 `RootObj`.  This can be done directly, or indirectly by
 inheriting from an object that inherits from `RootObj`.  Usually
@@ -53,7 +53,7 @@ types with inheritance are also marked as `ref` types even though
 this isn't strictly enforced. To check at runtime if an object is of a certain
 type, the `of` operator can be used.
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     Person = ref object of RootObj
       name*: string  # the * means that `name` is accessible from other modules
@@ -84,14 +84,14 @@ Student(id: 123)` will truncate subclass fields.
 
 **Note**: Composition (*has-a* relation) is often preferable to inheritance
 (*is-a* relation) for simple code reuse. Since objects are value types in
-Nim, composition is as efficient as inheritance.
+Brownie, composition is as efficient as inheritance.
 
 Interfaces
 ----------
 Concepts like abstract classes, protocols, traits, and interfaces can be
 simulated as objects of closures:
 
-```nim
+```brownie
 
 type
   IntFieldInterface = object
@@ -111,13 +111,13 @@ Mutually recursive types
 ------------------------
 
 Objects, tuples and references can model quite complex data structures which
-depend on each other; they are *mutually recursive*. In Nim
+depend on each other; they are *mutually recursive*. In Brownie
 these types can only be declared within a single type section. (Anything else
 would require arbitrary symbol lookahead which slows down compilation.)
 
 Example:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     Node = ref object  # a reference to an object with the following field:
       le, ri: Node     # left and right subtrees
@@ -132,7 +132,7 @@ Example:
 
 Type conversions
 ----------------
-Nim distinguishes between `type casts`:idx: and `type conversions`:idx:.
+Brownie distinguishes between `type casts`:idx: and `type conversions`:idx:.
 Casts are done with the `cast` operator and force the compiler to
 interpret a bit pattern to be of another type.
 
@@ -144,7 +144,7 @@ raised.
 The syntax for type conversions is `destination_type(expression_to_convert)`
 (like an ordinary call):
 
-  ```nim
+  ```brownie
   proc getID(x: Person): int =
     Student(x).id
   ```
@@ -160,8 +160,8 @@ variant types are needed.
 
 An example:
 
-  ```nim  test = "nim c $1"
-  # This is an example how an abstract syntax tree could be modelled in Nim
+  ```brownie  test = "brownie c $1"
+  # This is an example how an abstract syntax tree could be modelled in Brownie
   type
     NodeKind = enum  # the different node types
       nkInt,          # a leaf with an integer value
@@ -203,7 +203,7 @@ If there are no remaining arguments, the parentheses can be omitted:
 This method call syntax is not restricted to objects, it can be used
 for any type:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   import std/strutils
 
   echo "abc".len # is the same as echo len("abc")
@@ -217,7 +217,7 @@ postfix notation.)
 
 So "pure object oriented" code is easy to write:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   import std/[strutils, sequtils]
 
   stdout.writeLine("Give a list of numbers (separated by spaces): ")
@@ -228,12 +228,12 @@ So "pure object oriented" code is easy to write:
 
 Properties
 ----------
-As the above example shows, Nim has no need for *get-properties*:
+As the above example shows, Brownie has no need for *get-properties*:
 Ordinary get-procedures that are called with the *method call syntax* achieve
 the same. But setting a value is different; for this a special setter syntax
 is needed:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     Socket* = ref object of RootObj
       h: int # cannot be accessed from the outside of the module due to missing star
@@ -257,7 +257,7 @@ is needed:
 The `[]` array access operator can be overloaded to provide
 `array properties`:idx:\ :
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     Vector* = object
       x, y, z: float
@@ -289,7 +289,7 @@ Dynamic dispatch
 Procedures always use static dispatch. For dynamic dispatch replace the
 `proc` keyword by `method`:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     Expression = ref object of RootObj ## abstract base class for an expression
     Literal = ref object of Expression
@@ -315,13 +315,13 @@ Note that in the example the constructors `newLit` and `newPlus` are procs
 because it makes more sense for them to use static binding, but `eval` is a
 method because it requires dynamic binding.
 
-**Note:** Starting from Nim 0.20, to use multi-methods one must explicitly pass
+**Note:** Starting from Brownie 0.20, to use multi-methods one must explicitly pass
 ``--multimethods:on`` when compiling.
 
 In a multi-method all parameters that have an object type are used for the
 dispatching:
 
-  ```nim  test = "nim c --multiMethods:on $1"
+  ```brownie  test = "brownie c --multiMethods:on $1"
   type
     Thing = ref object of RootObj
     Unit = ref object of Thing
@@ -347,7 +347,7 @@ As the example demonstrates, invocation of a multi-method cannot be ambiguous:
 Collide 2 is preferred over collide 1 because the resolution works from left to
 right. Thus `Unit, Thing` is preferred over `Thing, Unit`.
 
-**Performance note**: Nim generates dispatch trees for methods by default.
+**Performance note**: Brownie generates dispatch trees for methods by default.
 With `--experimental:vtables`, it also provides an option to generate
 a virtual method table for methods,
 which tends to produce better performance in general, 
@@ -358,7 +358,7 @@ However, other optimizations like compile time evaluation or dead code eliminati
 Exceptions
 ==========
 
-In Nim exceptions are objects. By convention, exception types are
+In Brownie exceptions are objects. By convention, exception types are
 suffixed with 'Error'. The [system](system.html) module defines an
 exception hierarchy that you might want to stick to. Exceptions derive from
 `system.Exception`, which provides the common interface.
@@ -375,7 +375,7 @@ Raise statement
 ---------------
 Raising an exception is done with the `raise` statement:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   var
     e: ref OSError
   new(e)
@@ -387,7 +387,7 @@ If the `raise` keyword is not followed by an expression, the last exception
 is *re-raised*. For the purpose of avoiding repeating this common code pattern,
 the template `newException` in the `system` module can be used:
 
-  ```nim
+  ```brownie
   raise newException(OSError, "the request to the OS failed")
   ```
 
@@ -397,7 +397,7 @@ Try statement
 
 The `try` statement handles exceptions:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   from std/strutils import parseInt
 
   # read the first two lines of a text file that should contain numbers
@@ -444,7 +444,7 @@ system.html#getCurrentException) and [getCurrentExceptionMsg()](
 system.html#getCurrentExceptionMsg) procs from the [system](system.html)
 module. Example:
 
-  ```nim
+  ```brownie
   try:
     doSomethingHere()
   except CatchableError:
@@ -465,7 +465,7 @@ instance, if you specify that a proc raises `IOError`, and at some point it
 (or one of the procs it calls) starts raising a new exception the compiler will
 prevent that proc from compiling. Usage example:
 
-  ```nim
+  ```brownie
   proc complexProc() {.raises: [IOError, ArithmeticDefect].} =
     ...
 
@@ -482,22 +482,22 @@ help you locate the offending code which has changed.
 If you want to add the `{.raises.}` pragma to existing code, the compiler can
 also help you. You can add the `{.effects.}` pragma statement to your proc and
 the compiler will output all inferred effects up to that point (exception
-tracking is part of Nim's effect system). Another more roundabout way to
-find out the list of exceptions raised by a proc is to use the Nim ``doc``
+tracking is part of Brownie's effect system). Another more roundabout way to
+find out the list of exceptions raised by a proc is to use the Brownie ``doc``
 command which generates documentation for a whole module and decorates all
-procs with the list of raised exceptions. You can read more about Nim's
+procs with the list of raised exceptions. You can read more about Brownie's
 [effect system and related pragmas in the manual](manual.html#effect-system).
 
 
 Generics
 ========
 
-Generics are Nim's means to parametrize procs, iterators or types
+Generics are Brownie's means to parametrize procs, iterators or types
 with `type parameters`:idx:. Generic parameters are written within square
 brackets, for example `Foo[T]`. They are most useful for efficient type safe
 containers:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   type
     BinaryTree*[T] = ref object # BinaryTree is a generic type with
                                 # generic param `T`
@@ -562,7 +562,7 @@ is not hidden and is used in the `preorder` iterator.
 
 There is a special `[:T]` syntax when using generics with the method call syntax:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   proc foo[T](i: T) =
     discard
 
@@ -577,7 +577,7 @@ There is a special `[:T]` syntax when using generics with the method call syntax
 Templates
 =========
 
-Templates are a simple substitution mechanism that operates on Nim's
+Templates are a simple substitution mechanism that operates on Brownie's
 abstract syntax trees. Templates are processed in the semantic pass of the
 compiler. They integrate well with the rest of the language and share none
 of C's preprocessor macros flaws.
@@ -586,7 +586,7 @@ To *invoke* a template, call it like a procedure.
 
 Example:
 
-  ```nim
+  ```brownie
   template `!=` (a, b: untyped): untyped =
     # this definition exists in the System module
     not (a == b)
@@ -606,7 +606,7 @@ for IEEE floating point numbers - NaN breaks basic boolean logic.)
 Templates are especially useful for lazy evaluation purposes. Consider a
 simple proc for logging:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   const
     debug = true
 
@@ -624,7 +624,7 @@ evaluation for procedures is *eager*).
 
 Turning the `log` proc into a template solves this problem:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   const
     debug = true
 
@@ -646,7 +646,7 @@ If the template has no explicit return type,
 
 To pass a block of statements to a template, use `untyped` for the last parameter:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   template withFile(f: untyped, filename: string, mode: FileMode,
                     body: untyped) =
     let fn = filename
@@ -673,7 +673,7 @@ once.
 Example: Lifting Procs
 ----------------------
 
-  `````nim  test = "nim c $1"
+  `````brownie  test = "brownie c $1"
   import std/math
 
   template liftScalarProc(fname) =
@@ -682,7 +682,7 @@ Example: Lifting Procs
     ## to provide templated procs that can handle a single
     ## parameter of seq[T] or nested seq[seq[]] or the same type
     ##
-    ##   ```Nim
+    ##   ```Brownie
     ##   liftScalarProc(abs)
     ##   # now abs(@[@[1,-2], @[-2,-3]]) == @[@[1,2], @[2,3]]
     ##   ```
@@ -700,7 +700,7 @@ Example: Lifting Procs
 Compilation to JavaScript
 =========================
 
-Nim code can be compiled to JavaScript. However in order to write
+Brownie code can be compiled to JavaScript. However in order to write
 JavaScript-compatible code you should remember the following:
 - `addr` and `ptr` have slightly different semantic meaning in JavaScript.
   It is recommended to avoid those if you're not sure how they are translated

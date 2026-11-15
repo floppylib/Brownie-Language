@@ -23,21 +23,21 @@ Writing tests
 
 There are 4 types of tests:
 
-1. `runnableExamples` documentation comment tests, ran by `nim doc mymod.nim`:cmd:
+1. `runnableExamples` documentation comment tests, ran by `brownie doc mymod.brownie`:cmd:
    These end up in documentation and ensure documentation stays in sync with code.
 
-2. separate test files, e.g.: ``tests/stdlib/tos.nim``.
-   In nim repo, `testament`:cmd: (see below) runs all
-   ``$nim/tests/*/t*.nim`` test files;
-   for nimble packages, see https://github.com/nim-lang/nimble#tests.
+2. separate test files, e.g.: ``tests/stdlib/tos.brownie``.
+   In brownie repo, `testament`:cmd: (see below) runs all
+   ``$brownie/tests/*/t*.brownie`` test files;
+   for nimble packages, see https://github.com/brownie-lang/nimble#tests.
 
-3. (deprecated) tests in `when isMainModule:` block, ran by `nim r mymod.nim`:cmd:.
+3. (deprecated) tests in `when isMainModule:` block, ran by `brownie r mymod.brownie`:cmd:.
    `nimble test`:cmd: can run those in nimble packages when specified in a
    `task "test"`.
 
-4. (not preferred) ``.. code-block:: nim`` RST snippets;
+4. (not preferred) ``.. code-block:: brownie`` RST snippets;
    these should only be used in rst sources,
-   in nim sources `runnableExamples` should now always be preferred to those for
+   in brownie sources `runnableExamples` should now always be preferred to those for
    several reasons (cleaner syntax, syntax highlights, batched testing, and
    parameter `rdoccmd` allows customization).
 
@@ -47,8 +47,8 @@ that don't. Always leave the code cleaner than you found it.
 Stdlib
 ------
 
-Each stdlib module (anything under ``lib/``, e.g. ``lib/pure/os.nim``) should
-preferably have a corresponding separate test file, e.g. ``tests/stdlib/tos.nim``.
+Each stdlib module (anything under ``lib/``, e.g. ``lib/pure/os.brownie``) should
+preferably have a corresponding separate test file, e.g. ``tests/stdlib/tos.brownie``.
 The old convention was to add a `when isMainModule:` block in the source file,
 which only gets executed when the tester is building the file.
 
@@ -59,7 +59,7 @@ things like `echo "done"`. Don't use `unittest.suite` and `unittest.test`.
 
 Sample test:
 
-  ```nim
+  ```brownie
   block: # foo
     doAssert foo(1) == 10
 
@@ -92,25 +92,25 @@ Compiler
 --------
 
 The tests for the compiler use a testing tool called `testament`:cmd:. They are all
-located in ``tests/`` (e.g.: ``tests/destructor/tdestructor3.nim``).
+located in ``tests/`` (e.g.: ``tests/destructor/tdestructor3.brownie``).
 Each test has its own file. All test files are prefixed with `t`. If you want
 to create a file for import into another test only, use the prefix `m`.
 
 At the beginning of every test is the expected behavior of the test.
 Possible keys are:
 
-- `cmd`: A compilation command template e.g. `nim $target --threads:on $options $file`:cmd:
+- `cmd`: A compilation command template e.g. `brownie $target --threads:on $options $file`:cmd:
 - `output`: The expected output (stdout + stderr), most likely via `echo`
 - `exitcode`: Exit code of the test (via `exit(number)`)
 - `errormsg`: The expected compiler error message
 - `file`: The file the errormsg was produced at
 - `line`: The line the errormsg was produced at
 
-For a full spec, see here: ``testament/specs.nim``
+For a full spec, see here: ``testament/specs.brownie``
 
 An example of a test:
 
-  ```nim
+  ```brownie
   discard """
     errormsg: "type mismatch: got (PTest)"
   """
@@ -131,37 +131,37 @@ Running tests
 You can run the tests with
 
   ```cmd
-  ./koch tests
+  ./kitten tests
   ```
 
 which will run a good subset of tests. Some tests may fail. If you
 only want to see the output of failing tests, go for
 
   ```cmd
-  ./koch tests --failing all
+  ./kitten tests --failing all
   ```
 
 You can also run only a single category of tests. A category is a subdirectory
 in the ``tests/`` directory. There are a couple of special categories; for a
-list of these, see ``testament/categories.nim``, at the bottom.
+list of these, see ``testament/categories.brownie``, at the bottom.
 
   ```cmd
-  ./koch tests c lib # compiles / runs stdlib modules, including `isMainModule` tests
-  ./koch tests c megatest # runs a set of tests that can be combined into 1
+  ./kitten tests c lib # compiles / runs stdlib modules, including `isMainModule` tests
+  ./kitten tests c megatest # runs a set of tests that can be combined into 1
   ```
 
 To run a single test:
 
   ```cmd
-  ./koch test run <category>/<name>    # e.g.: tuples/ttuples_issues
-  ./koch test run tests/stdlib/tos.nim # can also provide relative path
+  ./kitten test run <category>/<name>    # e.g.: tuples/ttuples_issues
+  ./kitten test run tests/stdlib/tos.brownie # can also provide relative path
   ```
 
 For reproducible tests (to reproduce an environment more similar to the one
 run by Continuous Integration on GitHub actions), you may want to disable your
-local configuration (e.g. in ``~/.config/nim/nim.cfg``) which may affect some
+local configuration (e.g. in ``~/.config/brownie/brownie.cfg``) which may affect some
 tests; this can also be achieved by using
-`export XDG_CONFIG_HOME=pathtoAlternateConfig`:cmd: before running `./koch`:cmd:
+`export XDG_CONFIG_HOME=pathtoAlternateConfig`:cmd: before running `./kitten`:cmd:
 commands.
 
 
@@ -177,21 +177,21 @@ the tester needs to know in order to compare the two.
   ```cmd
   git checkout devel
   DEVEL_COMMIT=$(git rev-parse HEAD)
-  ./koch tests
+  ./kitten tests
   ```
 
 Then switch over to your changes and run the tester again.
 
   ```cmd
   git checkout your-changes
-  ./koch tests
+  ./kitten tests
   ```
 
 Then you can ask the tester to create a ``testresults.html`` which will
 tell you if any new tests passed/failed.
 
   ```cmd
-  ./koch tests --print html $DEVEL_COMMIT
+  ./kitten tests --print html $DEVEL_COMMIT
   ```
 
 
@@ -201,7 +201,7 @@ Deprecation
 Backwards compatibility is important. When renaming types, procedures, etc. the old name
 must be marked as deprecated using the `deprecated` pragma:
 
-  ```nim
+  ```brownie
   # for routines (proc/template/macro/iterator) and types:
   proc oldProc(a: int, b: float): bool {.deprecated:
       "deprecated since v1.2.3; use `newImpl: string -> int` instead".} = discard
@@ -225,16 +225,16 @@ Documentation
 
 When contributing new procs, be sure to add documentation, especially if
 the proc is public. Even private procs benefit from documentation and can be
-viewed using `nim doc --docInternal foo.nim`:cmd:.
+viewed using `brownie doc --docInternal foo.brownie`:cmd:.
 Documentation begins on the line
 following the `proc` definition, and is prefixed by `##` on each line.
 
 Runnable code examples are also encouraged, to show typical behavior with a few
 test cases (typically 1 to 3 `assert` statements, depending on complexity).
-These `runnableExamples` are automatically run by `nim doc mymodule.nim`:cmd:
+These `runnableExamples` are automatically run by `brownie doc mymodule.brownie`:cmd:
 as well as `testament`:cmd: and guarantee they stay in sync.
 
-  ```nim
+  ```brownie
   proc addBar*(a: string): string =
     ## Adds "Bar" to `a`.
     runnableExamples:
@@ -244,11 +244,11 @@ as well as `testament`:cmd: and guarantee they stay in sync.
 
 See [parentDir](os.html#parentDir,string) example.
 
-The RestructuredText Nim uses has a special syntax for including code snippets
-embedded in documentation; these are not run by `nim doc`:cmd: and therefore are
+The RestructuredText Brownie uses has a special syntax for including code snippets
+embedded in documentation; these are not run by `brownie doc`:cmd: and therefore are
 not guaranteed to stay in sync, so `runnableExamples` is almost always preferred:
 
-  ````nim
+  ````brownie
   proc someProc*(): string =
     ## Returns "something"
     ##
@@ -259,14 +259,14 @@ not guaranteed to stay in sync, so `runnableExamples` is almost always preferred
   ````
 
 The \`\`\` followed by a newline and an indentation instructs the
-`nim doc`:cmd: command to produce syntax-highlighted example code with the
-documentation (\`\`\` is sufficient inside a ``.nim`` module, while from
-a ``.md`` one needs to set the language explicitly as \`\`\`nim).
+`brownie doc`:cmd: command to produce syntax-highlighted example code with the
+documentation (\`\`\` is sufficient inside a ``.brownie`` module, while from
+a ``.md`` one needs to set the language explicitly as \`\`\`brownie).
 
 When forward declaration is used, the documentation should be included with the
 first appearance of the proc.
 
-  ```nim
+  ```brownie
   proc hello*(): string
     ## Put documentation here
   proc nothing() = discard
@@ -278,7 +278,7 @@ first appearance of the proc.
 The preferred documentation style is to begin with a capital letter and use
 the third-person singular. That is, between:
 
-  ```nim
+  ```brownie
   proc hello*(): string =
     ## Returns "hello"
     result = "hello"
@@ -286,7 +286,7 @@ the third-person singular. That is, between:
 
 or
 
-  ```nim
+  ```brownie
   proc hello*(): string =
     ## say hello
     result = "hello"
@@ -297,23 +297,23 @@ the first is preferred.
 When you specify an *RST role* (highlighting/interpretation marker) do it
 in the postfix form for uniformity, that is after \`text in backticks\`.
 For example an ``:idx:`` role for referencing a topic ("SQLite" in the
-example below) from [Nim Index] can be used in doc comment this way:
+example below) from [Brownie Index] can be used in doc comment this way:
 
-  ```nim
+  ```brownie
   ## A higher level `SQLite`:idx: database wrapper.
   ```
 
-.. _`Nim Index`: https://nim-lang.org/docs/theindex.html
+.. _`Brownie Index`: https://brownie-lang.org/docs/theindex.html
 
 Inline monospaced text can be input using \`single backticks\` or
 \`\`double backticks\`\`. The former are syntactically highlighted,
 the latter are not.
-To avoid accidental highlighting follow this rule in ``*.nim`` files:
+To avoid accidental highlighting follow this rule in ``*.brownie`` files:
 
-* Use single backticks for fragments of code in Nim and other
-  programming languages, including identifiers, in ``*.nim`` files.
+* Use single backticks for fragments of code in Brownie and other
+  programming languages, including identifiers, in ``*.brownie`` files.
 
-  For languages other than Nim add a role after final backtick,
+  For languages other than Brownie add a role after final backtick,
   e.g. for C++ inline highlighting:
 
       `#include <stdio.h>`:cpp:
@@ -328,19 +328,19 @@ To avoid accidental highlighting follow this rule in ``*.nim`` files:
 
 * Use double backticks:
 
-  * For file names: \`\`os.nim\`\`
+  * For file names: \`\`os.brownie\`\`
   * For fragments of strings **not** enclosed by `"` and `"` and not
     related to code, e.g. text of compiler messages
   * When code ends with a standalone ``\`` (otherwise a combination of
     ``\`` and a final \` would get escaped)
 
 .. Note:: ``*.rst`` files have ``:literal:`` as their default role.
-  So for them the rule above is only applicable if the ``:nim:`` role
+  So for them the rule above is only applicable if the ``:brownie:`` role
   is set up manually as the default [^1]:
 
-      .. role:: nim(code)
-         :language: nim
-      .. default-role:: nim
+      .. role:: brownie(code)
+         :language: brownie
+      .. default-role:: brownie
 
   The first 2 lines are for other RST implementations,
   including Github one.
@@ -356,11 +356,11 @@ propagate best practices.
 
 .. _define_needs_prefix:
 New `defined(foo)` symbols need to be prefixed by the nimble package name, or
-by `nim` for symbols in nim sources (e.g. compiler, standard library). This is
+by `brownie` for symbols in brownie sources (e.g. compiler, standard library). This is
 to avoid name conflicts across packages.
 
-  ```nim
-  # if in nim sources
+  ```brownie
+  # if in brownie sources
   when defined(allocStats): discard # bad, can cause conflicts
   when defined(nimAllocStats): discard # preferred
   # if in a package `cligen`:
@@ -371,7 +371,7 @@ to avoid name conflicts across packages.
 .. _noimplicitbool:
 Take advantage of no implicit bool conversion
 
-  ```nim
+  ```brownie
   doAssert isValid() == true
   doAssert isValid() # preferred
   ```
@@ -379,7 +379,7 @@ Take advantage of no implicit bool conversion
 .. _design_for_mcs:
 Design with method call syntax chaining in mind
 
-  ```nim
+  ```brownie
   proc foo(cond: bool, lines: seq[string]) # bad
   proc foo(lines: seq[string], cond: bool) # preferred
   # can be called as: `getLines().foo(false)`
@@ -387,9 +387,9 @@ Design with method call syntax chaining in mind
 
 .. _avoid_quit:
 Use exceptions (including `assert` / `doAssert`) instead of `quit`
-rationale: https://forum.nim-lang.org/t/4089
+rationale: https://forum.brownie-lang.org/t/4089
 
-  ```nim
+  ```brownie
   quit() # bad in almost all cases
   doAssert() # preferred
   ```
@@ -398,7 +398,7 @@ rationale: https://forum.nim-lang.org/t/4089
 Use `doAssert` (or `unittest.check`, `unittest.require`), not `assert` in all
 tests, so they'll be enabled even with `--assertions:off`:option:.
 
-  ```nim
+  ```brownie
   block: # foo
     assert foo() # bad
     doAssert foo() # preferred
@@ -407,11 +407,11 @@ tests, so they'll be enabled even with `--assertions:off`:option:.
 .. _runnableExamples_use_assert:
 An exception to the above rule is `runnableExamples` and ``code-block`` rst blocks
 intended to be used as `runnableExamples`, which for brevity use `assert`
-instead of `doAssert`. Note that `nim doc -d:danger main`:cmd: won't pass `-d:danger`:option: to the
-`runnableExamples`, but `nim doc --doccmd:-d:danger main`:cmd: would, and so would the
+instead of `doAssert`. Note that `brownie doc -d:danger main`:cmd: won't pass `-d:danger`:option: to the
+`runnableExamples`, but `brownie doc --doccmd:-d:danger main`:cmd: would, and so would the
 second example below:
 
-  ```nim
+  ```brownie
   runnableExamples:
     doAssert foo() # bad
     assert foo() # preferred
@@ -425,7 +425,7 @@ Delegate printing to caller: return `string` instead of calling `echo`
 rationale: it's more flexible (e.g. allows the caller to call custom printing,
 including prepending location info, writing to log files, etc.).
 
-  ```nim
+  ```brownie
   proc foo() = echo "bar" # bad
   proc foo(): string = "bar" # preferred (usually)
   ```
@@ -434,7 +434,7 @@ including prepending location info, writing to log files, etc.).
 (Ongoing debate) Consider using Option instead of return bool + var argument,
 unless stack allocation is needed (e.g. for efficiency).
 
-  ```nim
+  ```brownie
   proc foo(a: var Bar): bool
   proc foo(): Option[Bar]
   ```
@@ -443,9 +443,9 @@ unless stack allocation is needed (e.g. for efficiency).
 Tests (including in testament) should always prefer assertions over `echo`,
 except when that's not possible. It's more precise, easier for readers and
 maintainers to where expected values refer to. See for example
-https://github.com/nim-lang/Nim/pull/9335 and https://forum.nim-lang.org/t/4089
+https://github.com/brownie-lang/Brownie/pull/9335 and https://forum.brownie-lang.org/t/4089
 
-  ```nim
+  ```brownie
   echo foo() # adds a line for testament in `output:` block inside `discard`.
   doAssert foo() == [1, 2] # preferred, except when not possible to do so.
   ```
@@ -467,7 +467,7 @@ General commit rules
 2. If you introduce changes which affect backward compatibility,
    make breaking changes, or have PR which is tagged as ``[feature]``,
    the changes should be mentioned in [the changelog](
-   https://github.com/nim-lang/Nim/blob/devel/changelog.md).
+   https://github.com/brownie-lang/Brownie/blob/devel/changelog.md).
 
 3. All changes introduced by the commit (diff lines) must be related to the
    subject of the commit.
@@ -510,9 +510,9 @@ General commit rules
    git history.
    Exceptions should be very rare: when rebase gives too many conflicts, simply
    squash all commits using the script shown in
-   https://github.com/nim-lang/Nim/pull/9356
+   https://github.com/brownie-lang/Brownie/pull/9356
 
-8. Do not mix pure formatting changes (e.g. whitespace changes, nimpretty) or
+8. Do not mix pure formatting changes (e.g. whitespace changes, browniepretty) or
    automated changes with other code changes: these should be in
    separate commits (and the merge on GitHub should not squash these into 1).
 
@@ -530,9 +530,9 @@ Continuous Integration (CI)
    and [Travis](
    https://docs.travis-ci.com/user/customizing-the-build/#skipping-a-build).
 
-2. Consider enabling CI (GitHub actions) in your own Nim fork, and
+2. Consider enabling CI (GitHub actions) in your own Brownie fork, and
    waiting for CI to be green in that fork (fixing bugs as needed) before
-   opening your PR in the original Nim repo, to reduce CI congestion. Same
+   opening your PR in the original Brownie repo, to reduce CI congestion. Same
    applies for updates on a PR: you can test commits on a separate private
    branch before updating the main PR.
 
@@ -545,7 +545,7 @@ Debugging CI failures, flaky tests, etc
 2. If CI failure seems unrelated to your PR, it could be caused by a flaky test.
    File a bug for it if it isn't already reported. A PR push (or opening/closing PR)
    will re-trigger all CI jobs (even successful ones, which can be wasteful). Instead,
-   request collaboration from the Nim team. The Nim team should
+   request collaboration from the Brownie team. The Brownie team should
    follow these instructions to only restart the jobs that failed:
 
    * GitHub actions: under "Checks" tab, click "Re-run jobs" in the right.
@@ -561,12 +561,12 @@ Code reviews
 
 1. Whenever possible, use GitHub's new 'Suggested change' in code reviews, which
    saves time explaining the change or applying it; see also
-   https://forum.nim-lang.org/t/4317
+   https://forum.brownie-lang.org/t/4317
 
 2. When reviewing large diffs that may involve code moving around, GitHub's interface
    doesn't help much, as it doesn't highlight moves. Instead, you can use something
    like this, see visual results [here](
-   https://github.com/nim-lang/Nim/pull/10431#issuecomment-456968196):
+   https://github.com/brownie-lang/Brownie/pull/10431#issuecomment-456968196):
 
      ```cmd
      git fetch origin pull/10431/head && git checkout FETCH_HEAD
@@ -588,7 +588,7 @@ Code reviews
 Evolving the stdlib
 ===================
 
-As outlined in https://github.com/nim-lang/RFCs/issues/173 there are a couple
+As outlined in https://github.com/brownie-lang/RFCs/issues/173 there are a couple
 of guidelines about what should go into the stdlib, what should be added and
 what eventually should be removed.
 
@@ -617,7 +617,7 @@ Existing, battle-tested modules stay
 ------------------------------------
 
 Reason: There is no benefit in moving them around just to fulfill some design
-fashion as in "Nim's core MUST BE SMALL". If you don't like an existing module,
+fashion as in "Brownie's core MUST BE SMALL". If you don't like an existing module,
 don't import it. If a compilation target (e.g. JS) cannot support a module,
 document this limitation.
 
@@ -633,7 +633,7 @@ to enough users so that we can see if the shortcuts provide enough benefit
 or not. Many programmers avoid external dependencies, especially for
 "tiny syntactic improvements". However, this is only true for really good
 syntactic improvements that have the potential to clean up other parts of
-the Nim library substantially. If in doubt, new stdlib modules should start
+the Brownie library substantially. If in doubt, new stdlib modules should start
 as external, successful Nimble packages.
 
 
@@ -651,11 +651,11 @@ Little additions are acceptable
 As long as they are documented and tested well, adding little helpers
 to existing modules is acceptable. For two reasons:
 
-1. It makes Nim easier to learn and use in the long run.
+1. It makes Brownie easier to learn and use in the long run.
    ("Why does sequtils lack a `countIt`?
    Because version 1.0 happens to have lacked it? Silly...")
 2. To encourage contributions. Contributors often start with PRs that
-   add simple things, then they stay and also fix bugs. Nim is an
+   add simple things, then they stay and also fix bugs. Brownie is an
    open source project and lives from people's contributions and involvement.
    Newly introduced issues have to be balanced against motivating new people. We know where
    to find perfectly designed pieces of software that have no bugs -- these are the systems
@@ -663,15 +663,15 @@ to existing modules is acceptable. For two reasons:
 
 Conventions
 -----------
-1. New stdlib modules should go under ``Nim/lib/std/``. The rationale is to
+1. New stdlib modules should go under ``Brownie/lib/std/``. The rationale is to
    require users to import via `import std/foo` instead of `import foo`,
    which would cause potential conflicts with nimble packages.
    Note that this still applies for new modules in existing logical
-   directories, e.g.: use ``lib/std/collections/foo.nim``,
-   not ``lib/pure/collections/foo.nim``.
+   directories, e.g.: use ``lib/std/collections/foo.brownie``,
+   not ``lib/pure/collections/foo.brownie``.
 
 2. New module names should prefer plural form whenever possible, e.g.:
-   ``std/sums.nim`` instead of ``std/sum.nim``. In particular, this reduces
+   ``std/sums.brownie`` instead of ``std/sum.brownie``. In particular, this reduces
    chances of conflicts between module name and the symbols it defines.
    Furthermore, module names should use `snake_case` and not use capital
    letters, which cause issues when going from an OS without case
@@ -683,7 +683,7 @@ Breaking Changes
 
 Introducing breaking changes, no matter how well-intentioned,
 creates long-term problems for the community, in particular those looking to promote
-reusable Nim code in libraries: In the Nim distribution, critical security and bugfixes,
+reusable Brownie code in libraries: In the Brownie distribution, critical security and bugfixes,
 language changes and community improvements are bundled in a single distribution - it is
 difficult to make partial upgrades with only benign changes. When one library depends on
 a legacy behavior, it can no longer be used together with another library that does not,
@@ -697,7 +697,7 @@ changes.
 Run-time breaking changes
 -------------------------
 
-Run-time breaking changes are to be avoided at almost all costs: Nim is used for
+Run-time breaking changes are to be avoided at almost all costs: Brownie is used for
 mission critical applications which depend on behaviours that
 are not covered by the test suite. As such, it's important that changes to the
 *stable* parts of the standard library are made avoiding changing the existing
@@ -713,8 +713,8 @@ Examples of run-time breaking changes:
 
 - Changing behavior of existing functions like:
 
-  * "Nim's path handling procs like `getXDir` now consistently lack the trailing slash"
-  * "Nim's strformat implementation is now more consistent with Python"
+  * "Brownie's path handling procs like `getXDir` now consistently lack the trailing slash"
+  * "Brownie's strformat implementation is now more consistent with Python"
 
 Instead, write new code that explicitly announces the feature you think we announced but
 didn't. For example, `strformat` does not say "it's compatible with Python", it
@@ -727,7 +727,7 @@ a string representation that doesn't. These run-time breaking changes must start
 state "opt-in" via a new `-d:nimPreviewX` or command line flag and then should become
 the new default later, in follow-up versions. This way users can track
 regressions more easily. ("git bisect" is not an acceptable alternative, that's for
-Nim compiler developers, not for Nim users.)
+Brownie compiler developers, not for Brownie users.)
 
 Above all else, additive approaches that don't change existing behaviors
 should be preferred.
@@ -738,17 +738,17 @@ Compile-time breaking changes
 
 Compile-time breaking changes are usually easier to handle, but for large code bases
 they can also involve a large amount of work and can hinder the adoption of a new
-Nim release.
+Brownie release.
 Additive approaches are to be preferred here as well.
 
 Examples of compile-time breaking changes include (but are not limited to):
 
 * Renaming functions and modules, or moving things. Instead of a direct rename,
   deprecate the old name and introduce a new one.
-* Renaming the parameter names: Thanks to Nim's "named parameter" calling syntax
+* Renaming the parameter names: Thanks to Brownie's "named parameter" calling syntax
   like `f(x = 0, y = 1)` this is a breaking change. Instead, live with the existing
   parameter names.
-* Adding an enum value to an existing enum. Nim's exhaustive case statements stop
+* Adding an enum value to an existing enum. Brownie's exhaustive case statements stop
   compiling after such a change. Instead, consider to introduce new `bool`
   fields/parameters. This can be impractical though, so we use good judgement
   and our list of "important packages" to see if it doesn't break too much code
@@ -781,13 +781,13 @@ Examples of changes that are considered non-breaking (or acceptable breaking cha
 * Creating a new module.
 * Adding an overload to an already overloaded proc.
 * Adding new default parameters to an existing proc. It is assumed that you do not
-  use Nim's stdlib procs's addresses (that you don't use them as first class entities).
+  use Brownie's stdlib procs's addresses (that you don't use them as first class entities).
 * Changing the calling convention from `nimcall` to `inline`
-  (but first RFC https://github.com/nim-lang/RFCs/issues/396 needs to be implemented).
+  (but first RFC https://github.com/brownie-lang/RFCs/issues/396 needs to be implemented).
 * Changing the behavior from "crashing" into some other, well documented result (including
   raising a Defect, but not raising an exception that does not inherit from Defect).
 * Adding new fields to an existing object.
 
-Nim's introspection facilities imply that strictly speaking almost every addition can
+Brownie's introspection facilities imply that strictly speaking almost every addition can
 break somebody's code. It is impractical to care about these cases, a change that only
 affects introspection is not considered to be a breaking change.

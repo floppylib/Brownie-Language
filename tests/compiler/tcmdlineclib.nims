@@ -1,6 +1,6 @@
 import os
 
-selfExec "c --app:lib " & (projectDir() / "samplelib.nim")
+selfExec "c --app:lib " & (projectDir() / "samplelib.brownie")
 switch("clibdir", projectDir())
 --clib:samplelib
 

@@ -3,15 +3,15 @@ Usage:
 
 * To search:
 
-      nimgrep [options] PATTERN [(FILE/DIRECTORY)*/-]
+      browniegrep [options] PATTERN [(FILE/DIRECTORY)*/-]
 
 * To replace:
 
-      nimgrep [options] PATTERN --replace REPLACEMENT (FILE/DIRECTORY)*/-
+      browniegrep [options] PATTERN --replace REPLACEMENT (FILE/DIRECTORY)*/-
 
 * To list file names:
 
-      nimgrep [options] --filenames [PATTERN] [(FILE/DIRECTORY)*]
+      browniegrep [options] --filenames [PATTERN] [(FILE/DIRECTORY)*]
 
 Positional arguments, from left to right:
 1) PATTERN is either Regex (default) or Peg if `--peg` is specified.
@@ -26,7 +26,7 @@ Positional arguments, from left to right:
 
    * empty, current directory `.` is assumed (not with `--replace`)
 
-     .. Note:: so when no FILE/DIRECTORY/`-` is specified nimgrep
+     .. Note:: so when no FILE/DIRECTORY/`-` is specified browniegrep
        does **not** read the pipe, but searches files in the current
        dir instead!
    * `-`, read buffer once from stdin: pipe or terminal input;
@@ -34,7 +34,7 @@ Positional arguments, from left to right:
      it's not compatible with `--stdin`, `--filenames`, or `--confirm`
 
 
-   For any given DIRECTORY nimgrep searches only its immediate files without
+   For any given DIRECTORY browniegrep searches only its immediate files without
    traversing subdirectories unless `--recursive` is specified.
 
 In replacement mode we require all 3 positional arguments to avoid damaging.
@@ -49,8 +49,8 @@ Options:
                       the filenames (not in the contents of a file) or run
                       with empty pattern to just list all files:
 
-                          nimgrep --filenames               # In current dir
-                          nimgrep --filenames "" DIRECTORY
+                          browniegrep --filenames               # In current dir
+                          browniegrep --filenames "" DIRECTORY
                            # Note empty pattern "", lists all files in DIRECTORY
 * Interpret patterns:
   --peg               PATTERN and PAT are Peg

@@ -1,6 +1,6 @@
 /*
  *
- *           Nim's Runtime Library
+ *           Brownie's Runtime Library
  *       (c) Copyright 2022 Emery Hemingway
  *
  *   See the file "copying.txt", included in this
@@ -15,14 +15,14 @@
 #include <base/signal.h>
 #include <util/reconstructible.h>
 
-// Symbol for calling back into Nim
+// Symbol for calling back into Brownie
 extern "C" void nimHandleSignal(void *arg);
 
-namespace Nim { struct SignalHandler; }
+namespace Brownie { struct SignalHandler; }
 
-struct Nim::SignalHandler
+struct Brownie::SignalHandler
 {
-	// Pointer to the Nim handler object.
+	// Pointer to the Brownie handler object.
 	void *arg;
 
 	void handle_signal() {

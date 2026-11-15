@@ -1,10 +1,10 @@
 contact_links:
   - name: Forum
-    url: https://forum.nim-lang.org
+    url: https://forum.brownie-lang.org
     about: Please ask and answer questions here.
   - name: Discord
-    url: https://discord.gg/nim
+    url: https://discord.gg/brownie
     about: Please ask and answer questions here.
   - name: Stack Overflow
-    url: https://stackoverflow.com/questions/tagged/nim-lang
+    url: https://stackoverflow.com/questions/tagged/brownie-lang
     about: Please ask and answer questions here.

@@ -1,7 +1,7 @@
 ============================
-Nim's documentation system
+Brownie's documentation system
 ============================
 
-This folder contains Nim's documentation. The documentation
+This folder contains Brownie's documentation. The documentation
 is written in a format called *Markdown*, a markup language that reads
 like ASCII and can be converted to HTML automatically!

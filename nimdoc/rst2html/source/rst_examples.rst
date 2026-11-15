@@ -1,13 +1,13 @@
 ================
-Not a Nim Manual
+Not a Brownie Manual
 ================
 
 :Authors: Andreas Rumpf, Zahary Karadjov
 :Version: |nimversion|
 
-.. role:: nim(code)
-   :language: nim
-.. default-role:: nim
+.. role:: brownie(code)
+   :language: brownie
+.. default-role:: brownie
 
 .. contents::
 
@@ -20,10 +20,10 @@ Not a Nim Manual
 About this document
 ===================
 
-**Note**: This document is a draft! Several of Nim's features may need more
+**Note**: This document is a draft! Several of Brownie's features may need more
 precise wording. This manual is constantly evolving into a proper specification.
 
-**Note**: The experimental features of Nim are
+**Note**: The experimental features of Brownie are
 covered `here <manual_experimental.html>`_.
 
 **Note**: Assignments, moves, and destruction are specified in
@@ -42,16 +42,16 @@ with ``'``. An example::
 
   ifStmt = 'if' expr ':' stmts ('elif' expr ':' stmts)* ('else' stmts)?
 
-In a typical Nim program, most of the code is compiled into the executable.
+In a typical Brownie program, most of the code is compiled into the executable.
 However, some of the code may be executed at
 `compile-time`:idx:. This can include constant expressions, macro definitions,
-and Nim procedures used by macro definitions. Most of the Nim language is
+and Brownie procedures used by macro definitions. Most of the Brownie language is
 supported at compile-time, but there are some restrictions -- see `Restrictions
 on Compile-Time Execution <#restrictions-on-compileminustime-execution>`_ for
 details. We use the term `runtime`:idx: to cover both compile-time execution
 and code execution in the executable.
 
-.. code-block:: nim
+.. code-block:: brownie
   var a: array[0..1, char]
   let i = 5
   try:
@@ -62,7 +62,7 @@ and code execution in the executable.
 Encoding
 --------
 
-All Nim source files are in the UTF-8 encoding (or its ASCII subset). Other
+All Brownie source files are in the UTF-8 encoding (or its ASCII subset). Other
 encodings are not supported. Any of the standard platform line termination
 sequences can be used - the Unix form using ASCII LF (linefeed), the Windows
 form using the ASCII sequence CR LF (return followed by linefeed), or the old
@@ -73,7 +73,7 @@ used equally, regardless of the platform.
 Indentation
 -----------
 
-Nim's standard grammar describes an `indentation sensitive`:idx: language.
+Brownie's standard grammar describes an `indentation sensitive`:idx: language.
 This means that all the control structures are recognized by indentation.
 Indentation consists only of spaces; tabulators are not allowed.
 
@@ -121,7 +121,7 @@ contain the following `escape sequences`:idx:\ :
                            the codepoint
 ==================         ===================================================
 
-.. code-block:: nim
+.. code-block:: brownie
   """"long string within quotes""""
 
 Produces::
@@ -131,7 +131,7 @@ Produces::
 Operators
 ---------
 
-Nim allows user defined operators. An operator is any combination of the
+Brownie allows user defined operators. An operator is any combination of the
 following characters::
 
        =     +     -     *     /     <     >
@@ -238,8 +238,8 @@ and every other symbol is closed.
 
 In templates identifiers can be constructed with the backticks notation:
 
-.. code-block:: nim
-    :test: "nim c $1"
+.. code-block:: brownie
+    :test: "brownie c $1"
 
   template typedef(name: untyped, typ: typedesc) =
     type
@@ -273,7 +273,7 @@ from the same directory.
 Pragmas
 =======
 
-Pragmas are Nim's method to give the compiler additional information /
+Pragmas are Brownie's method to give the compiler additional information /
 commands without introducing a massive number of new keywords. Pragmas are
 processed on the fly during semantic checking. Pragmas are enclosed in the
 special ``{.`` and ``.}`` curly brackets. Pragmas are also often used as a
@@ -286,7 +286,7 @@ deprecated pragma
 
 The deprecated pragma is used to mark a symbol as deprecated:
 
-**Note**: `c2nim <https://github.com/nim-lang/c2nim/blob/master/doc/c2nim.rst>`_ can parse a large subset of C++ and knows
+**Note**: `c2nim <https://github.com/brownie-lang/c2nim/blob/master/doc/c2nim.rst>`_ can parse a large subset of C++ and knows
 about the ``importcpp`` pragma pattern language. It is not necessary
 to know all the details described here.
 
@@ -310,7 +310,7 @@ Automatic imports
   magic to work.
 
 * `threads <threads.html>`_
-  Basic Nim thread support. **Note**: This is part of the system module. Do not
+  Basic Brownie thread support. **Note**: This is part of the system module. Do not
   import it explicitly. Enabled with ``--threads:on``.
 
 Code reordering
@@ -353,11 +353,11 @@ preface definitions inside a module.
    Please note that if a callable symbol is never used in this scenario, its
    body will never be compiled. This is the default behavior leading to best
    compilation times, but if exhaustive compilation of all definitions is
-   required, using ``nim check`` provides this option as well.
+   required, using ``brownie check`` provides this option as well.
 
 Example:
 
-.. code-block:: nim
+.. code-block:: brownie
 
   {.experimental: "codeReordering".}
 
@@ -379,7 +379,7 @@ Example:
    code reordering process, and not after. As an example, the output of this
    code is the same as it would be with code reordering disabled.
 
-   .. code-block:: nim
+   .. code-block:: brownie
      {.experimental: "codeReordering".}
 
      proc x() =
@@ -412,7 +412,7 @@ The ``**`` operator
 The ``**`` is much like the ``*`` operator, except that it gathers not only
 all the arguments, but also the matched operators in reverse polish notation:
 
-Nim significantly improves on the safety of these features via additional
+Brownie significantly improves on the safety of these features via additional
 pragmas:
 
 1) A `guard`:idx: annotation is introduced to prevent data races.
@@ -429,7 +429,7 @@ pragmas:
    variable updated by the called proc.
 
 One problem with rules 3 and 4 is that they affect specific global or thread
-local variables, but Nim's effect tracking only tracks "uses no global variable"
+local variables, but Brownie's effect tracking only tracks "uses no global variable"
 via ``.noSideEffect``. The rules 3 and 4 can also be approximated by a different rule:
 
 5. A global or thread local variable (or a location derived from such a location)
@@ -456,11 +456,11 @@ These two procs are the two modus operandi of the real-time garbage collector:
     Otherwise, the garbage collector may decide not to do anything,
     if there is not much garbage to collect.
     You may also specify the current stack size via ``stackSize`` parameter.
-    It can improve performance when you know that there are no unique Nim references
+    It can improve performance when you know that there are no unique Brownie references
     below a certain point on the stack. Make sure the size you specify is greater
     than the potential worst-case size.
 
-    It can improve performance when you know that there are no unique Nim
+    It can improve performance when you know that there are no unique Brownie
     references below a certain point on the stack. Make sure the size you specify
     is greater than the potential worst-case size.
 
@@ -474,7 +474,7 @@ Time measurement with garbage collectors
 ----------------------------------------
 
 The garbage collectors' way of measuring time uses
-(see ``lib/system/timers.nim`` for the implementation):
+(see ``lib/system/timers.brownie`` for the implementation):
 
 1) ``QueryPerformanceCounter`` and ``QueryPerformanceFrequency`` on Windows.
 2) ``mach_absolute_time`` on Mac OS X.
@@ -492,12 +492,12 @@ Introduction
   </p></blockquote>
 
 
-This document is a tutorial for the programming language *Nim*.
+This document is a tutorial for the programming language *Brownie*.
 This tutorial assumes that you are familiar with basic programming concepts
 like variables, types, or statements but is kept very basic. The `manual
 <manual.html>`_ contains many more examples of the advanced language features.
 All code examples in this tutorial, as well as the ones found in the rest of
-Nim's documentation, follow the `Nim style guide <nep1.html>`_.
+Brownie's documentation, follow the `Brownie style guide <nep1.html>`_.
 
 However, this does not work. The problem is that the procedure should not
 only ``return``, but return and **continue** after an iteration has

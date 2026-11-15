@@ -1,7 +1,7 @@
 #? stdtmpl | standard
 #proc generateInnoSetup(c: ConfigData): string =
 #  result = ""
-; Default Template for NimInst
+; Default Template for brownieinst
 [Setup]
 AppName=$c.displayName
 AppVerName=$c.displayName $c.version

@@ -175,7 +175,7 @@ The PEG parser implements this grammar (written in PEG syntax):
 expression, identifiers are not interpreted as non-terminals, but are
 interpreted as verbatim string:
 
-  ```nim
+  ```brownie
   abc =~ peg"abc" # is true
   ```
 
@@ -185,21 +185,21 @@ So it is not necessary to write ``peg" 'abc' "`` in the above example.
 Examples
 --------
 
-Check if `s` matches Nim's "while" keyword:
+Check if `s` matches Brownie's "while" keyword:
 
-  ```nim
+  ```brownie
   s =~ peg" y'while'"
   ```
 
 Exchange (key, val)-pairs:
 
-  ```nim
+  ```brownie
   "key: val; key2: val2".replacef(peg"{\ident} \s* ':' \s* {\ident}", "$2: $1")
   ```
 
 Determine the ``#include``'ed files of a C file:
 
-  ```nim
+  ```brownie
   for line in lines("myfile.c"):
     if line =~ peg"""s <- ws '#include' ws '"' {[^"]+} '"' ws
                      comment <- '/*' @ '*/' / '//' .*
@@ -220,7 +220,7 @@ example ``*`` should not be greedy, so ``\[.*?\]`` should be used instead.
 
 PEG construction
 ----------------
-There are two ways to construct a PEG in Nim code:
+There are two ways to construct a PEG in Brownie code:
 (1) Parsing a string into an AST which consists of `Peg` nodes with the
     `peg` proc.
 (2) Constructing the AST directly with proc calls. This method does not

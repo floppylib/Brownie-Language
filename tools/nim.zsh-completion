@@ -1,4 +1,4 @@
-#compdef nim
+#compdef brownie
 
 # Installation note:
 # Please name this file as _nim (with underscore!) and copy it to a
@@ -15,7 +15,7 @@ _nim() {
     {compileToCpp,cpp}:'compile project to C++ code'
     {compileToOC,objc}:'compile project to Objective C code'
     'js:compile project to Javascript'
-    'e:run a Nimscript file'
+    'e:run a browniescript file'
     'doc:generate the HTML documentation for inputfile'
     'rst2html:convert a reStructuredText file to HTML'
     'doc2tex:generate the documentation for inputfile to LaTeX'
@@ -33,7 +33,7 @@ _nim() {
   _arguments '*:: :->anyState' && return 0
 
   if (( CURRENT == 1 )); then
-    _describe -t commands "Nim commands" nimCommands -V1
+    _describe -t commands "Brownie commands" nimCommands -V1
     return
   fi
 
@@ -87,24 +87,24 @@ _nim() {
   case "$words[1]" in
     compile|c|compileToC|cpp|compileToCpp|compileToOC|objc)
       _arguments $codeOpts $runOpts $sharedOpts $nativeOpts \
-          '*:filename:_files -g"*.nim"'
+          '*:filename:_files -g"*.brownie"'
     ;;
     js)
       _arguments $codeOpts $runOpts $sharedOpts \
-          '*:filename:_files -g"*.nim"'
+          '*:filename:_files -g"*.brownie"'
     ;;
     e)
       _arguments $codeOpts $runOpts $sharedOpts \
           '*:filename:_files -g"*.nims"'
     ;;
     doc|doc2tex|jsondoc)
-      _arguments $runOpts $sharedOpts '*:filename:_files -g"*.nim"'
+      _arguments $runOpts $sharedOpts '*:filename:_files -g"*.brownie"'
     ;;
     rst2html|rst2tex)
       _arguments $runOpts $sharedOpts $docOpts '*:filename:_files -g"*.rst"'
     ;;
     buildIndex|genDepend|check)
-      _arguments $sharedOpts '*:filename:_files -g"*.nim"'
+      _arguments $sharedOpts '*:filename:_files -g"*.brownie"'
     ;;
     dump)
       _arguments $sharedOpts

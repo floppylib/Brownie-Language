@@ -1,5 +1,5 @@
 =========================
-Nim Experimental Features
+Brownie Experimental Features
 =========================
 
 :Authors: Andreas Rumpf
@@ -13,10 +13,10 @@ Nim Experimental Features
 About this document
 ===================
 
-This document describes features of Nim that are to be considered experimental.
+This document describes features of Brownie that are to be considered experimental.
 Some of these are not covered by the `.experimental` pragma or
 `--experimental`:option: switch because they are already behind a special syntax and
-one may want to use Nim libraries using these features without using them
+one may want to use Brownie libraries using these features without using them
 oneself.
 
 .. note:: Unless otherwise indicated, these features are not to be removed,
@@ -29,7 +29,7 @@ Void type
 The `void` type denotes the absence of any value, i.e. it is the type that contains no values. Consequently, no value can be provided for parameters of
 type `void`, and no value can be returned from a function with return type `void`:
 
-  ```nim
+  ```brownie
   proc nothing(x, y: void): void =
     echo "ha"
 
@@ -38,7 +38,7 @@ type `void`, and no value can be returned from a function with return type `void
 
 The `void` type is particularly useful for generic code:
 
-  ```nim
+  ```brownie
   proc callProc[T](p: proc (x: T), x: T) =
     when T is void:
       p()
@@ -54,7 +54,7 @@ The `void` type is particularly useful for generic code:
 
 However, a `void` type cannot be inferred in generic code:
 
-  ```nim
+  ```brownie
   callProc(emptyProc)
   # Error: type mismatch: got (proc ())
   # but expected one of:
@@ -71,13 +71,13 @@ Aside the [typed define pragmas for constants](manual.html#implementation-specif
 there is a generic `{.define.}` pragma that interprets the value of the define
 based on the type of the constant value.
 
-  ```nim
+  ```brownie
   const foo {.define: "package.foo".} = 123
   const bar {.define: "package.bar".} = false
   ```
 
   ```cmd
-  nim c -d:package.foo=456 -d:package.bar foobar.nim
+  brownie c -d:package.foo=456 -d:package.bar foobar.brownie
   ```
 
 The following types are supported:
@@ -92,7 +92,7 @@ Top-down type inference
 
 In expressions such as:
 
-```nim
+```brownie
 let a: T = ex
 ```
 
@@ -107,7 +107,7 @@ extra knowledge that it is supposed to be of type `T`. For example,
 the following code is does not compile with the former method, but
 compiles with top-down type inference:
 
-```nim
+```brownie
 let foo: (float, uint8, cstring) = (1, 2, "abc")
 ```
 
@@ -131,7 +131,7 @@ In expressions making use of generic procs or templates, the expected
 (unbound) types are often able to be inferred based on context.
 This feature has to be enabled via `{.experimental: "inferGenericTypes".}`
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   {.experimental: "inferGenericTypes".}
 
   import std/options
@@ -170,7 +170,7 @@ If bindings *cannot be inferred*, compilation will fail and manual specification
 An example for *failing inference* can be found when passing a generic expression
 to a function/template call:
 
-  ```nim  test = "nim c $1"  status = 1
+  ```brownie  test = "brownie c $1"  status = 1
   {.experimental: "inferGenericTypes".}
 
   proc myProc[T](a, b: T) = discard
@@ -184,7 +184,7 @@ to a function/template call:
 
 Combination of generic inference with the `auto` type is also unsupported:
 
-  ```nim  test = "nim c $1"  status = 1
+  ```brownie  test = "brownie c $1"  status = 1
   {.experimental: "inferGenericTypes".}
 
   proc produceValue[T]: auto = default(T)
@@ -195,7 +195,7 @@ Combination of generic inference with the `auto` type is also unsupported:
 the return type of a procedure. It is a mapping mechanism that does not attempt to 
 perform deeper inference, nor does it modify what is a valid override.
 
-  ```nim  test = "nim c $1"  status = 1
+  ```brownie  test = "brownie c $1"  status = 1
   # Doesn't affect the following code, it is invalid either way
   {.experimental: "inferGenericTypes".}
 
@@ -209,7 +209,7 @@ Sequence literals
 
 Top-down type inference applies to sequence literals.
 
-```nim
+```brownie
 let x: seq[seq[float]] = @[@[1, 2, 3], @[4, 5, 6]]
 ```
 
@@ -217,7 +217,7 @@ This behavior is tied to the `@` overloads in the `system` module,
 so overloading `@` can disable this behavior. This can be circumvented by
 specifying the `` system.`@` `` overload.
 
-```nim
+```brownie
 proc `@`(x: string): string = "@" & x
 
 # does not compile:
@@ -230,7 +230,7 @@ let x: seq[float] = system.`@`([1, 2, 3])
 Package level objects
 =====================
 
-Every Nim module resides in a (nimble) package. An object type can be attached
+Every Brownie module resides in a (nimble) package. An object type can be attached
 to the package it resides in. If that is done, the type can be referenced from
 other modules as an `incomplete`:idx: object type. This feature allows to
 break up recursive type dependencies across module boundaries. Incomplete
@@ -245,7 +245,7 @@ available.
 
 Example:
 
-  ```nim
+  ```brownie
   # module A (in an arbitrary package)
   type
     Pack.SomeObject = object # declare as incomplete object of package 'Pack'
@@ -257,7 +257,7 @@ Example:
   ```
 
 
-  ```nim
+  ```brownie
   # module B (in package "Pack")
   type
     SomeObject* {.package.} = object # Use 'package' to complete the object
@@ -320,11 +320,11 @@ preface definitions inside a module.
    Please note that if a callable symbol is never used in this scenario, its
    body will never be compiled. This is the default behavior leading to best
    compilation times, but if exhaustive compilation of all definitions is
-   required, using `nim check` provides this option as well.
+   required, using `brownie check` provides this option as well.
 
 Example:
 
-  ```nim
+  ```brownie
   {.experimental: "codeReordering".}
 
   proc foo(x: int) =
@@ -341,7 +341,7 @@ variables that have their declaration and assignment combined in a single
 statement) can have their entire initialization statement reordered. Be wary of
 what code is executed at the top level:
 
-  ```nim
+  ```brownie
   {.experimental: "codeReordering".}
 
   proc a() =
@@ -361,7 +361,7 @@ what code is executed at the top level:
    code reordering process, and not after. As an example, the output of this
    code is the same as it would be with code reordering disabled.
 
-     ```nim
+     ```brownie
      {.experimental: "codeReordering".}
 
      proc x() =
@@ -375,7 +375,7 @@ what code is executed at the top level:
 It is important to note that reordering *only* works for symbols at top level
 scope. Therefore, the following will *fail to compile:*
 
-  ```nim
+  ```brownie
   {.experimental: "codeReordering".}
 
   proc a() =
@@ -398,20 +398,20 @@ dot operators
 .. note:: Dot operators are still experimental and so need to be enabled
   via `{.experimental: "dotOperators".}`.
 
-Nim offers a special family of dot operators that can be used to
+Brownie offers a special family of dot operators that can be used to
 intercept and rewrite proc call and field access attempts, referring
 to previously undeclared symbol names. They can be used to provide a
 fluent interface to objects lying outside the static confines of the
 type system such as values from dynamic scripting languages
 or dynamic file formats such as JSON or XML.
 
-When Nim encounters an expression that cannot be resolved by the
+When Brownie encounters an expression that cannot be resolved by the
 standard overload resolution rules, the current scope will be searched
 for a dot operator that can be matched against a re-written form of
 the expression, where the unknown field or proc name is passed to
 an `untyped` parameter:
 
-  ```nim
+  ```brownie
   a.b # becomes `.`(a, b)
   a.b(c, d) # becomes `.`(a, b, c, d)
   ```
@@ -419,7 +419,7 @@ an `untyped` parameter:
 The matched dot operators can be symbols of any callable kind (procs,
 templates and macros), depending on the desired effect:
 
-  ```nim
+  ```brownie
   template `.`(js: PJsonNode, field: untyped): JSON = js[astToStr(field)]
 
   var js = parseJson("{ x: 1, y: 2}")
@@ -444,7 +444,7 @@ operator `.=`
 -------------
 This operator will be matched against assignments to missing fields.
 
-  ```nim
+  ```brownie
   a.b = c # becomes `.=`(a, b, c)
   ```
 
@@ -455,7 +455,7 @@ precedence over dot operators, however it does not match missing overloads
 for existing routines. The experimental `callOperator` switch must be enabled
 to use this operator.
 
-  ```nim
+  ```brownie
   {.experimental: "callOperator".}
 
   template `()`(a: int, b: float): untyped = $(a, b)
@@ -490,7 +490,7 @@ can also be applied to type, variable and constant declarations.
 
 For types:
 
-  ```nim
+  ```brownie
   type
     MyObject {.schema: "schema.protobuf".} = object
   ```
@@ -516,7 +516,7 @@ For variables and constants, it is largely the same, except a unary node with
 the same kind as the section containing a single definition is passed to macros,
 and macros can return any expression.
 
-  ```nim
+  ```brownie
   var
     a = ...
     b {.importc, foo, nodecl.} = ...
@@ -525,7 +525,7 @@ and macros can return any expression.
 
 Assuming `foo` is a macro or a template, this is roughly equivalent to:
 
-  ```nim
+  ```brownie
   var a = ...
   foo:
     var b {.importc, nodecl.} = ...
@@ -541,7 +541,7 @@ can be called as lone symbols, i.e. without parentheses. This is useful for
 repeated uses of complex expressions that cannot conveniently be represented
 as runtime values.
 
-  ```nim
+  ```brownie
   type Foo = object
     bar: int
 
@@ -563,7 +563,7 @@ All types for which `nil` is a valid value can be annotated with the
 `not nil` annotation to exclude `nil` as a valid value. Note that only local
 symbols are checked.
 
-  ```nim
+  ```brownie
   {.experimental: "notnil".}
 
   type
@@ -610,7 +610,7 @@ an input parameter is any parameter that is not of type `var`.
    variable updated by the called proc.
 
 One problem with rules 3 and 4 is that they affect specific global or thread
-local variables, but Nim's effect tracking only tracks "uses no global variable"
+local variables, but Brownie's effect tracking only tracks "uses no global variable"
 via `.noSideEffect`. The rules 3 and 4 can also be approximated by a different rule:
 
 5. A global or thread local variable (or a location derived from such a location)
@@ -628,7 +628,7 @@ A store to the heap via a `ref` or `ptr` indirection is not allowed.
 
 For example:
 
-  ```nim
+  ```brownie
   {.experimental: "strictFuncs".}
 
   type
@@ -665,7 +665,7 @@ A view type is a type that is or contains one of the following types:
 
 For example:
 
-  ```nim
+  ```brownie
   type
     View1 = openArray[byte]
     View2 = lent string
@@ -676,7 +676,7 @@ For example:
 Exceptions to this rule are types constructed via `ptr` or `proc`.
 For example, the following types are **not** view types:
 
-  ```nim
+  ```brownie
   type
     NotView1 = proc (x: openArray[int])
     NotView2 = ptr openArray[char]
@@ -689,7 +689,7 @@ of the locations it's derived from. More on this later.
 
 A *view* is a symbol (a let, var, const, etc.) that has a view type.
 
-Since version 1.4, Nim allows view types to be used as local variables.
+Since version 1.4, Brownie allows view types to be used as local variables.
 This feature needs to be enabled via `{.experimental: "views".}`.
 
 A local variable of a view type *borrows* from the locations and
@@ -698,7 +698,7 @@ it was borrowed from.
 
 For example:
 
-  ```nim
+  ```brownie
   {.experimental: "views".}
 
   proc take(a: openArray[int]) =
@@ -779,7 +779,7 @@ For the duration of the borrow operation, no mutations to the borrowed locations
 may be performed except via the view that borrowed from the
 location. The borrowed location is said to be *sealed* during the borrow.
 
-  ```nim
+  ```brownie
   {.experimental: "views".}
 
   type
@@ -795,7 +795,7 @@ location. The borrowed location is said to be *sealed* during the borrow.
 
 The scope of the view does not matter:
 
-  ```nim
+  ```brownie
   proc valid(s: var seq[Obj]) =
     let v: lent Obj = s[0]  # begin of borrow
     echo v.field            # end of borrow
@@ -810,7 +810,7 @@ with `--experimental:strictFuncs`:option:.
 
 The analysis is currently control flow insensitive:
 
-  ```nim
+  ```brownie
   proc invalid(s: var seq[Obj]) =
     let v: lent Obj = s[0]
     if false:
@@ -904,7 +904,7 @@ arbitrary set of requirements that the matched type must satisfy.
 
 Concepts are written in the following form:
 
-  ```nim
+  ```brownie
   type
     Comparable = concept x, y
       (x < y) is bool
@@ -931,7 +931,7 @@ as `var`, `ref`, `ptr` and `static` to denote a more specific type of
 instance. You can also apply the `type` modifier to create a named instance of
 the type itself:
 
-  ```nim
+  ```brownie
   type
     MyConcept = concept x, var v, ref r, ptr p, static s, type T
       ...
@@ -941,7 +941,7 @@ Within the concept body, types can appear in positions where ordinary values
 and parameters are expected. This provides a more convenient way to check for
 the presence of callable symbols with specific signatures:
 
-  ```nim
+  ```brownie
   type
     OutputStream = concept var s
       s.write(string)
@@ -952,7 +952,7 @@ the type with the explicit `type` modifier. The named instance of the
 type, following the `concept` keyword is also considered to have the
 explicit modifier and will be matched only as a type.
 
-  ```nim
+  ```brownie
   type
     # Let's imagine a user-defined casting framework with operators
     # such as `val.to(string)` and `val.to(JSonValue)`. We can test
@@ -990,7 +990,7 @@ When you need to understand why the compiler is not matching a particular
 concept and, as a result, a wrong overload is selected, you can apply the
 `explain` pragma to either the concept body or a particular call-site.
 
-  ```nim
+  ```brownie
   type
     MyConcept {.explain.} = concept ...
 
@@ -1006,8 +1006,8 @@ Generic concepts and type binding rules
 
 The concept types can be parametric just like the regular generic types:
 
-  ```nim
-  ### matrixalgo.nim
+  ```brownie
+  ### matrixalgo.brownie
 
   import std/typetraits
 
@@ -1038,7 +1038,7 @@ The concept types can be parametric just like the regular generic types:
     ...
 
   --------------
-  ### matrix.nim
+  ### matrix.brownie
 
   type
     Matrix*[M, N: static int; T] = object
@@ -1056,7 +1056,7 @@ The concept types can be parametric just like the regular generic types:
   template ValueType*(M: typedesc[Matrix]): typedesc = M.T
 
   -------------
-  ### usage.nim
+  ### usage.brownie
 
   import matrix, matrixalgo
 
@@ -1080,22 +1080,22 @@ and `x.data is seq[T]`.
 Unbound static params will be inferred from expressions involving the `==`
 operator and also when types dependent on them are being matched:
 
-  ```nim
+  ```brownie
   type
     MatrixReducer[M, N: static int; T] = concept x
       x.reduce(SquareMatrix[N, T]) is array[M, int]
   ```
 
-The Nim compiler includes a simple linear equation solver, allowing it to
+The Brownie compiler includes a simple linear equation solver, allowing it to
 infer static params in some situations where integer arithmetic is involved.
 
-Just like in regular type classes, Nim discriminates between `bind once`
+Just like in regular type classes, Brownie discriminates between `bind once`
 and `bind many` types when matching the concept. You can add the `distinct`
 modifier to any of the otherwise inferable types to get a type that will be
 matched without permanently inferring it. This may be useful when you need
 to match several procs accepting the same wide class of types:
 
-  ```nim
+  ```brownie
   type
     Enumerable[T] = concept e
       for v in e:
@@ -1118,7 +1118,7 @@ On the other hand, using `bind once` types allows you to test for equivalent
 types used in multiple signatures, without actually requiring any concrete
 types, thus allowing you to encode implementation-defined types:
 
-  ```nim
+  ```brownie
   type
     MyConcept = concept x
       type T1 = auto
@@ -1137,17 +1137,17 @@ the concept will be automatically instantiated with the bind once auto type
 in the place of each missing generic param.
 
 Please note that generic concepts such as `Enumerable[T]` can be matched
-against concrete types such as `string`. Nim doesn't require the concept
+against concrete types such as `string`. Brownie doesn't require the concept
 type to have the same number of parameters as the type being matched.
 If you wish to express a requirement towards the generic parameters of
 the matched type, you can use a type mapping operator such as `genericHead`
 or `stripGenericParams` within the body of the concept to obtain the
 uninstantiated version of the type, which you can then try to instantiate
 in any required way. For example, here is how one might define the classic
-`Functor` concept from Haskell and then demonstrate that Nim's `Option[T]`
+`Functor` concept from Haskell and then demonstrate that Brownie's `Option[T]`
 type is an instance of it:
 
-  ```nim  test = "nim c $1"
+  ```brownie  test = "brownie c $1"
   import std/[sugar, typetraits]
 
   type
@@ -1178,7 +1178,7 @@ All top level constants or types appearing within the concept body are
 accessible through the dot operator in procs where the concept was successfully
 matched to a concrete type:
 
-  ```nim
+  ```brownie
   type
     DateTime = concept t1, t2, type T
       const Min = T.MinDate
@@ -1209,11 +1209,11 @@ Concept refinement
 When the matched type within a concept is directly tested against a different
 concept, we say that the outer concept is a refinement of the inner concept and
 thus it is more-specific. When both concepts are matched in a call during
-overload resolution, Nim will assign a higher precedence to the most specific
+overload resolution, Brownie will assign a higher precedence to the most specific
 one. As an alternative way of defining concept refinements, you can use the
 object inheritance syntax involving the `of` keyword:
 
-  ```nim
+  ```brownie
   type
     Graph = concept g, type G of EquallyComparable, Copyable
       type
@@ -1257,7 +1257,7 @@ object inheritance syntax involving the `of` keyword:
   a small set of simpler types. This is achieved with a `return` statement within
   the concept body:
 
-    ```nim
+    ```brownie
     type
       Stringable = concept x
         $x is string
@@ -1288,7 +1288,7 @@ object inheritance syntax involving the `of` keyword:
   VTable types
   ------------
 
-  Concepts allow Nim to define a great number of algorithms, using only
+  Concepts allow Brownie to define a great number of algorithms, using only
   static polymorphism and without erasing any type information or sacrificing
   any execution speed. But when polymorphic collections of objects are required,
   the user must use one of the provided type erasure techniques - either common
@@ -1298,9 +1298,9 @@ object inheritance syntax involving the `of` keyword:
   object together with a reference to a table of procs implementing a set of
   required operations (the so called vtable).
 
-  In contrast to other programming languages, the vtable in Nim is stored
+  In contrast to other programming languages, the vtable in Brownie is stored
   externally to the object, allowing you to create multiple different vtable
-  views for the same object. Thus, the polymorphism in Nim is unbounded -
+  views for the same object. Thus, the polymorphism in Brownie is unbounded -
   any type can implement an unlimited number of protocols or interfaces not
   originally envisioned by the type's author.
 
@@ -1309,7 +1309,7 @@ object inheritance syntax involving the `of` keyword:
   a converter type class, which converts the regular instances of the matching
   types to the corresponding VTable type.
 
-    ```nim
+    ```brownie
     type
       IntEnumerable = vtref Enumerable[int]
 
@@ -1352,7 +1352,7 @@ object inheritance syntax involving the `of` keyword:
 
   The signature has to be:
 
-    ```nim
+    ```brownie
     proc `=deepCopy`(x: T): T
     ```
 
@@ -1369,7 +1369,7 @@ Dynamic arguments for bindSym
 This experimental feature allows the symbol name argument of `macros.bindSym`
 to be computed dynamically.
 
-  ```nim
+  ```brownie
   {.experimental: "dynamicBindSym".}
 
   import std/macros
@@ -1390,7 +1390,7 @@ a *name* but also a *pattern* that is searched for after the semantic checking
 phase of the compiler: This means they provide an easy way to enhance the
 compilation pipeline with user defined optimizations:
 
-  ```nim
+  ```brownie
   template optMul{`*`(a, 2)}(a: int): int = a + a
 
   let x = 3
@@ -1413,7 +1413,7 @@ Once this limit has been passed, the term rewriting macro will be ignored.
 Unfortunately optimizations are hard to get right and even this tiny example
 is **wrong**:
 
-  ```nim
+  ```brownie
   template optMul{`*`(a, 2)}(a: int): int = a + a
 
   proc f(): int =
@@ -1424,9 +1424,9 @@ is **wrong**:
   ```
 
 We cannot duplicate 'a' if it denotes an expression that has a side effect!
-Fortunately Nim supports side effect analysis:
+Fortunately Brownie supports side effect analysis:
 
-  ```nim
+  ```brownie
   template optMul{`*`(a, 2)}(a: int{noSideEffect}): int = a + a
 
   proc f(): int =
@@ -1444,13 +1444,13 @@ So what about `2 * a`? We should tell the compiler `*` is commutative. We
 cannot really do that however as the following code only swaps arguments
 blindly:
 
-  ```nim
+  ```brownie
   template mulIsCommutative{`*`(a, b)}(a, b: int): int = b * a
   ```
 
 What optimizers really need to do is a *canonicalization*:
 
-  ```nim
+  ```brownie
   template canonMul{`*`(a, b)}(a: int{lit}, b: int): int = b * a
   ```
 
@@ -1510,7 +1510,7 @@ The `alias` and `noalias` predicates refer not only to the matching AST,
 but also to every other bound parameter; syntactically they need to occur after
 the ordinary AST predicates:
 
-  ```nim
+  ```brownie
   template ex{a = b + c}(a: int{noalias}, b, c: int) =
     # this transformation is only valid if 'b' and 'c' do not alias 'a':
     a = b
@@ -1519,7 +1519,7 @@ the ordinary AST predicates:
 
 Another example:
 
-  ```nim
+  ```brownie
   proc somefunc(s: string)                 = assert s == "variable"
   proc somefunc(s: string{nkStrLit})       = assert s == "literal"
   proc somefunc(s: string{nkRStrLit})      = assert s == r"raw"
@@ -1548,7 +1548,7 @@ if they are written in infix notation.
 
 The `|` operator if used as infix operator creates an ordered choice:
 
-  ```nim
+  ```brownie
   template t{0|1}(): untyped = 3
   let a = 1
   # outputs 3:
@@ -1558,7 +1558,7 @@ The `|` operator if used as infix operator creates an ordered choice:
 The matching is performed after the compiler performed some optimizations like
 constant folding, so the following does not work:
 
-  ```nim
+  ```brownie
   template t{0|1}(): untyped = 3
   # outputs 1:
   echo 1
@@ -1575,7 +1575,7 @@ command line option or temporarily with the `patterns` pragma.
 A pattern expression can be bound to a pattern parameter via the `expr{param}`
 notation:
 
-  ```nim
+  ```brownie
   template t{(0|1|2){x}}(x: untyped): untyped = x + 1
   let a = 1
   # outputs 2:
@@ -1587,7 +1587,7 @@ notation:
 
 The `~` operator is the 'not' operator in patterns:
 
-  ```nim
+  ```brownie
   template t{x = (~x){y} and (~x){z}}(x, y, z: bool) =
     x = y
     if x: x = z
@@ -1606,7 +1606,7 @@ The `~` operator is the 'not' operator in patterns:
 The `*` operator can *flatten* a nested binary expression like `a & b & c`
 to `&(a, b, c)`:
 
-  ```nim
+  ```brownie
   var
     calls = 0
 
@@ -1631,7 +1631,7 @@ is passed to `optConc` in `a` as a special list (of kind `nkArgList`)
 which is flattened into a call expression; thus the invocation of `optConc`
 produces:
 
-  ```nim
+  ```brownie
   `&&`("my", space & "awe", "some ", "concat")
   ```
 
@@ -1641,7 +1641,7 @@ produces:
 The `**` is much like the `*` operator, except that it gathers not only
 all the arguments, but also the matched operators in reverse polish notation:
 
-  ```nim
+  ```brownie
   import std/macros
 
   type
@@ -1686,7 +1686,7 @@ Parameters in a pattern are type checked in the matching process. If a
 parameter is of the type `varargs`, it is treated specially and can match
 0 or more arguments in the AST to be matched against:
 
-  ```nim
+  ```brownie
   template optWrite{
     write(f, x)
     ((write|writeLine){w})(f, y)
@@ -1706,7 +1706,7 @@ e.g. when rewriting term to same term plus extra content.
 `noRewrite` pragma can actually prevent further rewriting on marked code,
 e.g. with given example `echo("ab")` will be rewritten just once:
 
-  ```nim
+  ```brownie
   template pwnEcho{echo(x)}(x: untyped) =
     {.noRewrite.}: echo("pwned!")
 
@@ -1723,7 +1723,7 @@ Example: Partial evaluation
 The following example shows how some simple partial evaluation can be
 implemented with term rewriting:
 
-  ```nim
+  ```brownie
   proc p(x, y: int; cond: bool): int =
     result = if cond: x + y else: x - y
 
@@ -1737,7 +1737,7 @@ Example: Hoisting
 
 The following example shows how some form of hoisting can be implemented:
 
-  ```nim
+  ```brownie
   import std/pegs
 
   template optPeg{peg(pattern)}(pattern: string{lit}): Peg =
@@ -1761,7 +1761,7 @@ AST based overloading
 Parameter constraints can also be used for ordinary routine parameters; these
 constraints then affect ordinary overloading resolution:
 
-  ```nim
+  ```brownie
   proc optLit(a: string{lit|`const`}) =
     echo "string literal"
   proc optLit(a: string) =
@@ -1785,11 +1785,11 @@ ordinary routines.
 Parallel & Spawn
 ================
 
-Nim has two flavors of parallelism:
+Brownie has two flavors of parallelism:
 1) `Structured`:idx: parallelism via the `parallel` statement.
 2) `Unstructured`:idx: parallelism via the standalone `spawn` statement.
 
-Nim has a builtin thread pool that can be used for CPU intensive tasks. For
+Brownie has a builtin thread pool that can be used for CPU intensive tasks. For
 IO intensive tasks the `async` and `await` features should be
 used instead. Both parallel and spawn need the [threadpool](threadpool.html)
 module to work.
@@ -1816,7 +1816,7 @@ Spawn statement
 
 The `spawn`:idx: statement can be used to pass a task to the thread pool:
 
-  ```nim
+  ```brownie
   import std/threadpool
 
   proc processLine(line: string) =
@@ -1849,7 +1849,7 @@ a `data flow variable`:idx: `FlowVar[T]` that can be read from. The reading
 with the `^` operator is **blocking**. However, one can use `blockUntilAny` to
 wait on multiple flow variables at the same time:
 
-  ```nim
+  ```brownie
   import std/threadpool, ...
 
   # wait until 2 out of 3 servers received the update:
@@ -1876,7 +1876,7 @@ Parallel statement
 
 Example:
 
-  ```nim  test = "nim c --threads:on $1"
+  ```brownie  test = "brownie c --threads:on $1"
   # Compute pi in an inefficient way
   import std/[strutils, math, threadpool]
   {.experimental: "parallel".}
@@ -1896,7 +1896,7 @@ Example:
 
 
 The parallel statement is the preferred mechanism to introduce parallelism in a
-Nim program. Only a subset of the Nim language is valid within a `parallel`
+Brownie program. Only a subset of the Brownie language is valid within a `parallel`
 section. This subset is checked during semantic analysis to be free of data
 races. A sophisticated `disjoint checker`:idx: ensures that no data races are
 possible, even though shared memory is extensively supported!
@@ -1925,7 +1925,7 @@ Strict case objects
 With `experimental: "strictCaseObjects"` *every* field access is checked to be valid at compile-time.
 The field is within a `case` section of an `object`.
 
-  ```nim
+  ```brownie
   {.experimental: "strictCaseObjects".}
 
   type
@@ -1975,7 +1975,7 @@ This overhead might not be desired and depending on the semantics of the routine
 either.
 So it can be disabled via a `.quirky` annotation:
 
-  ```nim
+  ```brownie
   proc wontRaise(x: int) {.quirky.} =
     if x != 0:
       # because of `quirky` this will continue even if `write` raised an IO exception:
@@ -1992,7 +1992,7 @@ ignored.
 The `quirky` pragma can also be be pushed in order to affect a group of routines and whether
 the compiler supports the pragma can be checked with `defined(nimHasQuirky)`:
 
-  ```nim
+  ```brownie
   when defined(nimHasQuirky):
     {.push quirky: on.}
 
@@ -2039,7 +2039,7 @@ Fresh values (object constructions, `new(T)`, lambdas, `nil`) have no other
 owner yet and so may initialize an `owned` location, also in modules that do
 not enable the feature.
 
-  ```nim
+  ```brownie
   {.experimental: "ownedRefs".}
   type
     Node = ref object
@@ -2061,7 +2061,7 @@ one edge that is not `owned`. Hence a type whose references are all `owned` or
 ORC and YRC. An `owned` closure promises that its environment is acyclic;
 this is checked where the closure is formed:
 
-  ```nim
+  ```brownie
   {.experimental: "ownedRefs".}
   type
     Widget = ref object
@@ -2087,12 +2087,12 @@ only **isolated** subgraphs can be sent around.
 Isolation
 ---------
 
-The standard library module `isolation.nim` provides a generic type `Isolated[T]` that
+The standard library module `isolation.brownie` provides a generic type `Isolated[T]` that
 captures the important notion that nothing else can reference the graph that is wrapped
 inside `Isolated[T]`. It is what a channel implementation should use in order to enforce
 the freedom of data races:
 
-  ```nim
+  ```brownie
   proc send*[T](c: var Channel[T]; msg: sink Isolated[T])
   proc recv*[T](c: var Channel[T]): T
     ## Note: Returns T, not Isolated[T] for convenience.
@@ -2110,7 +2110,7 @@ Construction must ensure that the invariant holds, namely that the wrapped `T`
 is free of external aliases into it. `isolate` ensures this invariant. It is
 inspired by Pony's `recover` construct:
 
-  ```nim
+  ```brownie
   func isolate(x: sink T): Isolated[T] {.magic: "Isolate".}
   ```
 
@@ -2172,7 +2172,7 @@ A container type can be marked as `.sendable`. `.sendable` declares that the typ
 encapsulates a `ref` type effectively so that a variable of this container type
 can be used in an `isolate` context:
 
-  ```nim
+  ```brownie
   type
     Isolated*[T] {.sendable.} = object ## Isolated data can only be moved, not copied.
       value: T
@@ -2198,7 +2198,7 @@ Virtual pragma
 
 Here's an example of how to use the virtual pragma:
 
-```nim
+```brownie
 proc newCpp*[T](): ptr T {.importcpp: "new '*0()".}
 type
   Foo = object of RootObj
@@ -2230,7 +2230,7 @@ The virtual pragma also supports a special syntax to express Cpp constraints. He
 
 The return type can be referred to as `-> '0`, but this is optional and often not needed.
 
- ```nim
+ ```brownie
  {.emit:"""/*TYPESECTION*/
 #include <iostream>
   class CppPrinter {
@@ -2272,7 +2272,7 @@ The `constructor` pragma can be used in two ways: in conjunction with `importcpp
 
 Consider:
 
-```nim
+```brownie
 type Foo* = object
   x: int32
 
@@ -2286,7 +2286,7 @@ Like `virtual`, `constructor` also supports a syntax that allows to express C++ 
 
 For example:
 
-```nim
+```brownie
 {.emit:"""/*TYPESECTION*/
 struct CppClass {
   int x;
@@ -2315,17 +2315,17 @@ proc makeCppClass(): NimClass {.constructor: "NimClass() : CppClass(0, 0)".} =
 
 In the example above `CppClass` has a deleted default constructor. Notice how by using the constructor syntax, one can call the appropriate constructor.
 
-Notice when calling a constructor in the section of a global variable initialization, it will be called before `NimMain` meaning Nim is not fully initialized.
+Notice when calling a constructor in the section of a global variable initialization, it will be called before `NimMain` meaning Brownie is not fully initialized.
 
 Constructor Initializer
 =======================
 
-By default Nim initializes `importcpp` types with `{}`. This can be problematic when importing
+By default Brownie initializes `importcpp` types with `{}`. This can be problematic when importing
 types with a deleted default constructor. In order to avoid this, one can specify default values for a constructor by specifying default values for the proc params in the `constructor` proc.
 
 For example:
 
-```nim
+```brownie
 
 {.emit: """/*TYPESECTION*/
 struct CppStruct {
@@ -2350,7 +2350,7 @@ By using `noInit` in a type or field declaration, the compiler will skip the ini
 
 For example:
 
-```nim
+```brownie
 
 {.emit: """/*TYPESECTION*/
   struct Foo {
@@ -2401,7 +2401,7 @@ Like the `constructor` and `virtual` pragmas, the `member` pragma can be used to
 
 For example:
 
-```nim
+```brownie
 proc print(s: cstring) {.importcpp: "printf(@)", header: "<stdio.h>".}
 
 type
@@ -2431,14 +2431,14 @@ destructing
 destructing
 ```
 
-Notice how the C++ destructor is called automatically. Also notice the double implementation of `==` as an operator in Nim but also in C++. This is useful if you need the type to match some C++ `concept` or `trait` when interoping. 
+Notice how the C++ destructor is called automatically. Also notice the double implementation of `==` as an operator in Brownie but also in C++. This is useful if you need the type to match some C++ `concept` or `trait` when interoping. 
 
 A side effect of being able to declare C++ operators, is that you can now also create a
 C++ functor to have seamless interop with C++ lambdas (syntactic sugar for functors).
 
 For example:
 
-```nim
+```brownie
 type
   NimFunctor = object
     discard
@@ -2449,7 +2449,7 @@ proc invoke(f: NimFunctor; n: int) {.member: "operator ()('2 #2)".} =
 proc `()`(f: NimFunctor; n:int) {.importcpp: "#(@)" .} 
 NimFunctor()(1)
 ```
-Notice we use the overload of `()` to have the same semantics in Nim, but on the `importcpp` we import the functor as a function. 
+Notice we use the overload of `()` to have the same semantics in Brownie, but on the `importcpp` we import the functor as a function. 
 This allows to easy interop with functions that accepts for example a `const` operator in its signature. 
 
 
@@ -2468,7 +2468,7 @@ Since this change may affect runtime behavior, the experimental switch
 injected symbol would replace a captured symbol not bound by `bind` and
 the experimental switch isn't enabled.
 
-```nim
+```brownie
 const value = "captured"
 template foo(x: int, body: untyped): untyped =
   let value {.inject.} = "injected"
@@ -2524,7 +2524,7 @@ they are being called. However this does not generate `nnkOpenSym` nodes
 (unless the other switch is enabled) and so doesn't reflect the regular
 behavior of the switch.
 
-```nim
+```brownie
 const value = "captured"
 template foo(x: int, body: untyped): untyped =
   let value {.inject.} = "injected"
@@ -2554,27 +2554,27 @@ Methods now support implementations based on a VTable by using `--experimental:v
 globally. The virtual method table is stored in the type info of
 an object, which is an array of function pointers.
 
-```nim
+```brownie
 method foo(x: Base, ...) {.base.}
 method foo(x: Derived, ...) {.base.}
 ```
 
 It roughly generates a dispatcher like
 
-```nim
+```brownie
 proc foo_dispatch(x: Base, ...) =
   x.typeinfo.vtable[method_index](x, ...) # method_index is the index of the sorted order of a method
 ```
 
 Methods are required to be in the same module where their type has been defined.
 
-```nim
-# types.nim
+```brownie
+# types.brownie
 type
   Base* = ref object
 ```
 
-```nim
+```brownie
 import types
 
 method foo(x: Base) {.base.} = discard
@@ -2590,7 +2590,7 @@ The `asmSyntax` pragma is used to specify target inline assembler syntax in an `
 
 It prevents compiling code with different of the target CC inline asm syntax, i.e. it will not allow gcc inline asm code to be compiled with vcc.
 
-```nim
+```brownie
 proc nothing() =
   asm {.asmSyntax: "gcc".}"""
     nop
@@ -2634,8 +2634,8 @@ scope than imports.
 
 An example with the `hash` interface in the standard library is as follows:
 
-```nim
-# objs.nim
+```brownie
+# objs.brownie
 import std/hashes
 
 type
@@ -2656,8 +2656,8 @@ proc hash*(a: Obj): Hash =
 # 4. Obj is nominal
 ```
 
-```nim
-# main.nim
+```brownie
+# main.brownie
 {.experimental: "typeBoundOps".}
 from objs import Obj # objs.hash, objs.`==` not imported
 import std/tables
@@ -2674,8 +2674,8 @@ echo t[Obj(x: 3, y: 4, z: "ignored")] # 34
 
 Another example, this time with `$` and indirect imports:
 
-```nim
-# foo.nim
+```brownie
+# foo.brownie
 type Foo* = object
   x*, y*: int
 
@@ -2683,8 +2683,8 @@ proc `$`*(f: Foo): string =
   "Foo(" & $f.x & ", " & $f.y & ")"
 ```
 
-```nim
-# bar.nim
+```brownie
+# bar.brownie
 import foo
 
 proc makeFoo*(x, y: int): Foo =
@@ -2694,14 +2694,14 @@ proc useFoo*(f: Foo) =
   echo "used: ", f # directly calls `foo.$` from scope
 ```
 
-```nim
-# debugger.nim
+```brownie
+# debugger.brownie
 proc debug*[T](obj: T) =
   echo "debugging: ", obj # calls generic `$`
 ```
 
-```nim
-# main.nim
+```brownie
+# main.brownie
 {.experimental: "typeBoundOps".}
 import bar, debugger # `foo` not imported, so `foo.$` not in scope
 

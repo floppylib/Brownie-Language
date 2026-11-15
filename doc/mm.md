@@ -1,5 +1,5 @@
 =======================
-Nim's Memory Management
+Brownie's Memory Management
 =======================
 
 .. default-role:: code
@@ -19,10 +19,10 @@ Multi-paradigm Memory Management Strategies
 
 .. default-role:: option
 
-Nim offers multiple different memory management strategies.
+Brownie offers multiple different memory management strategies.
 To choose the memory management strategy use the `--mm:` switch.
 
- .. hint:: **The recommended switch for newly written Nim code is `--mm:orc`.**
+ .. hint:: **The recommended switch for newly written Brownie code is `--mm:orc`.**
 
 
 ARC/ORC
@@ -34,10 +34,10 @@ handled by a cycle collection mechanism based on "trial deletion".
 Since algorithms based on "tracing" are not used, the runtime behavior is oblivious to the involved heap and stack sizes.
 
 The reference counting operations (= "RC ops") do not use atomic instructions and do not have to --
-instead entire subgraphs are *moved* between threads. The Nim compiler also aggressively
+instead entire subgraphs are *moved* between threads. The Brownie compiler also aggressively
 optimizes away RC ops and exploits [move semantics](destructors.html#move-semantics).
 
-Nim performs a fair share of optimizations for ARC/ORC; you can inspect what it did
+Brownie performs a fair share of optimizations for ARC/ORC; you can inspect what it did
 to your time critical function via `--expandArc:functionName`. Likewise, you can inspect the whole module via `--expandArc:fileName`.
 
 `--mm:arc` uses the same mechanism as `--mm:orc`, but it leaves out the cycle collector.
@@ -106,5 +106,5 @@ None               Manual   Manual            Manual         Manual Manual      
 
 JavaScript's garbage collector is used for the [JavaScript and NodeJS](
 backends.html#backends-the-javascript-target) compilation targets.
-The [NimScript](nims.html) target uses the memory management strategy built into
-the Nim compiler.
+The [browniescript](nims.html) target uses the memory management strategy built into
+the Brownie compiler.

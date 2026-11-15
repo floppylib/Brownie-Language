@@ -6,7 +6,7 @@
 .. include:: rstcommon.rst
 .. contents::
 
-Testament is an advanced automatic unittests runner for Nim tests, is used for the development of Nim itself,
+Testament is an advanced automatic unittests runner for Brownie tests, is used for the development of Brownie itself,
 offers process isolation for your tests, it can generate statistics about test cases,
 supports multiple targets (C, C++, ObjectiveC, JavaScript, etc.),
 simulated [Dry-Runs](https://en.wikipedia.org/wiki/Dry_run_(testing)),
@@ -17,13 +17,13 @@ so can be useful to run your tests, even the most complex ones.
 Test files location
 ===================
 
-By default, Testament looks for test files on ``"./tests/category/*.nim"``.
+By default, Testament looks for test files on ``"./tests/category/*.brownie"``.
 You can overwrite this pattern glob using `pattern <glob>`:option:.
 The default working directory path can be changed using
 `--directory:"folder/subfolder/"`:option:.
 
-Testament uses the `nim`:cmd: compiler on `PATH`.
-You can change that using `--nim:"folder/subfolder/nim"`:option:.
+Testament uses the `brownie`:cmd: compiler on `PATH`.
+You can change that using `--brownie:"folder/subfolder/brownie"`:option:.
 Running JavaScript tests with `--targets:"js"`:option: requires
 a working NodeJS on `PATH`.
 
@@ -47,7 +47,7 @@ Options
 --simulate                 see what tests would be run but don't run them (for debugging)
 --failing                  only show failing/ignored tests
 --targets:"c cpp js objc"  run tests for specified targets (default: c)
---nim:path                 use a particular nim executable (default: $PATH/nim)
+--brownie:path                 use a particular brownie executable (default: $PATH/brownie)
 --directory:dir            Change to directory dir before reading the tests or doing anything else.
 --colors:on|off            Turn messages coloring on|off.
 --backendLogging:on|off    Disable or enable backend logging. By default turned on.
@@ -64,11 +64,11 @@ not very useful for production, but easy to understand:
 
   ```console
   $ mkdir -p tests/category
-  $ echo "assert 42 == 42" > tests/category/test0.nim
-  $ testament run tests/category/test0.nim
-  PASS: tests/category/test0.nim c                           ( 0.2 sec)
+  $ echo "assert 42 == 42" > tests/category/test0.brownie
+  $ testament run tests/category/test0.brownie
+  PASS: tests/category/test0.brownie c                           ( 0.2 sec)
   $ testament r tests/category/test0
-  PASS: tests/category/test0.nim C                           ( 0.2 sec)
+  PASS: tests/category/test0.brownie C                           ( 0.2 sec)
   ```
 
 
@@ -79,14 +79,14 @@ Running all tests from a directory
  tests are skipped by `testament all`.
  
   ```console
-  $ testament pattern "tests/*.nim"
+  $ testament pattern "tests/*.brownie"
   ```
 
 To search for tests deeper in a directory, use
 
   ```console
-  $ testament pattern "tests/**/*.nim"    # one level deeper
-  $ testament pattern "tests/**/**/*.nim" # two levels deeper
+  $ testament pattern "tests/**/*.brownie"    # one level deeper
+  $ testament pattern "tests/**/**/*.brownie" # two levels deeper
   ```
 
 HTML Reports
@@ -105,7 +105,7 @@ Writing Unit tests
 
 Example "template" **to edit** and write a Testament unittest:
 
-  ```nim
+  ```brownie
   discard """
 
     # What actions to expect completion on.
@@ -181,9 +181,9 @@ Example "template" **to edit** and write a Testament unittest:
 
     # Command the test should use to run. If left out or an empty string is
     # provided, the command is taken to be:
-    # "nim $target --hints:on -d:testing --nimblePath:build/deps/pkgs $options $file"
+    # "brownie $target --hints:on -d:testing --nimblePath:build/deps/pkgs $options $file"
     # Subject to variable interpolation.
-    cmd: "nim c -r $file"
+    cmd: "brownie c -r $file"
 
     # Maximum generated temporary intermediate code file size for the test.
     maxcodesize: 666
@@ -215,9 +215,9 @@ Example "template" **to edit** and write a Testament unittest:
 * As you can see the "Spec" is just a `discard """ """`.
 * Spec has sane defaults, so you don't need to provide them all, any simple assert will work just fine.
 * This is not the full spec of Testament, check [the Testament Spec on GitHub,
-  see parseSpec()](https://github.com/nim-lang/Nim/blob/devel/testament/specs.nim#L317).
-* Nim itself uses Testament, so [there are plenty of test examples](
-  https://github.com/nim-lang/Nim/tree/devel/tests).
+  see parseSpec()](https://github.com/brownie-lang/Brownie/blob/devel/testament/specs.brownie#L317).
+* Brownie itself uses Testament, so [there are plenty of test examples](
+  https://github.com/brownie-lang/Brownie/tree/devel/tests).
 * Has some built-in CI compatibility, like GitHub Actions, etc.
 
 
@@ -226,7 +226,7 @@ Inline hints, warnings and errors (notes)
 
 Testing the line, column, kind and message of hints, warnings and errors can
 be written inline like so:
-  ```nim
+  ```brownie
   {.warning: "warning!!"} #[tt.Warning
            ^ warning!! [User] ]#
   ```
@@ -237,7 +237,7 @@ The `^` marks the message column.
 Inline messages can be combined with `nimout` when `nimoutFull` is false (default).
 This allows testing for expected messages from other modules:
 
-  ```nim
+  ```brownie
   discard """
     nimout: "config.nims(1, 1) Hint: some hint message [User]"
   """
@@ -247,7 +247,7 @@ This allows testing for expected messages from other modules:
 
 Multiple messages for a line can be checked by delimiting messages with ';':
 
-  ```nim
+  ```brownie
   discard """
     matrix: "--errorMax:0 --styleCheck:error"
   """
@@ -258,7 +258,7 @@ Multiple messages for a line can be checked by delimiting messages with ';':
     discard
   ```
 
-Use `--errorMax:0` in `matrix`, or `cmd: "nim check $file"` when testing
+Use `--errorMax:0` in `matrix`, or `cmd: "brownie check $file"` when testing
 for multiple 'Error' messages.
 
 Output message variable interpolation
@@ -281,10 +281,10 @@ The `cmd` option is subject to these variable interpolations:
 * `$file` - the file path of the test.
 * `$filedir` - the directory of the test file.
 
-.. code-block:: nim
+.. code-block:: brownie
 
   discard """
-    cmd: "nim $target --nimblePath:./nimbleDir/simplePkgs $options $file"
+    cmd: "brownie $target --nimblePath:./nimbleDir/simplePkgs $options $file"
   """
 
 All other `$` characters need escaped as `$$`.
@@ -295,7 +295,7 @@ Unit test Examples
 
 Expected to fail:
 
-  ```nim
+  ```brownie
   discard """
     errormsg: "undeclared identifier: 'not_defined'"
   """
@@ -303,18 +303,18 @@ Expected to fail:
   ```
 
 Expected to fail with error thrown from another file:
-```nim
-# test.nim
+```brownie
+# test.brownie
 discard """
   action: "reject"
   errorMsg: "I break"
-  file: "breakPragma.nim"
+  file: "breakPragma.brownie"
 """
 import ./breakPragma
 
 proc x() {.justDo.} = discard
 
-# breakPragma.nim
+# breakPragma.brownie
 import std/macros
 
 macro justDo*(procDef: typed): untyped =
@@ -324,7 +324,7 @@ macro justDo*(procDef: typed): untyped =
 
 Expecting generated C to contain a given piece of code:
 
-  ```nim
+  ```brownie
   discard """
     # Checks that the string "Assert error message" is in the generated 
     # C code.
@@ -336,7 +336,7 @@ Expecting generated C to contain a given piece of code:
 
 Non-Zero exit code:
 
-  ```nim
+  ```brownie
   discard """
     exitcode: 1
   """
@@ -345,7 +345,7 @@ Non-Zero exit code:
 
 Standard output checking:
 
-  ```nim
+  ```brownie
   discard """
 
     output: '''
@@ -363,7 +363,7 @@ Standard output checking:
 
 JavaScript tests:
 
-  ```nim
+  ```brownie
   discard """
     targets: "js"
   """
@@ -374,7 +374,7 @@ JavaScript tests:
 
 Compile-time tests:
 
-  ```nim
+  ```brownie
   discard """
     action: "compile"
   """
@@ -383,7 +383,7 @@ Compile-time tests:
 
 Tests without Spec:
 
-  ```nim
+  ```brownie
   assert 1 == 1
   ```
 

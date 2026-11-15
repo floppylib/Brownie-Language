@@ -1,4 +1,4 @@
-# bash completion for nimgrep                          -*- shell-script -*-
+# bash completion for browniegrep                          -*- shell-script -*-
 
 __is_short_or_long()
 {
@@ -116,7 +116,7 @@ _nimgrep()
     # printf "\n[DBUG] curr:$curr|prev:$prev|words(${#words[*]}):${words[*]}\n"
 
     # Asking for a subcommand
-    if false && __ask_for_subcmd nimgrep nimgrep $i_curr "${words[@]}"
+    if false && __ask_for_subcmd browniegrep browniegrep $i_curr "${words[@]}"
     then
         subcmds=""
 	return 0
@@ -126,7 +126,7 @@ _nimgrep()
     if false
     then
 	return 124
-    elif false && __ask_for_subcmd_opts nimgrep compileToC $i_curr "${words[@]}"
+    elif false && __ask_for_subcmd_opts browniegrep compileToC $i_curr "${words[@]}"
     then
 	opts=() \
 	    && candids=()	
@@ -334,6 +334,6 @@ _nimgrep()
     return 0
 
 } &&
-    complete -F _nimgrep nimgrep
+    complete -F _nimgrep browniegrep
 
 # ex: filetype=sh

@@ -655,7 +655,7 @@ theorem release_wait_acyclic (capturing releasing : Nat → Prop)
   • Destructor timing. Deferral runs a dead batch's destructors one
     collection later. Safety is C6; the observable-behaviour claim
     ("nothing else observes the delay, the cells are unreachable and
-    their references already dropped") is an argument about the Nim
+    their references already dropped") is an argument about the Brownie
     language semantics, not modelled here.
   • Conservatism of tag retention. While a batch is parked, the tag also
     protects SURVIVORS that kept a stale tag (dirty and pruned SCCs are

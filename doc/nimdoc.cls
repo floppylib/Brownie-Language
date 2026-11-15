@@ -1,4 +1,4 @@
-\ProvidesClass{nimdoc}[2022/04/17, 2018/01/01 LaTeX2e nonstandard class]
+\ProvidesClass{browniedoc}[2022/04/17, 2018/01/01 LaTeX2e nonstandard class]
 
 \LoadClass[a4paper,11pt]{article}
 
@@ -17,15 +17,15 @@
 % logic to select default font with some fall-back fonts.
 \IfFontExistsTF{Times New Roman}{%
   \setmainfont{Times New Roman}  % the default font
-  \typeout{========================================= nim: using Times New Roman}
+  \typeout{========================================= brownie: using Times New Roman}
 }{
   \IfFontExistsTF{FreeSerif}{%
     \setmainfont{FreeSerif}  % fallback #1 - official GNU font, resembles Times
-    \typeout{========================================= nim: using FreeSerif}
+    \typeout{========================================= brownie: using FreeSerif}
   }{
     \IfFontExistsTF{DejaVuSerif}{%
       \setmainfont{DejaVuSerif}  % fallback #2 - very widespread free font
-      \typeout{========================================= nim: using DejaVuSerif}
+      \typeout{========================================= brownie: using DejaVuSerif}
     }{
       \typeout{!!!!!!!!!!!!!!!!!!! Fonts not found !!!!!!!!!!!!!!!!!!!!!!!}
     }

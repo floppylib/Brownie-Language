@@ -1,4 +1,4 @@
-# bash completion for nimsuggest                          -*- shell-script -*-
+# bash completion for browniesuggest                          -*- shell-script -*-
 
 __is_short_or_long()
 {
@@ -116,7 +116,7 @@ _nimsuggest()
     # printf "\n[DBUG] curr:$curr|prev:$prev|words(${#words[*]}):${words[*]}\n"
 
     # Asking for a subcommand
-    if false && __ask_for_subcmd nimsuggest nimsuggest $i_curr "${words[@]}"
+    if false && __ask_for_subcmd browniesuggest browniesuggest $i_curr "${words[@]}"
     then
         subcmds=""
 	return 0
@@ -126,7 +126,7 @@ _nimsuggest()
     if false
     then
 	return 124
-    elif false && __ask_for_subcmd_opts nimsuggest compileToC $i_curr "${words[@]}"
+    elif false && __ask_for_subcmd_opts browniesuggest compileToC $i_curr "${words[@]}"
     then
 	opts=() \
 	    && candids=()	
@@ -286,6 +286,6 @@ _nimsuggest()
     return 0
 
 } &&
-    complete -F _nimsuggest nimsuggest
+    complete -F _nimsuggest browniesuggest
 
 # ex: filetype=sh

@@ -1,5 +1,5 @@
 =========================
-  nimgrep User's manual
+  browniegrep User's manual
 =========================
 
 :Author: Andreas Rumpf
@@ -8,11 +8,11 @@
 .. default-role:: option
 .. contents::
 
-Nimgrep is a command line tool for search and replace tasks. It can search for
+browniegrep is a command line tool for search and replace tasks. It can search for
 regex or peg patterns and can search whole directories at once. User
 confirmation for every single replace operation can be requested.
 
-Nimgrep has particularly good support for Nim's
+browniegrep has particularly good support for Brownie's
 eccentric *style insensitivity* (see option `-y` below).
 Apart from that it is a generic text manipulation tool.
 
@@ -20,10 +20,10 @@ Apart from that it is a generic text manipulation tool.
 Installation
 ============
 
-Compile nimgrep with the command:
+Compile browniegrep with the command:
 
   ```cmd
-  nim c -d:release tools/nimgrep.nim
+  brownie c -d:release tools/browniegrep.brownie
   ```
 
 And copy the executable somewhere in your ``$PATH``.
@@ -37,13 +37,13 @@ Command line switches
 Path filter options
 -------------------
 
-Let us assume we have file `dirA/dirB/dirC/file.nim`.
+Let us assume we have file `dirA/dirB/dirC/file.brownie`.
 Filesystem path options will match for these parts of the path:
 
 | option              | matches for                        |
 | :------------------ | :--------------------------------  |
-| `--[not]extensions` | ``nim``                            |
-| `--[not]filename`   | ``file.nim``                       |
+| `--[not]extensions` | ``brownie``                            |
+| `--[not]filename`   | ``file.brownie``                       |
 | `--[not]dirname`    | ``dirA`` and ``dirB`` and ``dirC`` |
 | `--[not]dirpath`    | ``dirA/dirB/dirC``                 |
 
@@ -80,13 +80,13 @@ That means you can always use only 1 such an option with logical OR, e.g.
    E.g. to require that multi-line context of matches has occurrences of
    **both** PAT1 and PAT2 use positive lookaheads (`(?=PAT)`:literal:):
      ```cmd
-     nimgrep --inContext:'(?s)(?=.*PAT1)(?=.*PAT2)'
+     browniegrep --inContext:'(?s)(?=.*PAT1)(?=.*PAT2)'
      ```
 
 Meaning of `^`:literal: and `$`:literal:
 ========================================
 
-`nimgrep`:cmd: PCRE engine is run in a single-line mode so
+`browniegrep`:cmd: PCRE engine is run in a single-line mode so
 `^`:literal: matches the beginning of whole input *file* and
 `$`:literal: matches the end of *file* (or whole input *string* for
 options like `--filename`).
@@ -99,11 +99,11 @@ Examples
 
 All examples below use default PCRE Regex patterns:
 
-+ To search recursively in Nim files using style-insensitive identifiers:
++ To search recursively in Brownie files using style-insensitive identifiers:
 
     ```cmd
-    nimgrep --recursive --ext:'nim|nims' --ignoreStyle
-    # short: -r --ext:'nim|nims' -y
+    browniegrep --recursive --ext:'brownie|nims' --ignoreStyle
+    # short: -r --ext:'brownie|nims' -y
     ```
 
   .. Note:: we used `'` quotes to avoid special treatment of `|` symbol
@@ -112,17 +112,17 @@ All examples below use default PCRE Regex patterns:
 + To exclude version control directories (Git, Mercurial=hg, Subversion=svn)
   from the search:
     ```cmd
-    nimgrep --notdirname:'^\.git$' --notdirname:'^\.hg$' --notdirname:'^\.svn$'
+    browniegrep --notdirname:'^\.git$' --notdirname:'^\.hg$' --notdirname:'^\.svn$'
     # short: --ndi:'^\.git$' --ndi:'^\.hg$' --ndi:'^\.svn$'
     ```
 + To search only in paths containing the `tests`:literal: sub-directory
   recursively:
     ```cmd
-    nimgrep --recursive --dirname:'^tests$'
+    browniegrep --recursive --dirname:'^tests$'
     # short: -r --di:'^tests$'
     # or using --dirpath:
-    nimgrep --recursive --dirpath:'(^|/)tests($|/)'
+    browniegrep --recursive --dirpath:'(^|/)tests($|/)'
     # short: -r --pa:'(^|/)tests($|/)'
     ```
-+ Nimgrep can search multi-line, e.g. to find files containing `import`:literal:
++ browniegrep can search multi-line, e.g. to find files containing `import`:literal:
   and then `strutils`:literal: use pattern `'import(.|\n)*?strutils'`:literal:.

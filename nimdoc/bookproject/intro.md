@@ -1,21 +1,21 @@
-.. title:: Welcome to Nim Book
+.. title:: Welcome to Brownie Book
 .. importdoc:: page1
 .. importdoc:: sections/1/intro
 
-This is a test project for `nim book`:cmd:.
+This is a test project for `brownie book`:cmd:.
 
 # Code
 
 Inline code snippet:
 
-```nim
+```brownie
 proc twice*(a: int): int =
   a * 2
 ```
 
 This snippet is tested during documentation build:
 
-```nim test
+```brownie test
 proc twice*(a: int): int =
   a * 2
 
@@ -38,17 +38,17 @@ The same but using `.. code::` directive:
 
 Code included from a source file:
 
-.. include:: ./code1.nim
+.. include:: ./code1.brownie
   :code:
   
 Selective inclusuion:
 
-.. include:: ./code2.nim
+.. include:: ./code2.brownie
   :code:
   :start-after:#doublestart
   :end-before:#doubleend
 
-Doesn't have to be Nim code:
+Doesn't have to be Brownie code:
 
 .. include:: ./code3.py
   :code: python

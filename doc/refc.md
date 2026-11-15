@@ -16,7 +16,7 @@ defined via `--define:useRealtimeGC`:option: (you can put this into your config
 file as well).
 With this switch the garbage collector supports the following operations:
 
-  ```nim
+  ```brownie
   proc GC_setMaxPause*(maxPauseInUs: int)
   proc GC_step*(us: int, strongAdvice = false, stackSize = -1)
   ```
@@ -44,11 +44,11 @@ These two procs are the two modus operandi of the real-time garbage collector:
     Otherwise, the garbage collector may decide not to do anything,
     if there is not much garbage to collect.
     You may also specify the current stack size via `stackSize` parameter.
-    It can improve performance when you know that there are no unique Nim references
+    It can improve performance when you know that there are no unique Brownie references
     below a certain point on the stack. Make sure the size you specify is greater
     than the potential worst-case size.
 
-    It can improve performance when you know that there are no unique Nim
+    It can improve performance when you know that there are no unique Brownie
     references below a certain point on the stack. Make sure the size you specify
     is greater than the potential worst-case size.
 
@@ -63,7 +63,7 @@ Time measurement with garbage collectors
 ----------------------------------------
 
 The garbage collectors' way of measuring time uses
-(see ``lib/system/timers.nim`` for the implementation):
+(see ``lib/system/timers.brownie`` for the implementation):
 
 1) `QueryPerformanceCounter` and `QueryPerformanceFrequency` on Windows.
 2) `mach_absolute_time` on Mac OS X.
@@ -90,16 +90,16 @@ highly specialized environments or for older hardware.
 Thread coordination
 -------------------
 
-When the `NimMain()` function is called Nim initializes the garbage
+When the `NimMain()` function is called Brownie initializes the garbage
 collector to the current thread, which is usually the main thread of your
-application. If your C code later spawns a different thread and calls Nim
+application. If your C code later spawns a different thread and calls Brownie
 code, the garbage collector will fail to work properly and you will crash.
 
-As long as you don't use the threadvar emulation Nim uses native thread
+As long as you don't use the threadvar emulation Brownie uses native thread
 variables, of which you get a fresh version whenever you create a thread. You
 can then attach a GC to this thread via
 
-  ```nim
+  ```brownie
   system.setupForeignThreadGc()
   ```
 
@@ -110,7 +110,7 @@ lived.
 Before the thread exits, you should tear down the thread's GC to prevent memory
 leaks by calling
 
-  ```nim
+  ```brownie
   system.tearDownForeignThreadGc()
   ```
 
@@ -118,7 +118,7 @@ leaks by calling
 Keeping track of memory
 =======================
 
-If you need to pass around memory allocated by Nim to C, you can use the
+If you need to pass around memory allocated by Brownie to C, you can use the
 procs `GC_ref` and `GC_unref` to mark objects as referenced to avoid them
 being freed by the garbage collector.
 Other useful procs from [system](system.html) you can use to keep track of memory are:

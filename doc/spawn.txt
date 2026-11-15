@@ -2,7 +2,7 @@
                   Parallel & Spawn
 ==========================================================
 
-Nim has two flavors of parallelism:
+Brownie has two flavors of parallelism:
 1) `Structured`:idx parallelism via the ``parallel`` statement.
 2) `Unstructured`:idx: parallelism via the standalone ``spawn`` statement.
 
@@ -28,7 +28,7 @@ the passed expression on the thread pool and returns a `data flow variable`:idx:
 **blocking**. However, one can use ``blockUntilAny`` to wait on multiple flow
 variables at the same time:
 
-  ```nim
+  ```brownie
   import std/threadpool, ...
 
   # wait until 2 out of 3 servers received the update:
@@ -55,7 +55,7 @@ Parallel statement
 
 Example:
 
-  ```nim
+  ```brownie
   # Compute PI in an inefficient way
   import std/[strutils, math, threadpool]
 
@@ -74,7 +74,7 @@ Example:
 
 
 The parallel statement is the preferred mechanism to introduce parallelism
-in a Nim program. A subset of the Nim language is valid within a
+in a Brownie program. A subset of the Brownie language is valid within a
 ``parallel`` section. This subset is checked to be free of data races at
 compile time. A sophisticated `disjoint checker`:idx: ensures that no data
 races are possible even though shared memory is extensively supported!

@@ -8,7 +8,7 @@ import traceback
 if not hasattr(gdb, 'SYMBOL_FUNCTION_DOMAIN'):
     gdb.SYMBOL_FUNCTION_DOMAIN = 0  # This is the value used in newer GDB versions
 
-# Configure demangling for Itanium C++ ABI (which Nim uses)
+# Configure demangling for Itanium C++ ABI (which Brownie uses)
 try:
     gdb.execute("set demangle-style gnu-v3")  # GNU v3 style handles Itanium mangling
     gdb.execute("set print asm-demangle on")
@@ -16,9 +16,9 @@ try:
 except Exception as e:
     gdb.write(f"Warning: Could not configure demangling: {str(e)}\n", gdb.STDERR)
 
-# some feedback that the nim runtime support is loading, isn't a bad
+# some feedback that the brownie runtime support is loading, isn't a bad
 # thing at all.
-gdb.write("Loading Nim Runtime support.\n", gdb.STDERR)
+gdb.write("Loading Brownie Runtime support.\n", gdb.STDERR)
 
 # When error occure they occur regularly. This 'caches' known errors
 # and prevents them from being reprinted over and over again.
@@ -46,10 +46,10 @@ def getNimName(typ):
   return f"unknown <{typ}>"
 
 def getNimRti(type_name):
-  """ Return a ``gdb.Value`` object for the Nim Runtime Information of ``type_name``. """
+  """ Return a ``gdb.Value`` object for the Brownie Runtime Information of ``type_name``. """
 
   # Get static const TNimType variable. This should be available for
-  # every non trivial Nim type.
+  # every non trivial Brownie type.
   m = type_hash_regex.match(type_name)
   if m:
     lookups = [
@@ -65,7 +65,7 @@ def getNimRti(type_name):
   None
 
 def getNameFromNimRti(rti):
-  """ Return name (or None) given a Nim RTI ``gdb.Value`` """
+  """ Return name (or None) given a Brownie RTI ``gdb.Value`` """
   try:
     # sometimes there isn't a name field -- example enums
     return rti['name'].string(encoding="utf-8", errors="ignore")
@@ -74,8 +74,8 @@ def getNameFromNimRti(rti):
 
 class NimTypeRecognizer:
   # this type map maps from types that are generated in the C files to
-  # how they are called in nim. To not mix up the name ``int`` from
-  # system.nim with the name ``int`` that could still appear in
+  # how they are called in brownie. To not mix up the name ``int`` from
+  # system.brownie with the name ``int`` that could still appear in
   # generated code, ``NI`` is mapped to ``system.int`` and not just
   # ``int``.
 
@@ -128,7 +128,7 @@ class NimTypeRecognizer:
       elif tname.startswith("tyEnum_"):
         return getNimName(tname)
       elif tname.startswith("tyTuple__"):
-        # We make the name be the field types (Just like in Nim)
+        # We make the name be the field types (Just like in Brownie)
         fields = ", ".join([self.recognize(field.type) for field in type_obj.fields()])
         return f"({fields})"
 
@@ -139,7 +139,7 @@ class NimTypeRecognizer:
     return None
 
 class NimTypePrinter:
-  """Nim type printer. One printer for all Nim types."""
+  """Brownie type printer. One printer for all Brownie types."""
 
   # enabling and disabling of type printers can be done with the
   # following gdb commands:
@@ -157,11 +157,11 @@ class NimTypePrinter:
     return NimTypeRecognizer()
 
 ################################################################################
-#####  GDB Function, equivalent of Nim's $ operator
+#####  GDB Function, equivalent of Brownie's $ operator
 ################################################################################
 
 class DollarPrintFunction (gdb.Function):
-  "Nim's equivalent of $ operator as a gdb function, available in expressions `print $dollar(myvalue)"
+  "Brownie's equivalent of $ operator as a gdb function, available in expressions `print $dollar(myvalue)"
 
   dollar_functions = re.findall(
     r'(?:NimStringDesc \*|NimStringV2)\s?([A-z0-9_]+?dollar_[A-z0-9_]+?)\(([^,)]*)\);',
@@ -189,7 +189,7 @@ class DollarPrintFunction (gdb.Function):
         return func_value(arg.address)
 
     if not ignore_errors:
-      debugPrint(f"No suitable Nim $ operator found for type: {getNimName(argTypeName)}\n")
+      debugPrint(f"No suitable Brownie $ operator found for type: {getNimName(argTypeName)}\n")
     return None
 
   def invoke(self, arg):
@@ -199,11 +199,11 @@ DollarPrintFunction()
 
 
 ################################################################################
-#####  GDB Function, Nim string comparison
+#####  GDB Function, Brownie string comparison
 ################################################################################
 
 class NimStringEqFunction (gdb.Function):
-  """Compare Nim strings for example in conditionals for breakpoints."""
+  """Compare Brownie strings for example in conditionals for breakpoints."""
 
   def __init__ (self):
     super (NimStringEqFunction, self).__init__("nimstreq")
@@ -228,11 +228,11 @@ NimStringEqFunction()
 
 
 ################################################################################
-#####  GDB Command, equivalent of Nim's $ operator
+#####  GDB Command, equivalent of Brownie's $ operator
 ################################################################################
 
 class DollarPrintCmd (gdb.Command):
-  """Dollar print command for Nim, `$ expr` will invoke Nim's $ operator and print the result."""
+  """Dollar print command for Brownie, `$ expr` will invoke Brownie's $ operator and print the result."""
 
   def __init__ (self):
     super (DollarPrintCmd, self).__init__ ("$", gdb.COMMAND_DATA, gdb.COMPLETE_EXPRESSION)
@@ -263,7 +263,7 @@ DollarPrintCmd()
 
 
 ################################################################################
-#####  GDB Commands to invoke common nim tools.
+#####  GDB Commands to invoke common brownie tools.
 ################################################################################
 
 
@@ -271,13 +271,13 @@ import subprocess, os
 
 
 class KochCmd (gdb.Command):
-  """Command that invokes ``koch'', the build tool for the compiler."""
+  """Command that invokes ``kitten'', the build tool for the compiler."""
 
   def __init__ (self):
-    super (KochCmd, self).__init__ ("koch",
+    super (KochCmd, self).__init__ ("kitten",
                                     gdb.COMMAND_USER, gdb.COMPLETE_FILENAME)
     self.binary = os.path.join(
-      os.path.dirname(os.path.dirname(__file__)), "koch")
+      os.path.dirname(os.path.dirname(__file__)), "kitten")
 
   def invoke(self, argument, from_tty):
     subprocess.run([self.binary] + gdb.string_to_argv(argument))
@@ -286,13 +286,13 @@ KochCmd()
 
 
 class NimCmd (gdb.Command):
-  """Command that invokes ``nim'', the nim compiler."""
+  """Command that invokes ``brownie'', the brownie compiler."""
 
   def __init__ (self):
-    super (NimCmd, self).__init__ ("nim",
+    super (NimCmd, self).__init__ ("brownie",
                                    gdb.COMMAND_USER, gdb.COMPLETE_FILENAME)
     self.binary = os.path.join(
-      os.path.dirname(os.path.dirname(__file__)), "bin/nim")
+      os.path.dirname(os.path.dirname(__file__)), "bin/brownie")
 
   def invoke(self, argument, from_tty):
     subprocess.run([self.binary] + gdb.string_to_argv(argument))
@@ -301,7 +301,7 @@ NimCmd()
 
 
 class NimbleCmd (gdb.Command):
-  """Command that invokes ``nimble'', the nim package manager and build tool."""
+  """Command that invokes ``nimble'', the brownie package manager and build tool."""
 
   def __init__ (self):
     super (NimbleCmd, self).__init__ ("nimble",
@@ -412,7 +412,7 @@ class NimEnumPrinter:
   def to_string(self):
     if NimEnumPrinter.enumReprProc and self.nti:
       # Use the old runtimes enumRepr function.
-      # We call the Nim proc itself so that the implementation is correct
+      # We call the Brownie proc itself so that the implementation is correct
       f = gdb.newest_frame()
       # We need to strip the quotes so it looks like an enum instead of a string
       reprProc = NimEnumPrinter.enumReprProc.value()
@@ -664,7 +664,7 @@ class NimTuplePrinter:
 
 class NimFrameFilter:
   def __init__(self):
-    self.name = "nim-frame-filter"
+    self.name = "brownie-frame-filter"
     self.enabled = True
     self.priority = 100
     self.hidden =  {"NimMainInner","NimMain", "main"}
@@ -692,7 +692,7 @@ def makematcher(klass):
 def register_nim_pretty_printers_for_object(objfile):
   nimMainSym = gdb.lookup_global_symbol("NimMain", gdb.SYMBOL_FUNCTION_DOMAIN)
   if nimMainSym and nimMainSym.symtab.objfile == objfile:
-    print("set Nim pretty printers for ", objfile.filename)
+    print("set Brownie pretty printers for ", objfile.filename)
 
     gdb.types.register_type_printer(objfile, NimTypePrinter())
     objfile.pretty_printers = [makematcher(var) for var in list(globals().values()) if hasattr(var, 'pattern')]
@@ -701,10 +701,10 @@ def register_nim_pretty_printers_for_object(objfile):
 for old_objfile in gdb.objfiles():
   register_nim_pretty_printers_for_object(old_objfile)
 
-# Register an event handler to register nim pretty printers for all future objfiles.
+# Register an event handler to register brownie pretty printers for all future objfiles.
 def new_object_handler(event):
   register_nim_pretty_printers_for_object(event.new_objfile)
 
 gdb.events.new_objfile.connect(new_object_handler)
 
-gdb.frame_filters = {"nim-frame-filter": NimFrameFilter()}
+gdb.frame_filters = {"brownie-frame-filter": NimFrameFilter()}

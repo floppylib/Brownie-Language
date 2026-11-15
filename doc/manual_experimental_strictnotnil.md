@@ -6,14 +6,14 @@ Strict not nil checking
 
 **Note:** This feature is experimental, you need to enable it with
 
-  ```nim
+  ```brownie
   {.experimental: "strictNotNil".}
   ```
 
 or 
 
   ```cmd
-  nim c --experimental:strictNotNil <program>
+  brownie c --experimental:strictNotNil <program>
   ```
 
 In the second case it would check builtin and imported modules as well.
@@ -41,7 +41,7 @@ not nil
 
 You can annotate a type where nil isn't a valid value with `not nil`.
 
-  ```nim
+  ```brownie
     type
       NilableObject = ref object
         a: int
@@ -124,14 +124,14 @@ call args rules
 
 When we call with arguments, we have two cases when we might change the nilability.
 
-  ```nim
+  ```brownie
   callByVar(a)
   ```
 
 Here `callByVar` can re-assign `a`, so this might change `a`'s nilability, so we change it to `MaybeNil`.
 This is also a possible aliasing `move out` (moving out of a current alias set).
 
-  ```nim
+  ```brownie
   call(a)
   ```
 
@@ -149,7 +149,7 @@ When branches "join" we usually unify their expression maps or/and nilabilities.
 
 Merging usually merges maps and alias sets: nilabilities are merged like this:
 
-  ```nim
+  ```brownie
   template union(l: Nilability, r: Nilability): Nilability =
     ## unify two states
     if l == r:
@@ -192,7 +192,7 @@ element tracking
 When we assign an object construction, we should track the fields as well: 
 
 
-  ```nim
+  ```brownie
   var a = Nilable(field: Nilable()) # a : Safe, a.field: Safe
   ```
 
@@ -205,7 +205,7 @@ unstructured control flow rules
 Unstructured control flow keywords as `return`, `break`, `continue`, `raise` mean that we jump from a branch out.
 This means that if there is code after the finishing of the branch, it would be run if one hasn't hit the direct parent branch of those: so it is similar to an `else`. In those cases we should use the reverse nilabilities for the local to the condition expressions. E.g.
 
-  ```nim
+  ```brownie
   for a in c:
     if not a.isNil:
       b()
@@ -225,7 +225,7 @@ Assignments and other changes to nilability can move / move out expressions of s
 `move`: Moving `left` to `right` means we remove `left` from its current set and unify it with the `right`'s set.
 This means it stops being aliased with its previous aliases.
 
-  ```nim
+  ```brownie
   var left = b
   left = right # moving left to right
   ```
@@ -234,7 +234,7 @@ This means it stops being aliased with its previous aliases.
 e.g.
 
 
-  ```nim
+  ```brownie
   var left = b
   left = nil # moving out
   ```

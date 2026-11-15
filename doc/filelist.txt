@@ -1,10 +1,10 @@
-Short description of Nim's modules
+Short description of Brownie's modules
 -------------------------------------
 
 ==============  ==========================================================
 Module          Description
 ==============  ==========================================================
-nim             main module: parses the command line and calls
+brownie             main module: parses the command line and calls
                 `main.MainCommand`
 main            implements the top-level command dispatching
 nimconf         implements the config file reader
@@ -12,8 +12,8 @@ syntaxes        dispatcher for the different parsers and filters
 filter_tmpl     standard template filter (``#? stdtempl``)
 lexbase         buffer handling of the lexical analyser
 lexer           lexical analyser
-parser          Nim's parser
-renderer        Nim code renderer (AST back to its textual form)
+parser          Brownie's parser
+renderer        Brownie code renderer (AST back to its textual form)
 options         contains global and local compiler options
 ast             type definitions of the abstract syntax tree (AST) and
                 node constructors
@@ -37,7 +37,7 @@ pragmas         semantic checking of pragmas
 
 idents          implements a general mapping from identifiers to an internal
                 representation (`PIdent`) that is used so that a simple
-                id-comparison suffices to establish whether two Nim
+                id-comparison suffices to establish whether two Brownie
                 identifiers are equivalent
 
 transf          transformations on the AST that need to be done before

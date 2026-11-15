@@ -26,7 +26,7 @@ available parameters depend on the invoked filter. Before version 0.12.0 of
 the language `#!` was used instead of `#?`.
 
 **Hint:** With `--hint:codeBegin:on`:option: or `--verbosity:2`:option:
-(or higher) while compiling or `nim check`:cmd:, Nim lists the processed code after
+(or higher) while compiling or `brownie check`:cmd:, Brownie lists the processed code after
 each filter application.
 
 Usage
@@ -36,12 +36,12 @@ First, put your SCF code in a separate file with filters specified in the first 
 **Note:** You can name your SCF file with any file extension you want, but the
 conventional extension is `.nimf`
 (it used to be `.tmpl` but that was too generic, for example preventing github to
-recognize it as Nim source file).
+recognize it as Brownie source file).
 
 If we use `generateXML` code shown above and call the SCF file `xmlGen.nimf`
-In your `main.nim`:
+In your `main.brownie`:
 
-  ```nim
+  ```brownie
   include "xmlGen.nimf"
   
   echo generateXML("John Smith","42")
@@ -100,19 +100,19 @@ Parameters and their defaults:
 StdTmpl filter
 --------------
 
-The stdtmpl filter provides a simple templating engine for Nim. The
+The stdtmpl filter provides a simple templating engine for Brownie. The
 filter uses a line based parser: Lines prefixed with a *meta character*
-(default: `#`) contain Nim code, other lines are verbatim. Because
+(default: `#`) contain Brownie code, other lines are verbatim. Because
 indentation-based parsing is not suited for a templating engine, control flow
 statements need `end X` delimiters.
 
 Parameters and their defaults:
 
 * `metaChar: char = '#'`
-  : prefix for a line that contains Nim code
+  : prefix for a line that contains Brownie code
 
 * `subsChar: char = '$'`
-  : prefix for a Nim expression within a template line
+  : prefix for a Brownie expression within a template line
 
 * `conc: string = " & "`
   : the operation for concatenation
@@ -151,7 +151,7 @@ Example:
 
 The filter transforms this into:
 
-  ```nim
+  ```brownie
   proc generateHTMLPage(title, currentTab, content: string,
                         tabs: openArray[string]): string =
     result = ""
@@ -180,7 +180,7 @@ The filter transforms this into:
 Each line that does not start with the meta character (ignoring leading
 whitespace) is converted to a string literal that is added to `result`.
 
-The substitution character introduces a Nim expression *e* within the
+The substitution character introduces a Brownie expression *e* within the
 string literal. *e* is converted to a string with the *toString* operation
 which defaults to `$`. For strong type checking, set `toString` to the
 empty string. *e* must match this PEG pattern:

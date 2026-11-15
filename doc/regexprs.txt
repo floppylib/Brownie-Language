@@ -44,12 +44,12 @@ As the regular expressions supported by this module are enormous,
 the reader is referred to https://perldoc.perl.org/perlre.html for the
 full documentation of Perl's regular expressions.
 
-Because the backslash ``\`` is a meta character both in the Nim
+Because the backslash ``\`` is a meta character both in the Brownie
 programming language and in regular expressions, it is strongly
-recommended that one uses the *raw* strings of Nim, so that
+recommended that one uses the *raw* strings of Brownie, so that
 backslashes are interpreted by the regular expression engine:
 
-```nim
+```brownie
   r"\S"  # matches any character that is not whitespace
 ```
 

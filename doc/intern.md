@@ -1,5 +1,5 @@
 =========================================
-    Internals of the Nim Compiler
+    Internals of the Brownie Compiler
 =========================================
 
 
@@ -16,55 +16,55 @@
 Directory structure
 ===================
 
-The Nim project's directory structure is:
+The Brownie project's directory structure is:
 
 ============   ===================================================
 Path           Purpose
 ============   ===================================================
 `bin`          generated binary files
 `build`        generated C code for the installation
-`compiler`     the Nim compiler itself; note that this
+`compiler`     the Brownie compiler itself; note that this
                code has been translated from a bootstrapping
                version written in Pascal, so the code is **not**
-               a poster child of good Nim code
-`config`       configuration files for Nim
+               a poster child of good Brownie code
+`config`       configuration files for Brownie
 `dist`         additional packages for the distribution
 `doc`          the documentation; it is a bunch of
                reStructuredText files
-`lib`          the Nim library
+`lib`          the Brownie library
 ============   ===================================================
 
 
 Bootstrapping the compiler
 ==========================
 
-**Note**: Add ``.`` to your PATH so that `koch`:cmd: can be used without the ``./``.
+**Note**: Add ``.`` to your PATH so that `kitten`:cmd: can be used without the ``./``.
 
 Compiling the compiler is a simple matter of running:
 
   ```cmd
-  nim c koch.nim
-  koch boot -d:release
+  brownie c kitten.brownie
+  kitten boot -d:release
   ```
 
 For a debug version use:
 
   ```cmd
-  nim c koch.nim
-  koch boot
+  brownie c kitten.brownie
+  kitten boot
   ```
 
 
 And for a debug version compatible with GDB:
 
   ```cmd
-  nim c koch.nim
-  koch boot --debuginfo --linedir:on
+  brownie c kitten.brownie
+  kitten boot --debuginfo --linedir:on
   ```
 
-The `koch`:cmd: program is Nim's maintenance script. It is a replacement for
+The `kitten`:cmd: program is Brownie's maintenance script. It is a replacement for
 make and shell scripting with the advantage that it is much more portable.
-More information about its options can be found in the [koch](koch.html)
+More information about its options can be found in the [kitten](kitten.html)
 documentation.
 
 
@@ -75,7 +75,7 @@ Set the compilation timestamp with the `SOURCE_DATE_EPOCH` environment variable.
 
   ```cmd
   export SOURCE_DATE_EPOCH=$(git log -n 1 --format=%at)
-  koch boot # or `./build_all.sh`
+  kitten boot # or `./build_all.sh`
   ```
 
 
@@ -87,25 +87,25 @@ Bisecting for regressions
 -------------------------
 
 There are often times when there is a bug that is caused by a regression in the
-compiler or stdlib. Bisecting the Nim repo commits is a useful tool to identify
+compiler or stdlib. Bisecting the Brownie repo commits is a useful tool to identify
 what commit introduced the regression.
 
 Even if it's not known whether a bug is caused by a regression, bisection can reduce
 debugging time by ruling it out. If the bug is found to be a regression, then you
 focus on the changes introduced by that one specific commit.
 
-`koch temp`:cmd: returns 125 as the exit code in case the compiler
+`kitten temp`:cmd: returns 125 as the exit code in case the compiler
 compilation fails. This exit code tells `git bisect`:cmd: to skip the
 current commit:
 
   ```cmd
   git bisect start bad-commit good-commit
-  git bisect run ./koch temp -r c test-source.nim
+  git bisect run ./kitten temp -r c test-source.brownie
   ```
 
 You can also bisect using custom options to build the compiler, for example if
 you don't need a debug version of the compiler (which runs slower), you can replace
-`./koch temp`:cmd: by explicit compilation command, see [Bootstrapping the compiler].
+`./kitten temp`:cmd: by explicit compilation command, see [Bootstrapping the compiler].
 
 See also:
 
@@ -118,17 +118,17 @@ Building an instrumented compiler
 Considering that a useful method of debugging the compiler is inserting debug
 logging, or changing code and then observing the outcome of a testcase, it is
 fastest to build a compiler that is instrumented for debugging from an
-existing release build. `koch temp`:cmd: provides a convenient method of doing
+existing release build. `kitten temp`:cmd: provides a convenient method of doing
 just that.
 
-By default, running `koch temp`:cmd: will build a lean version of the compiler
+By default, running `kitten temp`:cmd: will build a lean version of the compiler
 with `-d:debug`:option: enabled. The compiler is written to `bin/nim_temp` by
 default. A lean version of the compiler lacks JS and documentation generation.
 
 `bin/nim_temp` can be directly used to run testcases, or used with testament
-with `testament --nim:bin/nim_temp r tests/category/tsometest`:cmd:.
+with `testament --brownie:bin/nim_temp r tests/category/tsometest`:cmd:.
 
-`koch temp`:cmd: will build the temporary compiler with the `-d:debug`:option:
+`kitten temp`:cmd: will build the temporary compiler with the `-d:debug`:option:
 enabled. Here are compiler options that are of interest when debugging:
 
 * `-d:debug`:option:\: enables `assert` statements and stacktraces and all
@@ -140,19 +140,19 @@ enabled. Here are compiler options that are of interest when debugging:
 * `-d:nimDebugUtils`:option:\: enables various debugging utilities;
   see `compiler/debugutils`
 * `-d:stacktraceMsgs -d:nimCompilerStacktraceHints`:option:\: adds some additional
-  stacktrace hints; see https://github.com/nim-lang/Nim/pull/13351
+  stacktrace hints; see https://github.com/brownie-lang/Brownie/pull/13351
 * `-u:leanCompiler`:option:\: enable JS and doc generation
 
-Another method to build and run the compiler is directly through `koch`:cmd:\:
+Another method to build and run the compiler is directly through `kitten`:cmd:\:
 
   ```cmd
-  koch temp [options] c test.nim
+  kitten temp [options] c test.brownie
 
   # (will build with js support)
-  koch temp [options] js test.nim
+  kitten temp [options] js test.brownie
 
   # (will build with doc support)
-  koch temp [options] doc test.nim
+  kitten temp [options] doc test.brownie
   ```
 
 Debug logging
@@ -170,21 +170,21 @@ is being used. One very common way to achieve this is to use the `mdbg` conditio
 which will be true only in contexts, processing expressions and statements from
 the currently compiled main module:
 
-  ```nim
+  ```brownie
   # inside some compiler module
   if mdbg:
     debug someAstNode
   ```
 
-Using the `isCompilerDebug`:nim: condition along with inserting some statements
+Using the `isCompilerDebug`:brownie: condition along with inserting some statements
 into the testcase provides more granular logging:
 
-  ```nim
-  # compilermodule.nim
+  ```brownie
+  # compilermodule.brownie
   if isCompilerDebug():
     debug someAstNode
 
-  # testcase.nim
+  # testcase.brownie
   proc main =
     {.define(nimCompilerDebug).}
     let a = 2.5 * 3
@@ -194,22 +194,22 @@ into the testcase provides more granular logging:
 Logging can also be scoped to a specific filename as well. This will of course
 match against every module with that name.
 
-  ```nim
-  if `??`(conf, n.info, "module.nim"):
+  ```brownie
+  if `??`(conf, n.info, "module.brownie"):
     debug(n)
   ```
 
-The above examples also makes use of the `debug`:nim: proc, which is able to
+The above examples also makes use of the `debug`:brownie: proc, which is able to
 print a human-readable form of an arbitrary AST tree. Other common ways to print
 information about the internal compiler types include:
 
-  ```nim
+  ```brownie
   # pretty print PNode
 
-  # pretty prints the Nim ast
+  # pretty prints the Brownie ast
   echo renderTree(someNode)
 
-  # pretty prints the Nim ast, but annotates symbol IDs
+  # pretty prints the Brownie ast, but annotates symbol IDs
   echo renderTree(someNode, {renderIds})
 
   # pretty print ast as JSON
@@ -253,7 +253,7 @@ information about the internal compiler types include:
 
 Here are some other helpful utilities:
 
-  ```nim
+  ```brownie
   # how did execution reach this location?
   writeStackTrace()
   ```
@@ -261,7 +261,7 @@ Here are some other helpful utilities:
 These procs may not already be imported by the module you're editing.
 You can import them directly for debugging:
 
-  ```nim
+  ```brownie
   from astalgo import debug
   from types import typeToString
   from renderer import renderTree
@@ -274,8 +274,8 @@ Native debugging
 Stepping through the compiler with a native debugger is a very powerful tool to
 both learn and debug it. However, there is still the need to constrain when
 breakpoints are triggered. The same methods as in [Debug logging] can be applied
-here when combined with calls to the debug helpers `enteringDebugSection()`:nim:
-and `exitingDebugSection()`:nim:.
+here when combined with calls to the debug helpers `enteringDebugSection()`:brownie:
+and `exitingDebugSection()`:brownie:.
 
 #. Compile the temp compiler with `--debugger:native -d:nimDebugUtils`:option:
 #. Set your desired breakpoints or watchpoints.
@@ -284,7 +284,7 @@ and `exitingDebugSection()`:nim:.
    * LLDB execute `command source tools/compiler.lldb` at startup
 #. Use one of the scoping helpers like so:
 
-  ```nim
+  ```brownie
   if isCompilerDebug():
     enteringDebugSection()
   else:
@@ -297,7 +297,7 @@ disabled. Also, due to a bug, only breakpoints can be constrained for LLDB.
 The compiler's architecture
 ===========================
 
-Nim uses the classic compiler architecture: A lexer/scanner feeds tokens to a
+Brownie uses the classic compiler architecture: A lexer/scanner feeds tokens to a
 parser. The parser builds a syntax tree that is used by the code generators.
 This syntax tree is the interface between the parser and the code generator.
 It is essential to understand most of the compiler's code.
@@ -320,7 +320,7 @@ examples how the AST represents each syntactic structure.
 Runtimes
 ========
 
-Nim has two different runtimes, the "old runtime" and the "new runtime". The old
+Brownie has two different runtimes, the "old runtime" and the "new runtime". The old
 runtime supports the old GCs (markAndSweep, refc, Boehm), the new runtime supports
 ARC/ORC. The new runtime is active `when defined(nimV2)`.
 
@@ -328,13 +328,13 @@ ARC/ORC. The new runtime is active `when defined(nimV2)`.
 Coding Guidelines
 =================
 
-* We follow Nim's official style guide, see [NEP1](nep1.html).
+* We follow Brownie's official style guide, see [NEP1](nep1.html).
 * Max line length is 100 characters.
 * Provide spaces around binary operators if that enhances readability.
 * Use a space after a colon, but not before it.
 * (deprecated) Start types with a capital `T`, unless they are
   pointers/references which start with `P`.
-* Prefer `import package`:nim: over `from package import symbol`:nim:.
+* Prefer `import package`:brownie: over `from package import symbol`:brownie:.
 
 See also the [API naming design](apis.html) document.
 
@@ -342,13 +342,13 @@ See also the [API naming design](apis.html) document.
 Porting to new platforms
 ========================
 
-Porting Nim to a new architecture is pretty easy, since C is the most
-portable programming language (within certain limits) and Nim generates
+Porting Brownie to a new architecture is pretty easy, since C is the most
+portable programming language (within certain limits) and Brownie generates
 C code, porting the code generator is not necessary.
 
 POSIX-compliant systems on conventional hardware are usually pretty easy to
 port: Add the platform to `platform` (if it is not already listed there),
-check that the OS, System modules work and recompile Nim.
+check that the OS, System modules work and recompile Brownie.
 
 The only case where things aren't as easy is when old runtime's garbage
 collectors need some assembler tweaking to work. The default
@@ -358,37 +358,37 @@ replace this generic code by some assembler code.
 
 Files that may need changed for your platform include:
 
-* `compiler/platform.nim`
+* `compiler/platform.brownie`
   Add os/cpu properties.
-* `lib/system.nim`
+* `lib/system.brownie`
   Add os/cpu to the documentation for `system.hostOS` and `system.hostCPU`.
-* `compiler/options.nim`
+* `compiler/options.brownie`
   Add special os/cpu property checks in `isDefined`.
 * `compiler/installer.ini`
   Add os/cpu to `Project.Platforms` field.
-* `lib/system/platforms.nim`
+* `lib/system/platforms.brownie`
   Add os/cpu.
-* `std/private/osseps.nim`
+* `std/private/osseps.brownie`
   Add os specializations.
-* `lib/pure/distros.nim`
+* `lib/pure/distros.brownie`
   Add os, package handler.
-* `tools/niminst/makefile.nimf`
+* `tools/brownieinst/makefile.nimf`
   Add os/cpu compiler/linker flags.
-* `tools/niminst/buildsh.nimf`
+* `tools/brownieinst/buildsh.nimf`
   Add os/cpu compiler/linker flags.
 
-If the `--os` or `--cpu` options aren't passed to the compiler, then Nim will
+If the `--os` or `--cpu` options aren't passed to the compiler, then Brownie will
 determine the current host os, cpu and endianness from `system.cpuEndian`,
 `system.hostOS` and `system.hostCPU`. Those values are derived from
-`compiler/platform.nim`.
+`compiler/platform.brownie`.
 
 In order for the new platform to be bootstrapped from the `csources`, it must:
 
-* have `compiler/platform.nim` updated
+* have `compiler/platform.brownie` updated
 * have `compiler/installer.ini` updated
-* have `tools/niminst/buildsh.nimf` updated
-* have `tools/niminst/makefile.nimf` updated
-* be backported to the Nim version used by the `csources`
+* have `tools/brownieinst/buildsh.nimf` updated
+* have `tools/brownieinst/makefile.nimf` updated
+* be backported to the Brownie version used by the `csources`
 * the new `csources` must be pushed
 * the new `csources` revision must be updated in `config/build_config.txt`
 
@@ -398,22 +398,22 @@ Runtime type information
 
 **Note**: This section describes the "old runtime".
 
-*Runtime type information* (RTTI) is needed for several aspects of the Nim
+*Runtime type information* (RTTI) is needed for several aspects of the Brownie
 programming language:
 
 Garbage collection
-: The old GCs use the RTTI for traversing arbitrary Nim types, but usually
+: The old GCs use the RTTI for traversing arbitrary Brownie types, but usually
   only the `marker` field which contains a proc that does the traversal.
 
 Complex assignments
 : Sequences and strings are implemented as
-  pointers to resizable buffers, but Nim requires copying for
+  pointers to resizable buffers, but Brownie requires copying for
   assignments. Apart from RTTI the compiler also generates copy procedures
   as a specialization.
 
 We already know the type information as a graph in the compiler.
 Thus, we need to serialize this graph as RTTI for C code generation.
-Look at the file ``lib/system/hti.nim`` for more information.
+Look at the file ``lib/system/hti.brownie`` for more information.
 
 
 Magics and compilerProcs
@@ -439,7 +439,7 @@ Code generation for closures is implemented by `lambda lifting`:idx:.
 Design
 ------
 
-A `closure` proc var can call ordinary procs of the default Nim calling
+A `closure` proc var can call ordinary procs of the default Brownie calling
 convention. But not the other way round! A closure is implemented as a
 `tuple[prc, env]`. `env` can be nil implying a call without a closure.
 This means that a call through a closure generates an `if` but the
@@ -452,7 +452,7 @@ Tests with GCC on Amd64 showed that it's really beneficial if the
 Proper thunk generation is harder because the proc that is to wrap
 could stem from a complex expression:
 
-  ```nim
+  ```brownie
   receivesClosure(returnsDefaultCC[i])
   ```
 
@@ -465,7 +465,7 @@ to pass a proc pointer around via a generic `ref` type.
 
 Example code:
 
-  ```nim
+  ```brownie
   proc add(x: int): proc (y: int): int {.closure.} =
     return proc (y: int): int =
       return x + y
@@ -476,7 +476,7 @@ Example code:
 
 This should produce roughly this code:
 
-  ```nim
+  ```brownie
   type
     Env = ref object
       x: int # data
@@ -498,7 +498,7 @@ This should produce roughly this code:
 
 Beware of nesting:
 
-  ```nim
+  ```brownie
   proc add(x: int): proc (y: int): proc (z: int): int {.closure.} {.closure.} =
     return lambda (y: int): proc (z: int): int {.closure.} =
       return lambda (z: int): int =
@@ -510,7 +510,7 @@ Beware of nesting:
 
 This should produce roughly this code:
 
-  ```nim
+  ```brownie
   type
     EnvX = ref object
       x: int # data
@@ -549,7 +549,7 @@ however.
 Accumulator
 -----------
 
-  ```nim
+  ```brownie
   proc getAccumulator(start: int): proc (): int {.closure} =
     var i = start
     return lambda: int =
@@ -594,7 +594,7 @@ To be expanded.
 Integer literals
 ----------------
 
-In Nim, there is a redundant way to specify the type of an
+In Brownie, there is a redundant way to specify the type of an
 integer literal. First, it should be unsurprising that every
 node has a node kind. The node of an integer literal can be any of the
 following values:
@@ -623,7 +623,7 @@ keeps the full `int literal(321)` type. Here is an example where that
 difference matters.
 
 
-  ```nim
+  ```brownie
   proc foo(arg: int8) =
     echo "def"
 
@@ -639,7 +639,7 @@ always prefer the `int` type over all other types. If none of the
 overloads is of type `int`, then there will be an error because of
 ambiguity.
 
-  ```nim
+  ```brownie
   proc foo(arg: int) =
     echo "abc"
   proc foo(arg: int8) =
@@ -666,7 +666,7 @@ literal types.
 
 Other literal types, such as `uint literal(123)` that would
 automatically convert to other integer types, but prefers to
-become a `uint` are not part of the Nim language.
+become a `uint` are not part of the Brownie language.
 
 In an unchecked AST, the `typ` field is nil. The type checker will set
 the `typ` field accordingly to the node kind. Nodes of kind `nkIntLit`

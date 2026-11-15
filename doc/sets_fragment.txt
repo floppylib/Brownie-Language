@@ -16,20 +16,20 @@ with a bigger range length are coerced into the range `0 .. MaxSetElements-1`.
 The reason is that sets are implemented as high performance bit vectors.
 Attempting to declare a set with a larger type will result in an error:
 
-```nim
+```brownie
   var s: set[int64] # Error: set is too large; use `std/sets` for ordinal types
                     # with more than 2^16 elements
 ```
 
 
-**Note:** Nim also offers [hash sets](sets.html) (which you need to import
+**Note:** Brownie also offers [hash sets](sets.html) (which you need to import
 with `import std/sets`), which have no such restrictions.
 
 Sets can be constructed via the set constructor: `{}` is the empty set. The
 empty set is type compatible with any concrete set type. The constructor
 can also be used to include elements (and ranges of elements):
 
-  ```nim
+  ```brownie
   type
     CharSet = set[char]
   var
@@ -41,7 +41,7 @@ can also be used to include elements (and ranges of elements):
 
 The module [`std/setutils`](setutils.html) provides a way to initialize a set from an iterable:
 
-```nim
+```brownie
 import std/setutils
 
 let uniqueChars = myString.toSet
@@ -74,7 +74,7 @@ constants that have to be `or`'ed together.
 
 Enum, sets and casting can be used together as in:
 
-  ```nim
+  ```brownie
   type
     MyFlag* {.size: sizeof(cint).} = enum
       A

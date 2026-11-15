@@ -29,8 +29,8 @@ code when `F9` is pressed. The important lines are marked with `#***`.
 To install SDL2 you can use `nimble install sdl2`:cmd:.
 
 
-  ```nim
-  # logic.nim
+  ```brownie
+  # logic.brownie
   import sdl2
 
   #*** import the hotcodereloading stdlib module ***
@@ -65,7 +65,7 @@ To install SDL2 you can use `nimble install sdl2`:cmd:.
       if evt.kind == KeyDown:
         if evt.key.keysym.scancode == SDL_SCANCODE_ESCAPE: runGame = false
         elif evt.key.keysym.scancode == SDL_SCANCODE_F9:
-          #*** reload this logic.nim module on the F9 keypress ***
+          #*** reload this logic.brownie module on the F9 keypress ***
           performCodeReload()
 
     # draw a bouncing rectangle:
@@ -88,8 +88,8 @@ To install SDL2 you can use `nimble install sdl2`:cmd:.
   ```
 
 
-  ```nim
-  # mymain.nim
+  ```brownie
+  # mymain.brownie
   import logic
 
   proc main() =
@@ -105,7 +105,7 @@ To install SDL2 you can use `nimble install sdl2`:cmd:.
 Compile this example via:
 
   ```cmd
-  nim c --hotcodereloading:on mymain.nim
+  brownie c --hotcodereloading:on mymain.brownie
   ```
 
 Now start the program and KEEP it running!
@@ -120,13 +120,13 @@ Now start the program and KEEP it running!
 
 For example, change the line:
 
-  ```nim
+  ```brownie
   discard renderer.setDrawColor(255, 128, 128, 0)
   ```
 
 into:
 
-  ```nim
+  ```brownie
   discard renderer.setDrawColor(255, 255, 128, 0)
   ```
 
@@ -135,7 +135,7 @@ into:
 Then recompile the project, but do not restart or quit the mymain.exe program!
 
   ```cmd
-  nim c --hotcodereloading:on mymain.nim
+  brownie c --hotcodereloading:on mymain.brownie
   ```
 
 Now give the `mymain` SDL window the focus, press F9, and watch the
@@ -150,7 +150,7 @@ One can use the special event handlers `beforeCodeReload` and
 `afterCodeReload` to reset the state of a particular variable or to force
 the execution of certain statements:
 
-  ```Nim
+  ```Brownie
   var
    settings = initTable[string, string]()
    lastReload: Time
@@ -165,14 +165,14 @@ the execution of certain statements:
     resetProgramState()
   ```
 
-On each code reload, Nim will first execute all `beforeCodeReload`:idx:
+On each code reload, Brownie will first execute all `beforeCodeReload`:idx:
 handlers registered in the previous version of the program and then all
 `afterCodeReload`:idx: handlers appearing in the newly loaded code. Please note
 that any handlers appearing in modules that weren't reloaded will also be
 executed. To prevent this behavior, one can guard the code with the
 `hasModuleChanged()`:idx: API:
 
-  ```Nim
+  ```Brownie
   import mydb
 
   var myCache = initTable[Key, Value]()
@@ -184,7 +184,7 @@ executed. To prevent this behavior, one can guard the code with the
 
 The hot code reloading is based on dynamic library hot swapping in the native
 targets and direct manipulation of the global namespace in the JavaScript
-target. The Nim compiler does not specify the mechanism for detecting the
+target. The Brownie compiler does not specify the mechanism for detecting the
 conditions when the code must be reloaded. Instead, the program code is
 expected to call `performCodeReload()`:idx: every time it wishes to reload
 its code.
@@ -202,21 +202,21 @@ Native code targets
 
 Native projects using the hot code reloading option will be implicitly
 compiled with the `-d:useNimRtl`:option: option and they will depend on both
-the `nimrtl` library and the `nimhcr` library which implements the
+the `browniertl` library and the `browniehcr` library which implements the
 hot code reloading run-time. Both libraries can be found in the `lib`
-folder of Nim and can be compiled into dynamic libraries to satisfy
+folder of Brownie and can be compiled into dynamic libraries to satisfy
 runtime demands of the example code above. An example of compiling
-``nimhcr.nim`` and ``nimrtl.nim`` when the source dir of Nim is installed
+``browniehcr.brownie`` and ``browniertl.brownie`` when the source dir of Brownie is installed
 with choosenim follows.
 
   ```console
   # Unix/MacOS
-  # Make sure you are in the directory containing your .nim files
+  # Make sure you are in the directory containing your .brownie files
   $ cd your-source-directory
 
   # Compile two required files and set their output directory to current dir
-  $ nim c --outdir:$PWD ~/.choosenim/toolchains/nim-#devel/lib/nimhcr.nim
-  $ nim c --outdir:$PWD ~/.choosenim/toolchains/nim-#devel/lib/nimrtl.nim
+  $ brownie c --outdir:$PWD ~/.choosenim/toolchains/brownie-#devel/lib/browniehcr.brownie
+  $ brownie c --outdir:$PWD ~/.choosenim/toolchains/brownie-#devel/lib/browniertl.brownie
 
   # verify that you have two files named libnimhcr and libnimrtl in your
   # source directory (.dll for Windows, .so for Unix, .dylib for MacOS)
@@ -275,7 +275,7 @@ Outside this table:
 - The jump table is implemented for x86, x86-64, and for arm64 on Linux and
   macOS. Other combinations have no implementation, and the HCR runtime does
   not compile for them.
-- Nim does not detect musl by itself: on musl, pass `-d:musl`:option:.
+- Brownie does not detect musl by itself: on musl, pass `-d:musl`:option:.
   Without it, a reload can go on running the old code of a module.
 - The tests are disabled on OpenBSD and NetBSD, and are not run with
   `--mm:boehm`:option:.
@@ -297,7 +297,7 @@ entitlement for that.
 Finding the libraries at run-time
 ---------------------------------
 
-The program loads `nimrtl`, `nimhcr` and the libraries of its modules when it
+The program loads `browniertl`, `browniehcr` and the libraries of its modules when it
 starts. `could not load: libnimhcr.so` means the dynamic loader did not find
 them. The two run-time libraries are looked up by name, so their directory
 has to be on the loader's search path:
@@ -316,7 +316,7 @@ directory can be recorded in the executable when it is linked, for example
 with `--passL:"-Wl,-rpath,\$ORIGIN"`:option: on Linux or
 `--passL:-rpath --passL:@loader_path`:option: on macOS.
 
-`nimrtl` and `nimhcr` have to be compiled with the same memory management
+`browniertl` and `browniehcr` have to be compiled with the same memory management
 mode as the program.
 
 JavaScript target

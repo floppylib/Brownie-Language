@@ -16,7 +16,7 @@
   inheritance to prevent this issue.
 - The ``not nil`` type annotation now has to be enabled explicitly
   via ``{.experimental: "notnil".}`` as we are still not pleased with how this
-  feature works with Nim's containers.
+  feature works with Brownie's containers.
 - The parser now warns about inconsistent spacing around binary operators as
   these can easily be confused with unary operators. This warning will likely
   become an error in the future.
@@ -82,7 +82,7 @@
 - The undocumented ``#? braces`` parsing mode was removed.
 - The undocumented PHP backend was removed.
 - The default location of ``nimcache`` for the native code targets was
-  changed. Read [the compiler user guide](https://nim-lang.org/docs/nimc.html#generated-c-code-directory)
+  changed. Read [the compiler user guide](https://brownie-lang.org/docs/nimc.html#generated-c-code-directory)
   for more information.
 
 ### Library additions
@@ -92,7 +92,7 @@
 - Added ``system.toOpenArray`` in order to support zero-copy slicing
   operations. This is currently not yet available for the JavaScript target.
 - Added ``getCurrentDir``, ``findExe``, ``cpDir`` and  ``mvDir`` procs to
-  ``nimscript``.
+  ``browniescript``.
 - The ``times`` module now supports up to nanosecond time resolution when available.
 - Added the type ``times.Duration`` for representing fixed durations of time.
 - Added the proc ``times.convert`` for converting between different time units,
@@ -133,9 +133,9 @@
 - An exception raised from a ``test`` block of ``unittest`` now shows its type in
   error message.
 - The ``compiler/nimeval`` API was rewritten to simplify the "compiler as an
-  API". Using the Nim compiler and its VM as a scripting engine has never been
-  easier. See ``tests/compilerapi/tcompilerapi.nim`` for an example of how to
-  use the Nim VM in a native Nim application.
+  API". Using the Brownie compiler and its VM as a scripting engine has never been
+  easier. See ``tests/compilerapi/tcompilerapi.brownie`` for an example of how to
+  use the Brownie VM in a native Brownie application.
 - Added the parameter ``val`` for the ``CritBitTree[T].incl`` proc.
 - The proc ``tgamma`` was renamed to ``gamma``. ``tgamma`` is deprecated.
 - The ``pegs`` module now exports getters for the fields of its ``Peg`` and ``NonTerminal``
@@ -149,7 +149,7 @@
 - Dot calls combined with explicit generic instantiations can now be written
   as ``x.y[:z]`` which is transformed into ``y[z](x)`` by the parser.
 - ``func`` is now an alias for ``proc {.noSideEffect.}``.
-- In order to make ``for`` loops and iterators more flexible to use Nim now
+- In order to make ``for`` loops and iterators more flexible to use Brownie now
   supports so called "for-loop macros". See
   the [manual](manual.html#macros-for-loop-macros) for more details.
   This feature enables a Python-like generic ``enumerate`` implementation.
@@ -174,14 +174,14 @@
   (#6415)
 
 - Native C++ exceptions can now be imported with `importcpp` pragma.
-  Imported exceptions can be raised and caught just like Nim exceptions.
+  Imported exceptions can be raised and caught just like Brownie exceptions.
   More details in language manual.
 
 - ``nil`` for strings/seqs is finally gone. Instead the default value for
   these is ``"" / @[]``. Use ``--nilseqs:on`` for a transition period.
 
-- Accessing the binary zero terminator in Nim's native strings
-  is now invalid. Internally a Nim string still has the trailing zero for
+- Accessing the binary zero terminator in Brownie's native strings
+  is now invalid. Internally a Brownie string still has the trailing zero for
   zero-copy interoperability with ``cstring``. Compile your code with the
   new switch ``--laxStrings:on`` if you need a transition period.
 
@@ -190,7 +190,7 @@
 - Thread-local variables can now be declared inside procs. This implies all
   the effects of the ``global`` pragma.
 
-- Nim now supports the ``except`` clause in the export statement.
+- Brownie now supports the ``except`` clause in the export statement.
 
 - Range float types, example ``range[0.0 .. Inf]``. More details in language manual.
 - The ``{.this.}`` pragma has been deprecated. It never worked within generics and
@@ -202,7 +202,7 @@
 
 - The exception hierarchy was slightly reworked, ``SystemError`` was renamed to
   ``CatchableError`` and is the new base class for any exception that is guaranteed to
-  be catchable. This change should have minimal impact on most existing Nim code.
+  be catchable. This change should have minimal impact on most existing Brownie code.
 
 
 ### Tool changes
@@ -220,10 +220,10 @@
   helper library such as LiveReload or BrowserSync.
 
 - A new compiler option `--cppCompileToNamespace` puts the generated C++ code
-  into the namespace "Nim" in order to avoid naming conflicts with existing
-  C++ code. This is done for all Nim code - internal and exported.
+  into the namespace "Brownie" in order to avoid naming conflicts with existing
+  C++ code. This is done for all Brownie code - internal and exported.
 
-- Added ``macros.getProjectPath`` and ``os.putEnv`` procs to Nim's virtual
+- Added ``macros.getProjectPath`` and ``os.putEnv`` procs to Brownie's virtual
   machine.
 
 - The ``deadCodeElim`` option is now always turned on and the switch has no
@@ -232,7 +232,7 @@
 - ``experimental`` is now a pragma / command line switch that can enable specific
   language extensions, it is not an all-or-nothing switch anymore.
 
-- Nintendo Switch was added as a new platform target. See [the compiler user guide](https://nim-lang.org/docs/nimc.html)
+- Nintendo Switch was added as a new platform target. See [the compiler user guide](https://brownie-lang.org/docs/nimc.html)
   for more info.
 
 - macros.bindSym now capable to accepts not only literal string or string constant expression.
@@ -240,14 +240,14 @@
   compile time functions / static blocks. Only in templates / regular code it retains it's old behavior.
   This new feature can be accessed via {.experimental: "dynamicBindSym".} pragma/switch.
 
-- On Posix systems the global system wide configuration is now put under ``/etc/nim/nim.cfg``,
-  it used to be ``/etc/nim.cfg``. Usually it does not exist, however.
+- On Posix systems the global system wide configuration is now put under ``/etc/brownie/brownie.cfg``,
+  it used to be ``/etc/brownie.cfg``. Usually it does not exist, however.
 
-- On Posix systems the user configuration is now looked under ``$XDG_CONFIG_HOME/nim/nim.cfg``
-  (if ``XDG_CONFIG_HOME`` is not defined, then under ``~/.config/nim/nim.cfg``). It used to be
-  ``$XDG_CONFIG_DIR/nim.cfg`` (and ``~/.config/nim.cfg``).
+- On Posix systems the user configuration is now looked under ``$XDG_CONFIG_HOME/brownie/brownie.cfg``
+  (if ``XDG_CONFIG_HOME`` is not defined, then under ``~/.config/brownie/brownie.cfg``). It used to be
+  ``$XDG_CONFIG_DIR/brownie.cfg`` (and ``~/.config/brownie.cfg``).
 
-  Similarly, on Windows, the user configuration is now looked under ``%APPDATA%/nim/nim.cfg``.
-  This used to be ``%APPDATA%/nim.cfg``.
+  Similarly, on Windows, the user configuration is now looked under ``%APPDATA%/brownie/brownie.cfg``.
+  This used to be ``%APPDATA%/brownie.cfg``.
 
 ### Bugfixes
