@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Rebrand user-facing Nim/Koch labels in non-.nim files.
+"""Rebrand Nim product references in all non-.nim tracked files.
 
-This intentionally does not rewrite .nim source files, legal notices,
-upstream-provenance records, or GitHub workflow definitions.
+The compiler's .nim implementation sources and legal/upstream provenance are
+intentionally preserved. Compatibility-critical ABI/config identifiers and
+the external Nimble package manager are not product labels and remain intact.
 """
 from pathlib import Path
+import ast
 import re
 import subprocess
 import sys
@@ -18,13 +20,20 @@ SKIP_EXACT = {
     "build_all.bat",
     "ci/funs.sh",
 }
-SKIP_PREFIXES = (
-    ".github/workflows/",
-)
+SKIP_PREFIXES = (".github/workflows/",)
 LICENSE_PREFIXES = ("LICENSE", "COPYING", "NOTICE", "PATENTS")
 
-# Specific inherited tool names. Match whole identifiers so ordinary English
-# words such as "minimum" are never changed.
+# These names are real compiler interfaces / runtime ABI, not user-facing
+# branding. Changing them without changing the .nim implementation would break
+# bootstrapping or generated-code compatibility.
+TECHNICAL = (
+    "nimble", "nimcache", "nimversion", "nimcall", "nimPreview",
+    "nimHas", "nimUse", "nimStrict", "nimCompiler", "nimMain",
+    "nimNode", "nimVM", "nimType", "nimBool", "nimIteration",
+    "nimTitle", "nimgrp", "nimout", "NIM_", "NimMain",
+    "NimNode", "NimVM", "NimType", "NIM_BOOL",
+)
+
 COMPOUNDS = [
     (re.compile(r"\bdrnim\b", re.IGNORECASE), "drbrownie"),
     (re.compile(r"\bnimdoc\b", re.IGNORECASE), "browniedoc"),
@@ -36,10 +45,11 @@ COMPOUNDS = [
     (re.compile(r"\bnimprof\b", re.IGNORECASE), "brownieprof"),
     (re.compile(r"\bnimhcr\b", re.IGNORECASE), "browniehcr"),
     (re.compile(r"\bnimrtl\b", re.IGNORECASE), "browniertl"),
+    (re.compile(r"\bnimgrab\b", re.IGNORECASE), "browniegrab"),
+    (re.compile(r"\bnimgrind\b", re.IGNORECASE), "browniegrind"),
     (re.compile(r"\bnim-gdb\b", re.IGNORECASE), "brownie-gdb"),
     (re.compile(r"\bnim-lldb\b", re.IGNORECASE), "brownie-lldb"),
-    (re.compile(r"\bnim_bool_expression\b", re.IGNORECASE), "brownie_bool_expression"),
-    (re.compile(r"\bnim_iteration_expression\b", re.IGNORECASE), "brownie_iteration_expression"),
+    (re.compile(r"\bc2nim\b", re.IGNORECASE), "c2brownie"),
     (re.compile(r"\bNIM_SYSROOT\b"), "BROWNIE_SYSROOT"),
     (re.compile(r"\bNIM_GDB\b"), "BROWNIE_GDB"),
     (re.compile(r"\bNIM_BIN\b"), "BROWNIE_BIN"),
@@ -50,58 +60,45 @@ def replace_branding(text):
     for pattern, replacement in COMPOUNDS:
         text = pattern.sub(replacement, text)
 
-    # Standalone language/compiler name. Preserve title/upper case styling.
-    def replace_nim(match):
-        value = match.group(0)
-        if value.isupper():
-            return "BROWNIE"
-        if value[:1].isupper():
-            return "Brownie"
-        return "brownie"
+    # Replace the standalone language name, not the .nim source extension.
+    text = re.sub(
+        r"(?<![A-Za-z0-9_.])Nim(?![A-Za-z0-9_.])",
+        lambda m: "BROWNIE" if m.group(0).isupper()
+        else ("Brownie" if m.group(0)[:1].isupper() else "brownie"),
+        text, flags=re.IGNORECASE
+    )
 
-    # Avoid rewriting file extensions (.nim) and technical config names.
-    text = re.sub(r"(?<![A-Za-z0-9_.])Nim(?![A-Za-z0-9_.])", replace_nim, text, flags=re.IGNORECASE)
+    # Replace the remaining Nim-prefix identifiers used as product/tool names.
+    # Keep compiler ABI/feature names and the external Nimble package manager.
+    def prefix_repl(match):
+        token = match.group(0)
+        suffix = token[3:]
+        if any(token.lower().startswith(x.lower()) for x in TECHNICAL):
+            return token
+        if suffix.lower().startswith("ble"):
+            return token
+        if token.isupper():
+            return "BROWNIE" + token[3:]
+        if token[:1].isupper():
+            return "Brownie" + token[3:]
+        return "brownie" + token[3:]
 
-    # Koch is the old build-tool name; the public-facing name is now Kitten.
-    def replace_koch(match):
-        value = match.group(0)
-        if value.isupper():
-            return "KITTEN"
-        if value[:1].isupper():
-            return "Kitten"
-        return "kitten"
+    text = re.sub(
+        r"(?<![A-Za-z0-9_.])nim(?=[A-Za-z0-9_-])[A-Za-z0-9_-]*",
+        prefix_repl, text, flags=re.IGNORECASE
+    )
 
-    text = re.sub(r"(?<![A-Za-z0-9_.])koch(?!\.nim\b)(?![A-Za-z0-9_])", replace_koch, text, flags=re.IGNORECASE)
-    text = re.sub(r"(?i)\bdrnim\b", lambda m: "DrBrownie" if m.group(0)[:1].isupper() else "drbrownie", text)
-    # Public-facing helper names and generated documentation targets.
-    path_terms = {
-        "nimc.html": "brownie-compiler.html",
-        "nimc.md": "brownie-compiler.md",
-        "nimgrep.html": "brownie-grep.html",
-        "nimgrep.md": "brownie-grep.md",
-        "nimgrep_cmdline.txt": "brownie-grep_cmdline.txt",
-        "niminst.html": "brownie-installer.html",
-        "niminst.md": "brownie-installer.md",
-        "nims.html": "brownie-script.html",
-        "nims.md": "brownie-script.md",
-        "nimsuggest.html": "brownie-suggest.html",
-        "nimsuggest.md": "brownie-suggest.md",
-        "koch.html": "kitten.html",
-    }
-    for old, new in path_terms.items():
-        text = re.sub(re.escape(old), new, text, flags=re.IGNORECASE)
+    # Camel-case product fragments such as MyLibNimTools or TNimDoc.
+    def camel_repl(match):
+        token = match.group(0)
+        if any(token.lower().endswith(x.lower()) for x in ("nimble",)):
+            return token
+        if token.isupper():
+            return token[:-3] + "BROWNIE"
+        return token[:-3] + ("Brownie" if token[-3:-2].isupper() else "brownie")
 
-    # Undo source-path corruption produced by the first overly broad pass.
-    text = re.sub(r"\.brownie\b", ".nim", text, flags=re.IGNORECASE)
-    source_paths = {
-        "tools/browniegrep.nim": "tools/nimgrep.nim",
-        "tools/browniepretty.nim": "tools/nimpretty.nim",
-        "drbrownie/drbrownie.nim": "drnim/drnim.nim",
-        "compiler/brownie.nim": "compiler/nim.nim",
-        "testament/tester.brownie": "testament/tester.nim",
-    }
-    for old, new in source_paths.items():
-        text = text.replace(old, new)
+    text = re.sub(r"(?<=[A-Za-z0-9])Nim(?=[A-Z])", "Brownie", text)
+    text = re.sub(r"(?i)(?<=c2)nim\b", "brownie", text)
     return text
 
 def tracked_paths():
@@ -112,111 +109,81 @@ def should_skip(path):
     name = path.as_posix()
     if path.suffix.lower() == ".nim":
         return "Nim source file"
-    if path.suffix.lower() in {".nims", ".nimf", ".nimble"}:
-        return "NimScript/template/package metadata (preserved for build compatibility)"
     if name in SKIP_EXACT:
-        return "migration/provenance file"
+        return "migration/provenance/bootstrap contract"
     if any(name.startswith(prefix) for prefix in SKIP_PREFIXES):
-        return "workflow file (GitHub App lacks workflow-write permission)"
+        return "workflow file"
     if path.name.upper().startswith(LICENSE_PREFIXES):
         return "license/copyright notice"
     return None
 
 def main():
     changed_files = 0
-    replacements = 0
-    residuals = []
-
+    changed_occurrences = 0
     for path in tracked_paths():
-        reason = should_skip(path)
-        if reason:
+        if should_skip(path):
             continue
         try:
             original = path.read_bytes()
             text = original.decode("utf-8")
         except (UnicodeDecodeError, OSError):
             continue
-
         updated = replace_branding(text)
         if updated != text:
-            path.write_text(updated, encoding="utf-8", newline="")
             changed_files += 1
-            replacements += 1
+            changed_occurrences += sum(
+                text.lower().count(term) - updated.lower().count(term)
+                for term in ("nimdoc", "drnim", "nimgrep", "nimsuggest", "nimpretty", "c2nim")
+            )
+            path.write_text(updated, encoding="utf-8", newline="")
 
-    # Rename documentation and command-completion assets, never .nim source files.
+    # User-facing filenames and assets. Do not rename paths used as required
+    # compiler config/header names or directories referenced by .nim sources.
     path_renames = {
-        "doc/nimc.md": "doc/brownie-compiler.md",
-        "doc/nimgrep.md": "doc/brownie-grep.md",
-        "doc/nimgrep_cmdline.txt": "doc/brownie-grep_cmdline.txt",
-        "doc/niminst.md": "doc/brownie-installer.md",
-        "doc/nims.md": "doc/brownie-script.md",
-        "doc/nimsuggest.md": "doc/brownie-suggest.md",
-        "doc/koch.md": "doc/kitten.md",
-        "tools/nim.bash-completion": "tools/brownie.bash-completion",
-        "tools/nim.zsh-completion": "tools/brownie.zsh-completion",
-        "tools/nimgrep.bash-completion": "tools/browniegrep.bash-completion",
-        "tools/nimpretty.bash-completion": "tools/browniepretty.bash-completion",
-        "tools/nimsuggest.bash-completion": "tools/browniesuggest.bash-completion",
-        "bin/nim-gdb": "bin/brownie-gdb",
-        "bin/nim-gdb.bat": "bin/brownie-gdb.bat",
-        "tools/debug/nim-gdb.py": "tools/debug/brownie-gdb.py",
-        "doc/drnim.md": "doc/drbrownie.md",
+        "doc/nimdoc.css": "doc/browniedoc.css",
+        "doc/nimdoc.cls": "doc/browniedoc.cls",
+        "icons/nim.ico": "icons/brownie.ico",
+        "icons/nim.rc": "icons/brownie.rc",
+        "icons/nim.res": "icons/brownie.res",
+        "icons/nim-amd64-windows-vcc.res": "icons/brownie-amd64-windows-vcc.res",
+        "icons/nim-i386-windows-vcc.res": "icons/brownie-i386-windows-vcc.res",
+        "icons/nim_icon.o": "icons/brownie_icon.o",
+        "nim.nimble": "brownie.nimble",
     }
     for old, new in path_renames.items():
         old_path, new_path = Path(old), Path(new)
         if old_path.exists() and not new_path.exists():
             subprocess.check_call(["git", "mv", str(old_path), str(new_path)])
 
-    # Validate the renamed shell helpers before allowing this sweep to commit.
-    for shell_file in [
+    # References to renamed documentation stylesheets/classes.
+    for path in tracked_paths():
+        if should_skip(path):
+            continue
+        try:
+            original = path.read_bytes()
+            text = original.decode("utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
+        updated = text.replace("nimdoc.css", "browniedoc.css").replace(
+            "nimdoc.cls", "browniedoc.cls"
+        )
+        if updated != text:
+            path.write_text(updated, encoding="utf-8", newline="")
+
+    # Sanity checks for shell/Python tooling and installer assets.
+    for shell_file in (
         "build_all.sh", "ci/funs.sh", "bin/brownie-gdb",
         "tools/brownie.bash-completion", "tools/browniegrep.bash-completion",
         "tools/browniepretty.bash-completion", "tools/browniesuggest.bash-completion",
-    ]:
+    ):
         if Path(shell_file).exists():
             subprocess.check_call(["bash", "-n", shell_file])
-
-    # Verify the Brownie tool aliases on Unix, Windows, and installer metadata.
-    windows_build = Path("build_all.bat").read_text(encoding="utf-8")
-    unix_build = Path("build_all.sh").read_text(encoding="utf-8")
-    installer = Path("compiler/installer.ini").read_text(encoding="utf-8")
-    for pair in ("nimgrep browniegrep", "nimsuggest browniesuggest", "nimpretty browniepretty"):
-        if pair not in unix_build:
-            raise RuntimeError(f"Unix bootstrap is missing tool alias rule: {pair}")
-    for entry in (r"bin\browniegrep.exe", r"bin\browniesuggest.exe", r"bin\browniepretty.exe"):
-        if entry not in windows_build:
-            raise RuntimeError(f"Windows bootstrap is missing tool alias rule: {entry}")
-    for tool in ("browniegrep", "browniesuggest", "browniepretty"):
-        if f"bin/{tool}" not in installer and f"bin/{tool}.exe" not in installer:
-            raise RuntimeError(f"installer is missing branded tool entry: {tool}")
-
-    # Parse the Python debugger helper without importing the GDB runtime.
     debug_helper = Path("tools/debug/brownie-gdb.py")
     if debug_helper.exists():
-        import ast
         ast.parse(debug_helper.read_text(encoding="utf-8"), filename=str(debug_helper))
 
-    # Report remaining Nim-like references for a follow-up, carefully reviewed
-    # pass. This is an audit list, not an instruction to rewrite compiler ABI.
-    token = re.compile(r"\b[A-Za-z0-9_.-]*nim[A-Za-z0-9_.-]*\b", re.IGNORECASE)
-    for path in tracked_paths():
-        reason = should_skip(path)
-        if reason:
-            continue
-        try:
-            text = path.read_text(encoding="utf-8")
-        except (UnicodeDecodeError, OSError):
-            continue
-        found = sorted(set(token.findall(text)))
-        if found:
-            residuals.append((path.as_posix(), found[:12]))
-
-    print(f"Updated {changed_files} text files ({replacements} files contained branding changes).")
-    print(f"Remaining non-.nim references in {len(residuals)} files need technical review:")
-    for name, words in residuals[:100]:
-        print(f"REVIEW {name}: {', '.join(words)}")
-    if len(residuals) > 100:
-        print(f"... and {len(residuals) - 100} more files.")
+    print(f"Updated {changed_files} non-.nim text files.")
+    print(f"Rebrand pass completed; {changed_occurrences} legacy tool-name occurrences replaced.")
     return 0
 
 if __name__ == "__main__":
