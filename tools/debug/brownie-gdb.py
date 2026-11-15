@@ -8,7 +8,7 @@ import traceback
 if not hasattr(gdb, 'SYMBOL_FUNCTION_DOMAIN'):
     gdb.SYMBOL_FUNCTION_DOMAIN = 0  # This is the value used in newer GDB versions
 
-# Configure demangling for Itanium C++ ABI (which Nim uses)
+# Configure demangling for Itanium C++ ABI (which Brownie uses)
 try:
     gdb.execute("set demangle-style gnu-v3")  # GNU v3 style handles Itanium mangling
     gdb.execute("set print asm-demangle on")
@@ -74,7 +74,7 @@ def getNameFromBrownieRti(rti):
 
 class BrownieTypeRecognizer:
   # this type map maps from types that are generated in the C files to
-  # how they are called in nim. To not mix up the name ``int`` from
+  # how they are called in Brownie. To not mix up the name ``int`` from
   # system.nim with the name ``int`` that could still appear in
   # generated code, ``NI`` is mapped to ``system.int`` and not just
   # ``int``.
@@ -128,7 +128,7 @@ class BrownieTypeRecognizer:
       elif tname.startswith("tyEnum_"):
         return getBrownieName(tname)
       elif tname.startswith("tyTuple__"):
-        # We make the name be the field types (Just like in Nim)
+        # We make the name be the field types (Just like in Brownie)
         fields = ", ".join([self.recognize(field.type) for field in type_obj.fields()])
         return f"({fields})"
 
@@ -189,7 +189,7 @@ class DollarPrintFunction (gdb.Function):
         return func_value(arg.address)
 
     if not ignore_errors:
-      debugPrint(f"No suitable Nim $ operator found for type: {getBrownieName(argTypeName)}\n")
+      debugPrint(f"No suitable Brownie $ operator found for type: {getBrownieName(argTypeName)}\n")
     return None
 
   def invoke(self, arg):
@@ -232,7 +232,7 @@ BrownieStringEqFunction()
 ################################################################################
 
 class DollarPrintCmd (gdb.Command):
-  """Dollar print command for Nim, `$ expr` will invoke Brownie's $ operator and print the result."""
+  """Dollar print command for Brownie, `$ expr` will invoke Brownie's $ operator and print the result."""
 
   def __init__ (self):
     super (DollarPrintCmd, self).__init__ ("$", gdb.COMMAND_DATA, gdb.COMPLETE_EXPRESSION)
@@ -390,8 +390,8 @@ def reprEnum(e, typ):
   val = gdb.Value(e).cast(typ)
   return strFromLazy(BrownieEnumPrinter(val).to_string())
 
-def enumNti(typeNimName, idString):
-  typeInfoName = "NTI" + typeNimName.lower() + "__" + idString + "_"
+def enumNti(typeBrownieName, idString):
+  typeInfoName = "NTI" + typeBrownieName.lower() + "__" + idString + "_"
   nti = gdb.lookup_global_symbol(typeInfoName)
   if nti is None:
     typeInfoName = "NTI" + "__" + idString + "_"
@@ -406,13 +406,13 @@ class BrownieEnumPrinter:
     self.val = val
     typeName = self.val.type.name
     match = self.pattern.match(typeName)
-    self.typeNimName  = match.group(1)
-    typeInfoName, self.nti = enumNti(self.typeNimName, match.group(2))
+    self.typeBrownieName  = match.group(1)
+    typeInfoName, self.nti = enumNti(self.typeBrownieName, match.group(2))
 
   def to_string(self):
     if BrownieEnumPrinter.enumReprProc and self.nti:
       # Use the old runtimes enumRepr function.
-      # We call the Nim proc itself so that the implementation is correct
+      # We call the Brownie proc itself so that the implementation is correct
       f = gdb.newest_frame()
       # We need to strip the quotes so it looks like an enum instead of a string
       reprProc = BrownieEnumPrinter.enumReprProc.value()
@@ -422,7 +422,7 @@ class BrownieEnumPrinter:
       # dollar function for it
       return str(BrownieStringPrinter(dollarResult))
     else:
-      return self.typeNimName + "(" + str(int(self.val)) + ")"
+      return self.typeBrownieName + "(" + str(int(self.val)) + ")"
 
 ################################################################################
 
@@ -436,7 +436,7 @@ class BrownieSetPrinter:
     self.val = val
     typeName = self.val.type.name
     match = self.pattern.match(typeName)
-    self.typeNimName = match.group(1)
+    self.typeBrownieName = match.group(1)
 
   def to_string(self):
     # Remove the tySet from the type name
@@ -690,8 +690,8 @@ def makematcher(klass):
   return matcher
 
 def register_brownie_pretty_printers_for_object(objfile):
-  nimMainSym = gdb.lookup_global_symbol("NimMain", gdb.SYMBOL_FUNCTION_DOMAIN)
-  if nimMainSym and nimMainSym.symtab.objfile == objfile:
+  brownieMainSym = gdb.lookup_global_symbol("NimMain", gdb.SYMBOL_FUNCTION_DOMAIN)
+  if brownieMainSym and brownieMainSym.symtab.objfile == objfile:
     print("set Brownie pretty printers for ", objfile.filename)
 
     gdb.types.register_type_printer(objfile, BrownieTypePrinter())
