@@ -1,14 +1,14 @@
 #compdef brownie
 
 # Installation note:
-# Please name this file as _nim (with underscore!) and copy it to a
+# Please name this file as _brownie (with underscore!) and copy it to a
 # completions directory, either:
 # - system wide one, like /usr/share/zsh/functions/Completion/Unix/ on Linux
 # - or to a user directory like ~/scripts. Then you also need to add
 #   that directory in your ~/.zshrc to `fpath` array like so:
 #     fpath=( ~/scripts "${fpath[@]}" )
 
-_nim() {
+_brownie() {
   local -a nimCommands=(
     {compile,c}:'compile project with default code generator C'
     {compileToC,cc}:'compile project with C code generator'
@@ -117,4 +117,4 @@ _nim() {
   return 1
 }
 
-_nim "$@"
+_brownie "$@"
