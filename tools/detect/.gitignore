@@ -1,5 +1,5 @@
 pre.c
 pre.i
 genconsts.c
-other_consts.brownie
-linux_amd64_consts.brownie
+other_consts.nim
+linux_amd64_consts.nim

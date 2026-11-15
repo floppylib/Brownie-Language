@@ -77,7 +77,7 @@ based on the type of the constant value.
   ```
 
   ```cmd
-  brownie c -d:package.foo=456 -d:package.bar foobar.brownie
+  brownie c -d:package.foo=456 -d:package.bar foobar.nim
   ```
 
 The following types are supported:
@@ -1007,7 +1007,7 @@ Generic concepts and type binding rules
 The concept types can be parametric just like the regular generic types:
 
   ```brownie
-  ### matrixalgo.brownie
+  ### matrixalgo.nim
 
   import std/typetraits
 
@@ -1038,7 +1038,7 @@ The concept types can be parametric just like the regular generic types:
     ...
 
   --------------
-  ### matrix.brownie
+  ### matrix.nim
 
   type
     Matrix*[M, N: static int; T] = object
@@ -1056,7 +1056,7 @@ The concept types can be parametric just like the regular generic types:
   template ValueType*(M: typedesc[Matrix]): typedesc = M.T
 
   -------------
-  ### usage.brownie
+  ### usage.nim
 
   import matrix, matrixalgo
 
@@ -2087,7 +2087,7 @@ only **isolated** subgraphs can be sent around.
 Isolation
 ---------
 
-The standard library module `isolation.brownie` provides a generic type `Isolated[T]` that
+The standard library module `isolation.nim` provides a generic type `Isolated[T]` that
 captures the important notion that nothing else can reference the graph that is wrapped
 inside `Isolated[T]`. It is what a channel implementation should use in order to enforce
 the freedom of data races:
@@ -2569,7 +2569,7 @@ proc foo_dispatch(x: Base, ...) =
 Methods are required to be in the same module where their type has been defined.
 
 ```brownie
-# types.brownie
+# types.nim
 type
   Base* = ref object
 ```
@@ -2635,7 +2635,7 @@ scope than imports.
 An example with the `hash` interface in the standard library is as follows:
 
 ```brownie
-# objs.brownie
+# objs.nim
 import std/hashes
 
 type
@@ -2657,7 +2657,7 @@ proc hash*(a: Obj): Hash =
 ```
 
 ```brownie
-# main.brownie
+# main.nim
 {.experimental: "typeBoundOps".}
 from objs import Obj # objs.hash, objs.`==` not imported
 import std/tables
@@ -2675,7 +2675,7 @@ echo t[Obj(x: 3, y: 4, z: "ignored")] # 34
 Another example, this time with `$` and indirect imports:
 
 ```brownie
-# foo.brownie
+# foo.nim
 type Foo* = object
   x*, y*: int
 
@@ -2684,7 +2684,7 @@ proc `$`*(f: Foo): string =
 ```
 
 ```brownie
-# bar.brownie
+# bar.nim
 import foo
 
 proc makeFoo*(x, y: int): Foo =
@@ -2695,13 +2695,13 @@ proc useFoo*(f: Foo) =
 ```
 
 ```brownie
-# debugger.brownie
+# debugger.nim
 proc debug*[T](obj: T) =
   echo "debugging: ", obj # calls generic `$`
 ```
 
 ```brownie
-# main.brownie
+# main.nim
 {.experimental: "typeBoundOps".}
 import bar, debugger # `foo` not imported, so `foo.$` not in scope
 

@@ -43,14 +43,14 @@ Bootstrapping the compiler
 Compiling the compiler is a simple matter of running:
 
   ```cmd
-  brownie c kitten.brownie
+  brownie c kitten.nim
   kitten boot -d:release
   ```
 
 For a debug version use:
 
   ```cmd
-  brownie c kitten.brownie
+  brownie c kitten.nim
   kitten boot
   ```
 
@@ -58,7 +58,7 @@ For a debug version use:
 And for a debug version compatible with GDB:
 
   ```cmd
-  brownie c kitten.brownie
+  brownie c kitten.nim
   kitten boot --debuginfo --linedir:on
   ```
 
@@ -100,7 +100,7 @@ current commit:
 
   ```cmd
   git bisect start bad-commit good-commit
-  git bisect run ./kitten temp -r c test-source.brownie
+  git bisect run ./kitten temp -r c test-source.nim
   ```
 
 You can also bisect using custom options to build the compiler, for example if
@@ -146,13 +146,13 @@ enabled. Here are compiler options that are of interest when debugging:
 Another method to build and run the compiler is directly through `kitten`:cmd:\:
 
   ```cmd
-  kitten temp [options] c test.brownie
+  kitten temp [options] c test.nim
 
   # (will build with js support)
-  kitten temp [options] js test.brownie
+  kitten temp [options] js test.nim
 
   # (will build with doc support)
-  kitten temp [options] doc test.brownie
+  kitten temp [options] doc test.nim
   ```
 
 Debug logging
@@ -180,11 +180,11 @@ Using the `isCompilerDebug`:brownie: condition along with inserting some stateme
 into the testcase provides more granular logging:
 
   ```brownie
-  # compilermodule.brownie
+  # compilermodule.nim
   if isCompilerDebug():
     debug someAstNode
 
-  # testcase.brownie
+  # testcase.nim
   proc main =
     {.define(nimCompilerDebug).}
     let a = 2.5 * 3
@@ -195,7 +195,7 @@ Logging can also be scoped to a specific filename as well. This will of course
 match against every module with that name.
 
   ```brownie
-  if `??`(conf, n.info, "module.brownie"):
+  if `??`(conf, n.info, "module.nim"):
     debug(n)
   ```
 
@@ -358,19 +358,19 @@ replace this generic code by some assembler code.
 
 Files that may need changed for your platform include:
 
-* `compiler/platform.brownie`
+* `compiler/platform.nim`
   Add os/cpu properties.
-* `lib/system.brownie`
+* `lib/system.nim`
   Add os/cpu to the documentation for `system.hostOS` and `system.hostCPU`.
-* `compiler/options.brownie`
+* `compiler/options.nim`
   Add special os/cpu property checks in `isDefined`.
 * `compiler/installer.ini`
   Add os/cpu to `Project.Platforms` field.
-* `lib/system/platforms.brownie`
+* `lib/system/platforms.nim`
   Add os/cpu.
-* `std/private/osseps.brownie`
+* `std/private/osseps.nim`
   Add os specializations.
-* `lib/pure/distros.brownie`
+* `lib/pure/distros.nim`
   Add os, package handler.
 * `tools/brownieinst/makefile.nimf`
   Add os/cpu compiler/linker flags.
@@ -380,11 +380,11 @@ Files that may need changed for your platform include:
 If the `--os` or `--cpu` options aren't passed to the compiler, then Brownie will
 determine the current host os, cpu and endianness from `system.cpuEndian`,
 `system.hostOS` and `system.hostCPU`. Those values are derived from
-`compiler/platform.brownie`.
+`compiler/platform.nim`.
 
 In order for the new platform to be bootstrapped from the `csources`, it must:
 
-* have `compiler/platform.brownie` updated
+* have `compiler/platform.nim` updated
 * have `compiler/installer.ini` updated
 * have `tools/brownieinst/buildsh.nimf` updated
 * have `tools/brownieinst/makefile.nimf` updated
@@ -413,7 +413,7 @@ Complex assignments
 
 We already know the type information as a graph in the compiler.
 Thus, we need to serialize this graph as RTTI for C code generation.
-Look at the file ``lib/system/hti.brownie`` for more information.
+Look at the file ``lib/system/hti.nim`` for more information.
 
 
 Magics and compilerProcs

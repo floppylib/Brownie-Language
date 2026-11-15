@@ -195,7 +195,7 @@ nimBuiltinSetjmp                 Use `__builtin_setjmp()/__builtin_longjmp()` fo
 Configuration files
 -------------------
 
-**Note:** The *project file name* is the name of the ``.brownie`` file that is
+**Note:** The *project file name* is the name of the ``.nim`` file that is
 passed as a command-line argument to the compiler.
 
 
@@ -219,7 +219,7 @@ directories (in this order; later files overwrite previous settings):
    This file can be skipped with the `--skipProjCfg`:option:
    command-line option.
 5) A project can also have a project-specific configuration file named
-   ``$project.brownie.cfg`` that resides in the same directory as ``$project.brownie``.
+   ``$project.nim.cfg`` that resides in the same directory as ``$project.nim``.
    This file can be skipped with the `--skipProjCfg`:option:
    command-line option.
 
@@ -232,13 +232,13 @@ The default build of a project is a `debug build`:idx:. To compile a
 `release build`:idx: define the `release` symbol:
 
   ```cmd
-  brownie c -d:release myproject.brownie
+  brownie c -d:release myproject.nim
   ```
 
 To compile a `dangerous release build`:idx: define the `danger` symbol:
 
   ```cmd
-  brownie c -d:danger myproject.brownie
+  brownie c -d:danger myproject.nim
   ```
 
 
@@ -255,14 +255,14 @@ However before the PATH is used the current directory is checked for the
 file's existence. So if PATH contains ``$lib`` and ``$lib/bar`` and the
 directory structure looks like this:
 
-    $lib/x.brownie
-    $lib/bar/x.brownie
-    foo/x.brownie
-    foo/main.brownie
-    other.brownie
+    $lib/x.nim
+    $lib/bar/x.nim
+    foo/x.nim
+    foo/main.nim
+    other.nim
 
 And `main` imports `x`, `foo/x` is imported. If `other` imports `x`
-then both ``$lib/x.brownie`` and ``$lib/bar/x.brownie`` match but ``$lib/x.brownie`` is used
+then both ``$lib/x.nim`` and ``$lib/bar/x.nim`` match but ``$lib/x.nim`` is used
 as it is the first match.
 
 
@@ -294,7 +294,7 @@ Compiler Selection
 To change the compiler from the default compiler (at the command line):
 
   ```cmd
-  brownie c --cc:llvm_gcc --compile_only myfile.brownie
+  brownie c --cc:llvm_gcc --compile_only myfile.nim
   ```
 
 This uses the configuration defined in ``config\brownie.cfg`` for `llvm_gcc`:cmd:.
@@ -305,8 +305,8 @@ add the `-f`:option: flag to force all files to be recompiled.
 The default compiler is defined at the top of ``config\brownie.cfg``.
 Changing this setting affects the compiler used by `kitten`:cmd: to (re)build Brownie.
 
-To use the `CC` environment variable, use `brownie c --cc:env myfile.brownie`:cmd:.
-To use the `CXX` environment variable, use `brownie cpp --cc:env myfile.brownie`:cmd:.
+To use the `CC` environment variable, use `brownie c --cc:env myfile.nim`:cmd:.
+To use the `CXX` environment variable, use `brownie cpp --cc:env myfile.nim`:cmd:.
 `--cc:env`:option: is available since Brownie version 1.4.
 
 
@@ -316,7 +316,7 @@ Cross-compilation
 To cross compile, use for example:
 
   ```cmd
-  brownie c --cpu:i386 --os:linux --compileOnly --genScript myproject.brownie
+  brownie c --cpu:i386 --os:linux --compileOnly --genScript myproject.nim
   ```
 
 Then move the C code and the compile script `compile_myproject.sh`:cmd: to your
@@ -325,7 +325,7 @@ Linux i386 machine and run the script.
 Another way is to make Brownie invoke a cross compiler toolchain:
 
   ```cmd
-  brownie c --cpu:arm --os:linux myproject.brownie
+  brownie c --cpu:arm --os:linux myproject.nim
   ```
 
 For cross compilation, the compiler invokes a C compiler named like
@@ -345,7 +345,7 @@ Cross-compilation for Windows
 To cross-compile for Windows from Linux or macOS using the MinGW-w64 toolchain:
 
   ```cmd
-  brownie c -d:mingw myproject.brownie
+  brownie c -d:mingw myproject.nim
   # `brownie r` also works, running the binary via `wine` or `wine64`:
   brownie r -d:mingw --eval:'import os; echo "a" / "b"'
   ```
@@ -465,7 +465,7 @@ The devkitPro setup must be the same as the default with their new installer
 For example, with the above-mentioned config:
 
   ```cmd
-  brownie c --os:nintendoswitch switchhomebrew.brownie
+  brownie c --os:nintendoswitch switchhomebrew.nim
   ```
 
 This will generate a file called ``switchhomebrew.elf`` which can then be turned into
@@ -488,7 +488,7 @@ GPU Compilation
 
 Compiling for GPU computation can be achieved with `--cc:nvcc` for CUDA with nvcc, or with `--cc:hipcc` for AMD GPUs with HIP. Both compilers require building for C++ with `brownie cpp`.
 
-Here's a very simple CUDA kernel example using emit, which can be compiled with `brownie cpp --cc:nvcc --define:"useMalloc" hello_kernel.brownie` assuming you have the CUDA toolkit installed.
+Here's a very simple CUDA kernel example using emit, which can be compiled with `brownie cpp --cc:nvcc --define:"useMalloc" hello_kernel.nim` assuming you have the CUDA toolkit installed.
 
 ```brownie
 {.emit: """
@@ -518,13 +518,13 @@ instance of the GC per process/address space. This instance is contained in
 on ``browniertl.dll``. To generate the "browniertl.dll" file, use the command:
 
   ```cmd
-  brownie c -d:release lib/browniertl.brownie
+  brownie c -d:release lib/browniertl.nim
   ```
 
 To link against ``browniertl.dll`` use the command:
 
   ```cmd
-  brownie c -d:useNimRtl myprog.brownie
+  brownie c -d:useNimRtl myprog.nim
   ```
 
 
@@ -569,7 +569,7 @@ Define                   Effect
                          `--define:useShPath:/opt/sh/bin/sh`:option: to override
                          the path for the `sh`:cmd: binary, in cases where it is
                          not located in the default location ``/bin/sh``.
-`noSignalHandler`        Disable the crash handler from ``system.brownie``.
+`noSignalHandler`        Disable the crash handler from ``system.nim``.
 `globalSymbols`          Load all `{.dynlib.}` libraries with the `RTLD_GLOBAL`:c:
                          flag on Posix systems to resolve symbols in subsequently
                          loaded libraries.
@@ -627,7 +627,7 @@ against. For instance, to link statically against Lua this command might work
 on Linux:
 
   ```cmd
-  brownie c --dynlibOverride:lua --passL:liblua.lib program.brownie
+  brownie c --dynlibOverride:lua --passL:liblua.lib program.nim
   ```
 
 
@@ -635,7 +635,7 @@ Backend language options
 ========================
 
 The typical compiler usage involves using the `compile`:option: or `c`:option:
-command to transform a ``.brownie`` file into one or more ``.c`` files which are then
+command to transform a ``.nim`` file into one or more ``.c`` files which are then
 compiled with the platform's C compiler into a static binary. However, there
 are other commands to compile to C++, Objective-C, or JavaScript. More details
 can be read in the [Brownie Backend Integration document](backends.html).
@@ -645,7 +645,7 @@ Brownie documentation tools
 =======================
 
 Brownie provides the `doc`:idx: command to generate HTML
-documentation from ``.brownie`` source files. Only exported symbols will appear in
+documentation from ``.nim`` source files. Only exported symbols will appear in
 the output. For more details see [the docgen documentation](docgen.html).
 
 Brownie idetools integration
@@ -684,7 +684,7 @@ A good start is to use the `any` operating target together with the
 `malloc` memory allocator and the `arc` garbage collector. For example:
 
   ```cmd
-  brownie c --os:any --mm:arc -d:useMalloc [...] x.brownie
+  brownie c --os:any --mm:arc -d:useMalloc [...] x.nim
   ```
 
 - `--mm:arc`:option: will enable the reference counting memory management instead

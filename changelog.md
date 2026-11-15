@@ -200,7 +200,7 @@ parameter and result types, not just their source-level shape. Use
   reliable for nominal types across indirect/restricted imports.
 
   ```brownie
-  # objs.brownie
+  # objs.nim
   import std/hashes
 
   type
@@ -216,7 +216,7 @@ parameter and result types, not just their source-level shape. Use
   ```
 
   ```brownie
-  # main.brownie
+  # main.nim
   {.experimental: "typeBoundOps".}
   from objs import Obj # objs.hash, objs.`==` not imported
   import std/tables
@@ -289,7 +289,7 @@ parameter and result types, not just their source-level shape. Use
 
 - Fixed a bug where `sizeof(T)` inside a `typedesc` template called from a generic type's
   `when` clause would error with "'sizeof' requires '.importc' types to be '.completeStruct'".
-  The issue was that `hasValuelessStatics` in `semtypinst.brownie` didn't recognize
+  The issue was that `hasValuelessStatics` in `semtypinst.nim` didn't recognize
   `tyTypeDesc(tyGenericParam)` as an unresolved generic parameter.
 
 - The JS backend now implements write-through for `var openArray` parameters that
@@ -310,7 +310,7 @@ parameter and result types, not just their source-level shape. Use
 ## Tool changes
 
 - Added `--raw` flag when generating JSON docs to not render markup.
-- Added `--stdinfile` flag to name of the file used when running program from stdin (defaults to `stdinfile.brownie`)
+- Added `--stdinfile` flag to name of the file used when running program from stdin (defaults to `stdinfile.nim`)
 - Added `--styleCheck:warning` flag to treat style check violations as warnings.
 
 ## Documentation changes

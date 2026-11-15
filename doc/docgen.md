@@ -9,14 +9,14 @@
 .. include:: rstcommon.rst
 .. contents::
 
-.. importdoc:: markdown_rst.md, compiler/docgen.brownie
+.. importdoc:: markdown_rst.md, compiler/docgen.nim
 
 Introduction
 ============
 
 This document describes the `documentation generation tools`:idx: built into
 the [Brownie compiler](brownie-compiler.html), which can generate HTML, Latex and JSON output
-from input ``.brownie`` files and projects.
+from input ``.nim`` files and projects.
 The output documentation will include the module
 dependencies (`import`), any top-level documentation comments (`##`), and
 exported symbols (`*`), including procedures, types, and variables.
@@ -45,14 +45,14 @@ Quick start
 Generate HTML documentation for a file:
 
   ```cmd
-  brownie doc <filename>.brownie
+  brownie doc <filename>.nim
   ```
 
 Generate HTML documentation for a whole project:
 
   ```cmd
   # delete any htmldocs/*.idx file before starting
-  brownie doc --project --index:on --git.url:<url> --git.commit:<tag> --outdir:htmldocs <main_filename>.brownie
+  brownie doc --project --index:on --git.url:<url> --git.commit:<tag> --outdir:htmldocs <main_filename>.nim
   # this will generate html files, a theindex.html index, css and js under `htmldocs`
   # See also `--docroot` to specify a relative root.
   # to get search (dochacks.js) to work locally, you need a server otherwise
@@ -151,7 +151,7 @@ There are 2 basic options as to how generated HTML output files are stored:
    ``.idx``) files into 1 directory.
 
    .. Important:: Make sure that you don't have files with same base name
-     like ``x.brownie`` and ``x.md`` in the same package, otherwise you'll
+     like ``x.nim`` and ``x.md`` in the same package, otherwise you'll
      have name conflict for ``x.html``.
 
    .. Tip:: To structure your output directories and avoid file name
@@ -161,10 +161,10 @@ There are 2 basic options as to how generated HTML output files are stored:
 
      An example of such strategy is Brownie repository itself which has:
 
-     * its stdlib ``.brownie`` files from different directories and ``.md``
+     * its stdlib ``.nim`` files from different directories and ``.md``
        documentation from ``doc/`` directory are all docgen-compiled
        into `--outdir:web/upload/<version>/`:option: directory
-     * its ``.brownie`` files from ``compiler/`` directory are docgen-compiled
+     * its ``.nim`` files from ``compiler/`` directory are docgen-compiled
        into `--outdir:web/upload/<version>/compiler/`:option: directory.
        Interestingly, it's compiled with complex hierarchy using
        `--project`:option: switch.
@@ -173,7 +173,7 @@ There are 2 basic options as to how generated HTML output files are stored:
      Web server.
 
      This output directory structure allows to work correctly with files like
-     ``compiler/docgen.brownie`` (implementation) and ``doc/docgen.md`` (user
+     ``compiler/docgen.nim`` (implementation) and ``doc/docgen.md`` (user
      documentation) in 1 repository.
 
 
@@ -182,7 +182,7 @@ Index files
 
 Index (``.idx``) files are used for 2 different purposes:
 
-1. easy cross-referencing between different ``.brownie`` and/or ``.md`` / ``.rst``
+1. easy cross-referencing between different ``.nim`` and/or ``.md`` / ``.rst``
    files described in [Brownie external referencing]
 2. creating a whole-project index for searching of symbols and keywords,
    see [Buildindex command].
@@ -287,9 +287,9 @@ Example of Brownie file input
 -------------------------
 
 The following examples will generate documentation for this sample
-*Brownie* module, aptly named ``doc/docgen_sample.brownie``:
+*Brownie* module, aptly named ``doc/docgen_sample.nim``:
 
-   ```brownie file=docgen_sample.brownie
+   ```brownie file=docgen_sample.nim
    ```
 
 All the below commands save their output to ``htmldocs`` directory relative to
@@ -300,14 +300,14 @@ HTML
 ----
 
 The generation of HTML documents is done via the `doc`:option: command. This command
-takes either a single ``.brownie`` file, outputting a single ``.html`` file with the same
-base filename, or multiple ``.brownie`` files, outputting multiple ``.html`` files and,
+takes either a single ``.nim`` file, outputting a single ``.html`` file with the same
+base filename, or multiple ``.nim`` files, outputting multiple ``.html`` files and,
 optionally, an index file.
 
 The `doc`:option: command:
 
   ```cmd
-  brownie doc docgen_sample.brownie
+  brownie doc docgen_sample.nim
   ```
 
 Partial Output:
@@ -330,7 +330,7 @@ HTML -> PDF conversion).
 The `doc2tex`:option: command:
 
   ```cmd
-  brownie doc2tex docgen_sample.brownie
+  brownie doc2tex docgen_sample.nim
   cd htmldocs
   xelatex docgen_sample.tex
   xelatex docgen_sample.tex
@@ -346,7 +346,7 @@ JSON
 ----
 
 The generation of JSON documents is done via the `jsondoc`:option: command.
-This command takes in a ``.brownie`` file and outputs a ``.json`` file with
+This command takes in a ``.nim`` file and outputs a ``.json`` file with
 the same base filename.
 Note that this tool is built off of the `doc`:option: command
 (previously `doc2`:option:), and contains the same information.
@@ -354,13 +354,13 @@ Note that this tool is built off of the `doc`:option: command
 The `jsondoc`:option: command:
 
   ```cmd
-  brownie jsondoc docgen_sample.brownie
+  brownie jsondoc docgen_sample.nim
   ```
 
 Output:
 
     {
-      "orig": "docgen_sample.brownie",
+      "orig": "docgen_sample.nim",
       "nimble": "",
       "moduleDescription": "This module is a sample",
       "entries": [
@@ -381,7 +381,7 @@ renamed to `jsondoc0`:option:.
 The `jsondoc0`:option: command:
 
   ```cmd
-  brownie jsondoc0 docgen_sample.brownie
+  brownie jsondoc0 docgen_sample.nim
   ```
 
 Output:
@@ -407,7 +407,7 @@ Simple documentation links
 
 It's possible to use normal Markdown/RST syntax to *manually*
 reference Brownie symbols using HTML anchors, however Brownie has an *automatic*
-facility that makes referencing inside ``.brownie`` and ``.md/.rst`` files and
+facility that makes referencing inside ``.nim`` and ``.md/.rst`` files and
 between them easy and seamless.
 The point is that such links will be resolved automatically
 by `brownie doc`:cmd: (or `md2html`:option:, or `jsondoc`:option:,
@@ -415,7 +415,7 @@ or `doc2tex`:option:, ...). And, unlike manual links, such automatic
 links **check** that their target exists -- a warning is emitted for
 any broken link, so you avoid broken links in your project.
 
-Brownie treats both ``.md/.rst`` files and ``.brownie`` modules (their doc comment
+Brownie treats both ``.md/.rst`` files and ``.nim`` modules (their doc comment
 part) as *documents* uniformly.
 Hence all directions of referencing are equally possible having the same syntax:
 
@@ -425,10 +425,10 @@ Hence all directions of referencing are equally possible having the same syntax:
    [Brownie-flavored Markdown and reStructuredText]
    (particularly it described usage of index files for referencing),
    while in this document we focus on Brownie-specific details.
-3. ``.md/rst`` -> external ``.brownie``. See [Brownie external referencing].
-4. ``.brownie`` -> itself (internal). See [Brownie local referencing].
-5. ``.brownie`` -> external ``.md/rst``. See [Markup external referencing].
-6. ``.brownie`` -> external ``.brownie``. See [Brownie external referencing].
+3. ``.md/rst`` -> external ``.nim``. See [Brownie external referencing].
+4. ``.nim`` -> itself (internal). See [Brownie local referencing].
+5. ``.nim`` -> external ``.md/rst``. See [Markup external referencing].
+6. ``.nim`` -> external ``.nim``. See [Brownie external referencing].
 
 To put it shortly, local referencing always works out of the box,
 external referencing requires to use ``.. importdoc:: <file>``
@@ -449,8 +449,8 @@ Brownie local referencing
 ---------------------
 
 You can reference Brownie identifiers from Brownie documentation comments
-inside their ``.brownie`` file (or inside a ``.rst`` file included from
-a ``.brownie``).
+inside their ``.nim`` file (or inside a ``.rst`` file included from
+a ``.nim``).
 This pertains to any exported symbol like `proc`, `const`, `iterator`, etc.
 Link text is either one word or a group of words enclosed by delimiters
 (brackets ``[...]`` for Markdown or backticks `\`...\`_` for RST).
@@ -632,18 +632,18 @@ comma-separated list of Brownie modules or Markdown/RST documents.
 
 `--index:only`:option: tells Brownie to only generate ``.idx`` file and
 do **not** attempt to generate HTML/LaTeX output.
-For ``.brownie`` modules there are 2 alternatives to work with ``.idx`` files:
+For ``.nim`` modules there are 2 alternatives to work with ``.idx`` files:
 
 1. using [Project switch] implies generation of ``.idx`` files,
    however, if ``importdoc`` is called on upper modules as its arguments,
    their ``.idx`` are not yet created. Thus one should generate **all**
    required ``.idx`` first:
      ```cmd
-     brownie doc --project --index:only <main>.brownie
-     brownie doc --project <main>.brownie
+     brownie doc --project --index:only <main>.nim
+     brownie doc --project <main>.nim
      ```
-2. or run `brownie doc --index:only <module.brownie>`:cmd: command for **all** (used)
-   Brownie modules in your project. Then run `brownie doc <module.brownie>` on them for
+2. or run `brownie doc --index:only <module.nim>`:cmd: command for **all** (used)
+   Brownie modules in your project. Then run `brownie doc <module.nim>` on them for
    output HTML generation.
 
    .. Warning:: A mere `brownie doc --index:on`:cmd: may fail on an attempt to do
@@ -652,10 +652,10 @@ For ``.brownie`` modules there are 2 alternatives to work with ``.idx`` files:
 
    For ``.md``/``.rst`` markup documents point 2 is the only option.
 
-Then, you can freely use something like this in ``your_module.brownie``:
+Then, you can freely use something like this in ``your_module.nim``:
 
   ```brownie
-  ## .. importdoc::  user_manual.md, another_module.brownie
+  ## .. importdoc::  user_manual.md, another_module.nim
 
   ...
   ## Ref. [some section from User Manual].
@@ -685,7 +685,7 @@ Markup documents as a whole can be referenced just by their title
 
 .. Hint:: After changing a *referenced* document file one may need
   to regenerate its corresponding ``.idx`` file to get correct results.
-  Of course, when referencing *internally* inside any given ``.brownie`` file,
+  Of course, when referencing *internally* inside any given ``.nim`` file,
   it's not needed, one can even immediately use any freshly added anchor
   (a document's own ``.idx`` file is not used for resolving its internal links).
 
@@ -715,8 +715,8 @@ compilation options are different:
    As the **original** project's directory structure is replicated in
    `OUTDIR`, all passed paths are related to this structure also.
 
-   E.g. if a module ``path1/module.brownie`` does
-   ``.. importdoc:: path2/another.brownie`` then docgen tries to load file
+   E.g. if a module ``path1/module.nim`` does
+   ``.. importdoc:: path2/another.nim`` then docgen tries to load file
    ``OUTDIR/path1/path2/another.idx``.
 
    .. Note:: markup documents are just placed into the specified directory
@@ -735,13 +735,13 @@ compilation options are different:
        ```
 
      Then the output file will be placed as ``OUTDIR/doc/manual.idx``.
-     So if you have ``PROJECT/path1/module.brownie``, then ``manual.md`` can
+     So if you have ``PROJECT/path1/module.nim``, then ``manual.md`` can
      be referenced as ``../doc/manual.md``.
 
 2) flattened structure.
 
-   E.g. if a module ``path1/module.brownie`` does
-   ``.. importdoc:: path2/another.brownie`` then docgen tries to load
+   E.g. if a module ``path1/module.nim`` does
+   ``.. importdoc:: path2/another.nim`` then docgen tries to load
    ``OUTDIR/path2/another.idx``, so the path ``path1``
    does not matter and providing ``path2`` can be useful only
    in the case it contains another package that was placed there
@@ -765,11 +765,11 @@ Project switch
 --------------
 
   ```cmd
-  brownie doc --project filename.brownie
+  brownie doc --project filename.nim
   ```
 
 This will recursively generate documentation of all Brownie modules imported
-into the input module that belong to the Nimble package that ``filename.brownie``
+into the input module that belong to the Nimble package that ``filename.nim``
 belongs to. The index files and the corresponding ``theindex.html`` will
 also be generated.
 
@@ -778,7 +778,7 @@ Index switch
 ------------
 
   ```cmd
-  brownie doc --index:on filename.brownie
+  brownie doc --index:on filename.nim
   ```
 
 This will generate an index of all the exported symbols in the input Brownie
@@ -807,7 +807,7 @@ See source switch
 -----------------
 
   ```cmd
-  brownie doc --git.url:<url> filename.brownie
+  brownie doc --git.url:<url> filename.nim
   ```
 
 With the `git.url`:option: switch the *See source* hyperlink will appear below each
@@ -850,7 +850,7 @@ build-specific text.
   ```
 
   ```cmd
-  brownie --putenv:foo=bar doc filename.brownie
+  brownie --putenv:foo=bar doc filename.nim
   ```
 
 The generated html will contain ``bar`` instead of ``foo``.
@@ -914,7 +914,7 @@ Callable type    Suffix
 ==============   ==============
 
 The relationship of type to suffix is made by the proc `complexName` in the
-``compiler/docgen.brownie`` file. Here are some examples of complex names for
+``compiler/docgen.nim`` file. Here are some examples of complex names for
 symbols in the [system module](system.html).
 
 * `type SomeSignedInt = int | int8 | int16 | int32 | int64` **=>**
@@ -957,7 +957,7 @@ The content of these columns is:
    `markupTitle`
    : a title for ``.md``/``.rst`` document
    `nimTitle`
-   : a title of ``.brownie`` module
+   : a title of ``.nim`` module
    `heading`
    : heading of sections, can be both in Brownie and markup files
    `idx`
@@ -978,7 +978,7 @@ The content of these columns is:
 5. A line number of file where the entry was defined.
 
 The index generation tools differentiate between documentation
-generated from ``.brownie`` files and documentation generated from ``.md`` or
+generated from ``.nim`` files and documentation generated from ``.md`` or
 ``.rst`` files by tag `nimTitle` or `markupTitle` in the 1st line of
 the ``.idx`` file.
 
@@ -988,7 +988,7 @@ the ``.idx`` file.
   level is in the TOC (at least 1 character). The prefix whitespace helps to
   filter TOC entries from API or text symbols. This is important because the
   amount of spaces is used to replicate the hierarchy for document TOCs in the
-  final index, and TOC entries found in ``.brownie`` files are discarded.
+  final index, and TOC entries found in ``.nim`` files are discarded.
 
 
 Additional resources

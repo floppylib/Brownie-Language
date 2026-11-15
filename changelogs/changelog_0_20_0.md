@@ -163,7 +163,7 @@ proc enumToString*(enums: openArray[enum]): string =
   deprecated `strutils.wordwrap`.
 
 - Added `split`, `splitWhitespace`, `size`, `alignLeft`, `align`,
-  `strip`, `repeat` procs and iterators to `unicode.brownie`.
+  `strip`, `repeat` procs and iterators to `unicode.nim`.
 
 - Added `or` for `NimNode` in `macros`.
 

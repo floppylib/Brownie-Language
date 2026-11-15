@@ -45,27 +45,27 @@ We start the tour with a modified "hello world" program:
   ```
 
 
-Save this code to the file "greetings.brownie". Now compile and run it:
+Save this code to the file "greetings.nim". Now compile and run it:
   ```cmd
-  brownie compile --run greetings.brownie
+  brownie compile --run greetings.nim
   ```
 
 With the ``--run`` [switch](brownie-compiler.html#compiler-usage-commandminusline-switches) Brownie
 executes the file automatically after compilation. You can give your program
 command-line arguments by appending them after the filename:
   ```cmd
-  brownie compile --run greetings.brownie arg1 arg2
+  brownie compile --run greetings.nim arg1 arg2
   ```
 
 Commonly used commands and switches have abbreviations, so you can also use:
   ```cmd
-  brownie c -r greetings.brownie
+  brownie c -r greetings.nim
   ```
 
 This is a **debug version**.
 To compile a release version use:
   ```cmd
-  brownie c -d:release greetings.brownie
+  brownie c -d:release greetings.nim
   ```
 
 By default, the Brownie compiler generates a large number of runtime checks

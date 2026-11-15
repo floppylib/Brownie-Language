@@ -1,4 +1,4 @@
-# Dragonbox.brownie and Schubfach.brownie
+# Dragonbox.nim and Schubfach.nim
 
 "Dragonbox" is Brownie's "float64 to string" algorithm.
 "Schubfach" is Brownie's "float32 to string" algorithm. These are based on

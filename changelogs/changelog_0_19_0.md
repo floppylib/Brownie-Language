@@ -134,7 +134,7 @@
   error message.
 - The ``compiler/nimeval`` API was rewritten to simplify the "compiler as an
   API". Using the Brownie compiler and its VM as a scripting engine has never been
-  easier. See ``tests/compilerapi/tcompilerapi.brownie`` for an example of how to
+  easier. See ``tests/compilerapi/tcompilerapi.nim`` for an example of how to
   use the Brownie VM in a native Brownie application.
 - Added the parameter ``val`` for the ``CritBitTree[T].incl`` proc.
 - The proc ``tgamma`` was renamed to ``gamma``. ``tgamma`` is deprecated.

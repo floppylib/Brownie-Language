@@ -111,7 +111,7 @@ Advanced options:
   --clib:LIBNAME            link an additional C library
                             (you should omit platform-specific extensions)
   --project                 document the whole project (doc)
-  --docRoot:path            `brownie doc --docRoot:/foo --project --outdir:docs /foo/sub/main.brownie`
+  --docRoot:path            `brownie doc --docRoot:/foo --project --outdir:docs /foo/sub/main.nim`
                             generates: docs/sub/main.html
                             if path == @pkg, will use nimble file enclosing dir
                             if path == @path, will use first matching dir in `--path`

@@ -34,10 +34,10 @@ but outputs a ``.tex`` file instead of ``.html``.
 These tools embedded into Brownie compiler; the compiler can output
 the result to HTML [^html] or Latex [^latex].
 
-[^html]: commands `brownie doc`:cmd: for ``*.brownie`` files and
+[^html]: commands `brownie doc`:cmd: for ``*.nim`` files and
    `brownie rst2html`:cmd: for ``*.rst`` files
 
-[^latex]: commands `brownie doc2tex`:cmd: for ``*.brownie`` and
+[^latex]: commands `brownie doc2tex`:cmd: for ``*.nim`` and
    `brownie rst2tex`:cmd: for ``*.rst``.
 
 Full list of supported commands:
@@ -50,7 +50,7 @@ command               runs on...                input format   output format
 `brownie md2tex`:cmd:     same                      same           ``.tex`` LaTeX
 `brownie rst2html`:cmd:   standalone rst files      ``.rst``       ``.html`` HTML
 `brownie rst2tex`:cmd:    same                      same           ``.tex`` LaTeX
-`brownie doc`:cmd:        documentation comments    ``.brownie``       ``.html`` HTML
+`brownie doc`:cmd:        documentation comments    ``.nim``       ``.html`` HTML
 `brownie doc2tex`:cmd:    same                      same           ``.tex`` LaTeX
 `brownie jsondoc`:cmd:    same                      same           ``.json`` JSON
 ===================   =======================   ============   ==============
@@ -339,7 +339,7 @@ Additional resources
 
 * See [Brownie DocGen Tools Guide](docgen.html) for the details about
   `brownie doc`:cmd: command and idiosyncrasies of documentation markup in
-  ``.brownie`` files and Brownie programming language projects.
+  ``.nim`` files and Brownie programming language projects.
 * See also documentation for [rst module](rst.html) -- Brownie RST/Markdown parser.
 
 .. _Markdown Basic Syntax: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax

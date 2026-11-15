@@ -87,24 +87,24 @@ _nim() {
   case "$words[1]" in
     compile|c|compileToC|cpp|compileToCpp|compileToOC|objc)
       _arguments $codeOpts $runOpts $sharedOpts $nativeOpts \
-          '*:filename:_files -g"*.brownie"'
+          '*:filename:_files -g"*.nim"'
     ;;
     js)
       _arguments $codeOpts $runOpts $sharedOpts \
-          '*:filename:_files -g"*.brownie"'
+          '*:filename:_files -g"*.nim"'
     ;;
     e)
       _arguments $codeOpts $runOpts $sharedOpts \
           '*:filename:_files -g"*.nims"'
     ;;
     doc|doc2tex|jsondoc)
-      _arguments $runOpts $sharedOpts '*:filename:_files -g"*.brownie"'
+      _arguments $runOpts $sharedOpts '*:filename:_files -g"*.nim"'
     ;;
     rst2html|rst2tex)
       _arguments $runOpts $sharedOpts $docOpts '*:filename:_files -g"*.rst"'
     ;;
     buildIndex|genDepend|check)
-      _arguments $sharedOpts '*:filename:_files -g"*.brownie"'
+      _arguments $sharedOpts '*:filename:_files -g"*.nim"'
     ;;
     dump)
       _arguments $sharedOpts

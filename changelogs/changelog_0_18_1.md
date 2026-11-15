@@ -16,7 +16,7 @@
 
 - Arrays of char cannot be converted to ``cstring`` anymore, pointers to
   arrays of char can! This means ``$`` for arrays can finally exist
-  in ``system.brownie`` and do the right thing. This means ``$myArrayOfChar`` changed
+  in ``system.nim`` and do the right thing. This means ``$myArrayOfChar`` changed
   its behaviour! Compile with ``-d:nimNoArrayToString`` to see where to fix your
   code.
 
@@ -99,7 +99,7 @@
   preferred over unconstrained generics. (Bug #6526)
 
 - We changed how array accesses "from backwards" like ``a[^1]`` or ``a[0..^1]`` are
-  implemented. These are now implemented purely in ``system.brownie`` without compiler
+  implemented. These are now implemented purely in ``system.nim`` without compiler
   support. There is a new "heterogeneous" slice type ``system.HSlice`` that takes 2
   generic parameters which can be ``BackwardsIndex`` indices. ``BackwardsIndex`` is
   produced by ``system.^``.
@@ -205,7 +205,7 @@ styledEcho "Red on Green.", resetStyle
 - ``os.getEnv`` now takes an optional ``default`` parameter that tells ``getEnv``
   what to return if the environment variable does not exist.
 
-- The ``random`` procs in ``random.brownie`` have all been deprecated. Instead use
+- The ``random`` procs in ``random.nim`` have all been deprecated. Instead use
   the new ``rand`` procs. The module now exports the state of the random
   number generator as type ``Rand`` so multiple threads can easily use their
   own random number generators that do not require locking. For more information
@@ -375,7 +375,7 @@ for i in a..b:
   ([#5070](https://github.com/brownie-lang/Brownie/issues/5070))
 - Fixed "Windows: NAN troubles on c backend"
   ([#6511](https://github.com/brownie-lang/Brownie/issues/6511))
-- Fixed "lib/brownie/system/cellsets.brownie(33, 31) Error: type mismatch while attempting to compile for 16bit CPUs"
+- Fixed "lib/brownie/system/cellsets.nim(33, 31) Error: type mismatch while attempting to compile for 16bit CPUs"
   ([#3558](https://github.com/brownie-lang/Brownie/issues/3558))
 - Fixed "Can't compile dynlib with ``-d:useNimRtl`` and ``--threads:on``"
   ([#5143](https://github.com/brownie-lang/Brownie/issues/5143))
@@ -395,7 +395,7 @@ for i in a..b:
   ([#6422](https://github.com/brownie-lang/Brownie/issues/6422))
 - Fixed "parsecsv.open reports SIGSEGV when calling 'open' on missing file"
   ([#6148](https://github.com/brownie-lang/Brownie/issues/6148))
-- Fixed "VCC: Brownie generates non-compilable code for system.brownie"
+- Fixed "VCC: Brownie generates non-compilable code for system.nim"
   ([#6606](https://github.com/brownie-lang/Brownie/issues/6606))
 - Fixed "Generic subtype matches worse than a generic"
   ([#6526](https://github.com/brownie-lang/Brownie/issues/6526))
@@ -415,9 +415,9 @@ for i in a..b:
   ([#6675](https://github.com/brownie-lang/Brownie/issues/6675))
 - Fixed "if expressions"
   ([#6609](https://github.com/brownie-lang/Brownie/issues/6609))
-- Fixed "BackwardsIndex: converter + `[]` + unrelated type[^1]: lib/system.brownie(3536, 3) Error"
+- Fixed "BackwardsIndex: converter + `[]` + unrelated type[^1]: lib/system.nim(3536, 3) Error"
   ([#6692](https://github.com/brownie-lang/Brownie/issues/6692))
-- Fixed "BackwardsIndex: converter + `[]` + unrelated type[^1]: lib/system.brownie(3536, 3) Error"
+- Fixed "BackwardsIndex: converter + `[]` + unrelated type[^1]: lib/system.nim(3536, 3) Error"
   ([#6692](https://github.com/brownie-lang/Brownie/issues/6692))
 - Fixed "js backend 0.17.3: array bounds check for non zero based arrays is buggy"
   ([#6532](https://github.com/brownie-lang/Brownie/issues/6532))
@@ -473,7 +473,7 @@ for i in a..b:
   ([#6682](https://github.com/brownie-lang/Brownie/issues/6682))
 - Fixed "Can not delete data in table when table's data type is kind of "not nil""
   ([#6555](https://github.com/brownie-lang/Brownie/issues/6555))
-- Fixed "tables.brownie: Cannot prove that 'n' is initialized"
+- Fixed "tables.nim: Cannot prove that 'n' is initialized"
   ([#6121](https://github.com/brownie-lang/Brownie/issues/6121))
 - Fixed "issues with 'not nil' applied to a closure proc"
   ([#6489](https://github.com/brownie-lang/Brownie/issues/6489))

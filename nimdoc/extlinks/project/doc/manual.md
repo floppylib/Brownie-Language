@@ -2,7 +2,7 @@
 Nothing User Manual
 ===================
 
-.. importdoc:: ../main.brownie, .. / sub / submodule.brownie, ../../util.brownie
+.. importdoc:: ../main.nim, .. / sub / submodule.nim, ../../util.nim
 
 First section
 =============

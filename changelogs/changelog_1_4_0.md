@@ -311,14 +311,14 @@
 
 - Specific warnings can now be turned into errors via `--warningAsError[X]:on|off`.
 - The `define` and `undef` pragmas have been de-deprecated.
-- New command: `brownie r main.brownie [args...]` which compiles and runs main.brownie, and implies `--usenimcache`
+- New command: `brownie r main.nim [args...]` which compiles and runs main.nim, and implies `--usenimcache`
   so that the output is saved to $nimcache/main$exeExt, using the same logic as `brownie c -r` to
   avoid recompilations when sources don't change.
   Example:
   ```bash
-  brownie r compiler/brownie.brownie --help # only compiled the first time
+  brownie r compiler/nim.nim --help # only compiled the first time
   echo 'import os; echo getCurrentCompilerExe()' | brownie r - # this works too
-  brownie r compiler/brownie.brownie --fullhelp # no recompilation
+  brownie r compiler/nim.nim --fullhelp # no recompilation
   brownie r --nimcache:/tmp main # binary saved to /tmp/main
   ```
 - `--hint:processing` is now supported and means `--hint:processing:on`
@@ -412,15 +412,15 @@
   ([#14030](https://github.com/brownie-lang/Brownie/issues/14030))
 - Fixed "Exception types in the stdlib should inherit from `CatchableError` or `Defect`, not `Exception`"
   ([#10288](https://github.com/brownie-lang/Brownie/issues/10288))
-- Fixed "Make debugSend and debugRecv procs public in smtp.brownie"
+- Fixed "Make debugSend and debugRecv procs public in smtp.nim"
   ([#12189](https://github.com/brownie-lang/Brownie/issues/12189))
 - Fixed "xmltree need add raw text, when add style element"
   ([#14064](https://github.com/brownie-lang/Brownie/issues/14064))
 - Fixed "raises requirement does not propagate to derived methods"
   ([#8481](https://github.com/brownie-lang/Brownie/issues/8481))
-- Fixed "tests/stdlib/tgetaddrinfo.brownie fails on NetBSD"
+- Fixed "tests/stdlib/tgetaddrinfo.nim fails on NetBSD"
   ([#14091](https://github.com/brownie-lang/Brownie/issues/14091))
-- Fixed "tests/niminaction/Chapter8/sdl/sdl_test.brownie fails on NetBSD"
+- Fixed "tests/niminaction/Chapter8/sdl/sdl_test.nim fails on NetBSD"
   ([#14088](https://github.com/brownie-lang/Brownie/issues/14088))
 - Fixed "Incorrect escape sequence for example in jsffi library documentation"
   ([#14110](https://github.com/brownie-lang/Brownie/issues/14110))
@@ -430,7 +430,7 @@
   ([#14112](https://github.com/brownie-lang/Brownie/issues/14112))
 - Fixed "macOS: dsymutil should not be called on static libraries"
   ([#14132](https://github.com/brownie-lang/Brownie/issues/14132))
-- Fixed "brownie jsondoc -o:doc.json filename.brownie fails when sequences without a type are used"
+- Fixed "brownie jsondoc -o:doc.json filename.nim fails when sequences without a type are used"
   ([#14066](https://github.com/brownie-lang/Brownie/issues/14066))
 - Fixed "algorithm.sortedByIt template corrupts tuple input under --gc:arc"
   ([#14079](https://github.com/brownie-lang/Brownie/issues/14079))
@@ -492,7 +492,7 @@
   ([#14314](https://github.com/brownie-lang/Brownie/issues/14314))
 - Fixed "`brownie cpp -r --gc:arc` segfaults on caught AssertionError"
   ([#13071](https://github.com/brownie-lang/Brownie/issues/13071))
-- Fixed "tests/async/tasyncawait.brownie is recently very flaky"
+- Fixed "tests/async/tasyncawait.nim is recently very flaky"
   ([#14320](https://github.com/brownie-lang/Brownie/issues/14320))
 - Fixed "Documentation nonexistent quitprocs module"
   ([#14331](https://github.com/brownie-lang/Brownie/issues/14331))
@@ -520,7 +520,7 @@
   ([#14380](https://github.com/brownie-lang/Brownie/issues/14380))
 - Fixed "runnableExamples block with `except` on specified error fails with `brownie doc`"
   ([#12746](https://github.com/brownie-lang/Brownie/issues/12746))
-- Fixed "compiler as a library: findNimStdLibCompileTime fails to find system.brownie"
+- Fixed "compiler as a library: findNimStdLibCompileTime fails to find system.nim"
   ([#12293](https://github.com/brownie-lang/Brownie/issues/12293))
 - Fixed "5 bugs with importcpp exceptions"
   ([#14369](https://github.com/brownie-lang/Brownie/issues/14369))
@@ -580,7 +580,7 @@
   ([#14279](https://github.com/brownie-lang/Brownie/issues/14279))
 - Fixed "windows CI docs fails with strange errors"
   ([#14545](https://github.com/brownie-lang/Brownie/issues/14545))
-- Fixed "[CI] tests/async/tioselectors.brownie flaky test for freebsd + OSX CI"
+- Fixed "[CI] tests/async/tioselectors.nim flaky test for freebsd + OSX CI"
   ([#13166](https://github.com/brownie-lang/Brownie/issues/13166))
 - Fixed "seq.setLen sometimes doesn't zero memory"
   ([#14655](https://github.com/brownie-lang/Brownie/issues/14655))
@@ -588,7 +588,7 @@
   ([#14179](https://github.com/brownie-lang/Brownie/issues/14179))
 - Fixed "Regression: devel docgen cannot generate document for method"
   ([#14691](https://github.com/brownie-lang/Brownie/issues/14691))
-- Fixed "recently flaky tests/async/t7758.brownie"
+- Fixed "recently flaky tests/async/t7758.nim"
   ([#14685](https://github.com/brownie-lang/Brownie/issues/14685))
 - Fixed "Bind no longer working in generic procs."
   ([#11811](https://github.com/brownie-lang/Brownie/issues/11811))
@@ -604,7 +604,7 @@
   ([#14240](https://github.com/brownie-lang/Brownie/issues/14240))
 - Fixed "Cannot borrow var float64 in infix assignment"
   ([#14440](https://github.com/brownie-lang/Brownie/issues/14440))
-- Fixed "lib/pure/memfiles.brownie: compilation error with --taintMode:on"
+- Fixed "lib/pure/memfiles.nim: compilation error with --taintMode:on"
   ([#14760](https://github.com/brownie-lang/Brownie/issues/14760))
 - Fixed "newWideCString allocates a multiple of the memory needed"
   ([#14750](https://github.com/brownie-lang/Brownie/issues/14750))
@@ -754,7 +754,7 @@
   ([#15112](https://github.com/brownie-lang/Brownie/issues/15112))
 - Fixed "Defer and --gc:arc"
   ([#15071](https://github.com/brownie-lang/Brownie/issues/15071))
-- Fixed "internal error: compiler/semobjconstr.brownie(324, 20) example"
+- Fixed "internal error: compiler/semobjconstr.nim(324, 20) example"
   ([#15111](https://github.com/brownie-lang/Brownie/issues/15111))
 - Fixed "[ARC] Sequence "disappears" with a table inside of a table with an object variant"
   ([#15122](https://github.com/brownie-lang/Brownie/issues/15122))
@@ -770,7 +770,7 @@
   ([#15101](https://github.com/brownie-lang/Brownie/issues/15101))
 - Fixed "{.nimcall.} convention won't avoid the creation of closures"
   ([#8473](https://github.com/brownie-lang/Brownie/issues/8473))
-- Fixed "smtp.brownie(161, 40) Error: type mismatch: got <typeof(nil)> but expected 'SslContext = void'"
+- Fixed "smtp.nim(161, 40) Error: type mismatch: got <typeof(nil)> but expected 'SslContext = void'"
   ([#15177](https://github.com/brownie-lang/Brownie/issues/15177))
 - Fixed "[strscans] scanf doesn't match a single character with $+ if it's the end of the string"
   ([#15064](https://github.com/brownie-lang/Brownie/issues/15064))
@@ -810,7 +810,7 @@
   ([#15076](https://github.com/brownie-lang/Brownie/issues/15076))
 - Fixed "Bug compiling with --gc:arg or --gc:orc"
   ([#15325](https://github.com/brownie-lang/Brownie/issues/15325))
-- Fixed "memory corruption in tmarshall.brownie"
+- Fixed "memory corruption in tmarshall.nim"
   ([#9754](https://github.com/brownie-lang/Brownie/issues/9754))
 - Fixed "typed macros break generic proc definitions"
   ([#15326](https://github.com/brownie-lang/Brownie/issues/15326))
@@ -830,7 +830,7 @@
   ([#6430](https://github.com/brownie-lang/Brownie/issues/6430))
 - Fixed "Regression. Double sem check for procs."
   ([#15389](https://github.com/brownie-lang/Brownie/issues/15389))
-- Fixed "uri.brownie url with literal ipv6 address is printed wrong, and cannot parsed again"
+- Fixed "uri.nim url with literal ipv6 address is printed wrong, and cannot parsed again"
   ([#15333](https://github.com/brownie-lang/Brownie/issues/15333))
 - Fixed "[ARC] Object variant gets corrupted with cursor inference"
   ([#15361](https://github.com/brownie-lang/Brownie/issues/15361))

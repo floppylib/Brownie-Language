@@ -1,15 +1,15 @@
 This directory contains the test cases.
 
-Each test must have a filename of the form: ``t*.brownie``
+Each test must have a filename of the form: ``t*.nim``
 
 **Note:** [Testament](https://brownie-lang.github.io/Brownie/testament.html) is only aware of tests under a directory (eg `tests/foo/`) and will ignore
-top-level tests like `tests/tbar.brownie`.
+top-level tests like `tests/tbar.nim`.
 
 # Specs
 
 Each test can contain a spec in a ``discard """ ... """`` block.
 
-**Check out the [``parseSpec`` procedure](https://github.com/brownie-lang/Brownie/blob/devel/testament/specs.brownie#L315) in the ``specs`` module for a full and reliable reference**
+**Check out the [``parseSpec`` procedure](https://github.com/brownie-lang/Brownie/blob/devel/testament/specs.nim#L315) in the ``specs`` module for a full and reliable reference**
 
 ## action
 

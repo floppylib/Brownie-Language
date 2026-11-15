@@ -39,7 +39,7 @@ conventional extension is `.nimf`
 recognize it as Brownie source file).
 
 If we use `generateXML` code shown above and call the SCF file `xmlGen.nimf`
-In your `main.brownie`:
+In your `main.nim`:
 
   ```brownie
   include "xmlGen.nimf"

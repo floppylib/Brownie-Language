@@ -20,7 +20,7 @@ Introduction
 The [Brownie Compiler User Guide](brownie-compiler.html) documents the typical
 compiler invocation, using the `compile`:option:
 or `c`:option: command to transform a
-``.brownie`` file into one or more ``.c`` files which are then compiled with the
+``.nim`` file into one or more ``.c`` files which are then compiled with the
 platform's C compiler into a static binary. However, there are other commands
 to compile to C++, Objective-C, or JavaScript. This document tries to
 concentrate in a single place all the backend and interfacing options.
@@ -58,9 +58,9 @@ into a project using any of these languages. Here are some typical command-
 line invocations:
 
   ```cmd
-  brownie c hallo.brownie
-  brownie cpp hallo.brownie
-  brownie objc hallo.brownie
+  brownie c hallo.nim
+  brownie cpp hallo.nim
+  brownie objc hallo.nim
   ```
 
 The compiler commands select the target backend, but if needed you can
@@ -99,7 +99,7 @@ file. However, you can also run the code with `nodejs`:idx:
 (https://nodejs.org):
 
   ```cmd
-  brownie js -r examples/hallo.brownie
+  brownie js -r examples/hallo.nim
   ```
 
 If you experience errors saying that `globalThis` is not defined, be
@@ -166,7 +166,7 @@ Create a ``logic.c`` file with the following content:
   }
   ```
 
-Create a ``calculator.brownie`` file with the following content:
+Create a ``calculator.nim`` file with the following content:
 
   ```brownie
   {.compile: "logic.c".}
@@ -176,9 +176,9 @@ Create a ``calculator.brownie`` file with the following content:
     echo addTwoIntegers(3, 7)
   ```
 
-With these two files in place, you can run `brownie c -r calculator.brownie`:cmd: and
+With these two files in place, you can run `brownie c -r calculator.nim`:cmd: and
 the Brownie compiler will compile the ``logic.c`` file in addition to
-``calculator.brownie`` and link both into an executable, which outputs `10` when
+``calculator.nim`` and link both into an executable, which outputs `10` when
 run. Another way to link the C file statically and get the same effect would
 be to remove the line with the `compile` pragma and run the following
 typical Unix commands:
@@ -186,7 +186,7 @@ typical Unix commands:
   ```cmd
   gcc -c logic.c
   ar rvs mylib.a logic.o
-  brownie c --passL:mylib.a -r calculator.brownie
+  brownie c --passL:mylib.a -r calculator.nim
   ```
 
 Just like in this example we pass the path to the ``mylib.a`` library (and we
@@ -210,7 +210,7 @@ Create a ``host.html`` file with the following content:
   </body></html>
   ```
 
-Create a ``calculator.brownie`` file with the following content (or reuse the one
+Create a ``calculator.nim`` file with the following content (or reuse the one
 from the previous section):
 
   ```brownie
@@ -221,7 +221,7 @@ from the previous section):
   ```
 
 Compile the Brownie code to JavaScript with `brownie js -o:calculator.js
-calculator.brownie`:cmd: and open ``host.html`` in a browser. If the browser supports
+calculator.nim`:cmd: and open ``host.html`` in a browser. If the browser supports
 javascript, you should see the value `10` in the browser's console. Use the
 [dom module](dom.html) for specific DOM querying and modification procs
 or take a look at [karax](https://github.com/pragmagic/karax) for how to
@@ -254,7 +254,7 @@ When compiling to static or dynamic libraries, they don't call destructors of gl
 
 ### Brownie invocation example from C
 
-Create a ``fib.brownie`` file with the following content:
+Create a ``fib.nim`` file with the following content:
 
   ```brownie
   proc fib(a: cint): cint {.exportc.} =
@@ -286,7 +286,7 @@ from the Brownie code, then link them into a static binary along your main C
 program:
 
   ```cmd
-  brownie c --noMain --noLinking fib.brownie
+  brownie c --noMain --noLinking fib.nim
   gcc -o m -I$HOME/.cache/brownie/fib_d -Ipath/to/brownie/lib $HOME/.cache/brownie/fib_d/*.c maths.c
   ```
 
@@ -301,12 +301,12 @@ Instead of depending on the generation of the individual ``.c`` files you can
 also ask the Brownie compiler to generate a statically linked library:
 
   ```cmd
-  brownie c --app:staticLib fib.brownie
-  gcc -o m -Inimcache -Ipath/to/brownie/lib maths.c libfib.brownie.a
+  brownie c --app:staticLib fib.nim
+  gcc -o m -Inimcache -Ipath/to/brownie/lib maths.c libfib.nim.a
   ```
 
 The Brownie compiler will handle linking the source files generated in the
-``nimcache`` directory into the ``libfib.brownie.a`` static library, which you can
+``nimcache`` directory into the ``libfib.nim.a`` static library, which you can
 then link into your C program. Note that these commands are generic and will
 vary for each system. For instance, on Linux systems you will likely need to
 use `-ldl`:option: too to link in required dlopen functionality.
@@ -325,7 +325,7 @@ Create a ``mhost.html`` file with the following content:
   </body></html>
   ```
 
-Create a ``fib.brownie`` file with the following content (or reuse the one
+Create a ``fib.nim`` file with the following content (or reuse the one
 from the previous section):
 
   ```brownie
@@ -336,7 +336,7 @@ from the previous section):
       result = fib(a - 1) + fib(a - 2)
   ```
 
-Compile the Brownie code to JavaScript with `brownie js -o:fib.js fib.brownie`:cmd: and
+Compile the Brownie code to JavaScript with `brownie js -o:fib.js fib.nim`:cmd: and
 open ``mhost.html`` in a browser. If the browser supports javascript, you
 should see an alert box displaying the text ``Fib for 9 is 34``. As mentioned
 earlier, JavaScript doesn't require an initialization call to `NimMain` or

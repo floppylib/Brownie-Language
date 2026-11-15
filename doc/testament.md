@@ -17,7 +17,7 @@ so can be useful to run your tests, even the most complex ones.
 Test files location
 ===================
 
-By default, Testament looks for test files on ``"./tests/category/*.brownie"``.
+By default, Testament looks for test files on ``"./tests/category/*.nim"``.
 You can overwrite this pattern glob using `pattern <glob>`:option:.
 The default working directory path can be changed using
 `--directory:"folder/subfolder/"`:option:.
@@ -64,11 +64,11 @@ not very useful for production, but easy to understand:
 
   ```console
   $ mkdir -p tests/category
-  $ echo "assert 42 == 42" > tests/category/test0.brownie
-  $ testament run tests/category/test0.brownie
-  PASS: tests/category/test0.brownie c                           ( 0.2 sec)
+  $ echo "assert 42 == 42" > tests/category/test0.nim
+  $ testament run tests/category/test0.nim
+  PASS: tests/category/test0.nim c                           ( 0.2 sec)
   $ testament r tests/category/test0
-  PASS: tests/category/test0.brownie C                           ( 0.2 sec)
+  PASS: tests/category/test0.nim C                           ( 0.2 sec)
   ```
 
 
@@ -79,14 +79,14 @@ Running all tests from a directory
  tests are skipped by `testament all`.
  
   ```console
-  $ testament pattern "tests/*.brownie"
+  $ testament pattern "tests/*.nim"
   ```
 
 To search for tests deeper in a directory, use
 
   ```console
-  $ testament pattern "tests/**/*.brownie"    # one level deeper
-  $ testament pattern "tests/**/**/*.brownie" # two levels deeper
+  $ testament pattern "tests/**/*.nim"    # one level deeper
+  $ testament pattern "tests/**/**/*.nim" # two levels deeper
   ```
 
 HTML Reports
@@ -215,7 +215,7 @@ Example "template" **to edit** and write a Testament unittest:
 * As you can see the "Spec" is just a `discard """ """`.
 * Spec has sane defaults, so you don't need to provide them all, any simple assert will work just fine.
 * This is not the full spec of Testament, check [the Testament Spec on GitHub,
-  see parseSpec()](https://github.com/brownie-lang/Brownie/blob/devel/testament/specs.brownie#L317).
+  see parseSpec()](https://github.com/brownie-lang/Brownie/blob/devel/testament/specs.nim#L317).
 * Brownie itself uses Testament, so [there are plenty of test examples](
   https://github.com/brownie-lang/Brownie/tree/devel/tests).
 * Has some built-in CI compatibility, like GitHub Actions, etc.
@@ -304,17 +304,17 @@ Expected to fail:
 
 Expected to fail with error thrown from another file:
 ```brownie
-# test.brownie
+# test.nim
 discard """
   action: "reject"
   errorMsg: "I break"
-  file: "breakPragma.brownie"
+  file: "breakPragma.nim"
 """
 import ./breakPragma
 
 proc x() {.justDo.} = discard
 
-# breakPragma.brownie
+# breakPragma.nim
 import std/macros
 
 macro justDo*(procDef: typed): untyped =

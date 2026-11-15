@@ -8,7 +8,7 @@
 * fix browniepretty removing space before pragma
 * JS: gensym is stricter for 'this'
 * Fixed "VM Assertion Error with newruntime" [#12294](https://github.com/brownie-lang/Brownie/issues/12294)
-* Fixed "Assertion error when running `brownie check` on compiler/brownie.brownie" [#12281](https://github.com/brownie-lang/Brownie/issues/12281)
+* Fixed "Assertion error when running `brownie check` on compiler/nim.nim" [#12281](https://github.com/brownie-lang/Brownie/issues/12281)
 * Fixed "Compiler crash with empty array and generic instantiation with int as parameter" [#12264](https://github.com/brownie-lang/Brownie/issues/12264)
 * Fixed "Regression in JS backend codegen "Error: request to generate code for .compileTime proc"" [#12240](https://github.com/brownie-lang/Brownie/issues/12240)
 * Fix how `relativePath` handles case sensitivity
@@ -28,7 +28,7 @@
 * Fixed yield in nkCheckedFieldExpr
 * Fixed "`randomize()` from `random` not working on JS" [#12418](https://github.com/brownie-lang/Brownie/issues/12418)
 * Fixed "Compiler crash with invalid object variant" [#12379](https://github.com/brownie-lang/Brownie/issues/12379)
-* fix type's case in random.brownie
+* fix type's case in random.nim
 * Fixed "Update docs with a better way to signal unimplemented methods" [#10804](https://github.com/brownie-lang/Brownie/issues/10804)
 * Fixed "Brownie language manual, push pragma is not explained well" [#10824](https://github.com/brownie-lang/Brownie/issues/10824)
 * Fixed "[regression] Importing more than one module with same name from different packages produce bad codegen" [#12420](https://github.com/brownie-lang/Brownie/issues/12420)

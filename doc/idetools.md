@@ -18,7 +18,7 @@ Brownie differs from many other compilers in that it is really fast,
 and being so fast makes it suited to provide external queries for
 text editors about the source code being written. Through the
 `idetools` command of [the compiler](brownie-compiler.html), any IDE
-can query a `.brownie` source file and obtain useful information like
+can query a `.nim` source file and obtain useful information like
 definition of symbols or suggestions for completion.
 
 This document will guide you through the available options. If you
@@ -39,16 +39,16 @@ query location through the `--track` or `--trackDirty` switches.
 The general idetools invocations are:
 
   ```cmd
-  brownie idetools --track:FILE,LINE,COL <switches> proj.brownie
+  brownie idetools --track:FILE,LINE,COL <switches> proj.nim
   ```
 
 Or:
 
   ```cmd
-  brownie idetools --trackDirty:DIRTY_FILE,FILE,LINE,COL <switches> proj.brownie
+  brownie idetools --trackDirty:DIRTY_FILE,FILE,LINE,COL <switches> proj.nim
   ```
 
-`proj.brownie`
+`proj.nim`
 :   This is the main *project* filename. Most of the time you will
     pass in the same as **FILE**, but for bigger projects this is
     the file which is used as main entry point for the program, the
@@ -69,7 +69,7 @@ Or:
 
 `FILE`
 :   The file you want to perform the query on. Usually you will
-    pass in the same value as **proj.brownie**.
+    pass in the same value as **proj.nim**.
 
 `DIRTY_FILE`
 :   The **FILE** parameter is enough for static analysis, but IDEs
@@ -185,14 +185,14 @@ If you want to start the server using stdin/stdout as communication
 you need to type:
 
   ```cmd
-  brownie serve --server.type:stdin proj.brownie
+  brownie serve --server.type:stdin proj.nim
   ```
 
 If you want to start the server using tcp and a port, you need to type:
 
   ```cmd
   brownie serve --server.type:tcp --server.port:6000 \
-      --server.address:hostname proj.brownie
+      --server.address:hostname proj.nim
   ```
 
 In both cases the server will start up and await further commands.
@@ -216,9 +216,9 @@ tab characters (``\t``). The values of each column are:
 1. Three characters indicating the type of returned answer (e.g.
    def for definition, `sug` for suggestion, etc).
 2. Type of the symbol. This can be `skProc`, `skLet`, and just
-   about any of the enums defined in the module `compiler/ast.brownie`.
+   about any of the enums defined in the module `compiler/ast.nim`.
 3. Full qualified path of the symbol. If you are querying a symbol
-   defined in the `proj.brownie` file, this would have the form
+   defined in the `proj.nim` file, this would have the form
    `proj.symbolName`.
 4. Type/signature. For variables and enums this will contain the
    type of the symbol, for procs, methods and templates this will
@@ -282,7 +282,7 @@ skForVar
 | **Docstring**: always the empty string.
 
   ```brownie
-  proc looper(filename = "tests.brownie") =
+  proc looper(filename = "tests.nim") =
     for letter in filename:
       echo letter
   --> col 2: $MODULE.looper.letter
@@ -415,7 +415,7 @@ skParam
 | **Docstring**: always the empty string.
 
   ```brownie
-  proc reader(filename = "tests.brownie") =
+  proc reader(filename = "tests.nim") =
     let text = readFile(filename)
   --> col 2: $MODULE.reader.filename
       col 3: string
@@ -554,7 +554,7 @@ run it manually. First you have to compile the tester:
 
   ```cmd
   $ cd my/brownie/checkout/tests
-  $ brownie c testament/caasdriver.brownie
+  $ brownie c testament/caasdriver.nim
   ```
 
 Running the `caasdriver` without parameters will attempt to process

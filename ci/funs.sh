@@ -43,7 +43,7 @@ nimInternalBuildKochAndRunCI(){
   echo_run brownie c kitten
   if ! echo_run ./kitten runCI; then
     echo_run echo "runCI failed"
-    echo_run brownie r tools/ci_testresults.brownie
+    echo_run brownie r tools/ci_testresults.nim
     return 1
   fi
 }

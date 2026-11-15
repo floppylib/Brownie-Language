@@ -132,7 +132,7 @@ language, with the focus on Markdown development.
 See also [the docs](https://brownie-lang.github.io/Brownie/markdown_rst.html).
 
 * Added a `{.doctype: Markdown | RST | RstMarkdown.}` pragma allowing to
-  select the markup language mode in the doc comments of the current `.brownie`
+  select the markup language mode in the doc comments of the current `.nim`
   file for processing by `brownie doc`:
 
     1. `Markdown` (default) is basically CommonMark (standard Markdown) +

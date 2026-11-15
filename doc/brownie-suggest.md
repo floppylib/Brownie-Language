@@ -14,7 +14,7 @@ Brownie differs from many other compilers in that it is really fast,
 and being so fast makes it suited to provide external queries for
 text editors about the source code being written. Through the
 `browniesuggest`:cmd: tool, any IDE
-can query a ``.brownie`` source file and obtain useful information like
+can query a ``.nim`` source file and obtain useful information like
 definition of symbols or suggestions for completion.
 
 This document will guide you through the available options. If you
@@ -37,9 +37,9 @@ browniesuggest is part of Brownie's core. Build it via:
 browniesuggest invocation
 =====================
 
-Run it via `browniesuggest --stdin --debug myproject.brownie`:cmd:. browniesuggest is a
+Run it via `browniesuggest --stdin --debug myproject.nim`:cmd:. browniesuggest is a
 server that takes queries that are related to `myproject`. There is some
-support so that you can throw random ``.brownie`` files which are not part
+support so that you can throw random ``.nim`` files which are not part
 of `myproject` at browniesuggest too, but usually the query refer to modules/files
 that are part of `myproject`.
 
@@ -51,7 +51,7 @@ by default.
 browniesuggest is basically a frontend for the brownie compiler so `--path`:option: flags and
 [config files](brownie-compiler.html#compiler-usage-configuration-files)
 can be used to specify additional dependencies like 
-`browniesuggest --stdin --debug --path:"dependencies" myproject.brownie`:cmd:.
+`browniesuggest --stdin --debug --path:"dependencies" myproject.nim`:cmd:.
 
 
 Specifying the location of the query
@@ -62,18 +62,18 @@ cryptic 3 letter "command" `def` or `con` or `sug` or `use` followed by
 a location. A query location consists of:
 
 
-``file.brownie``
+``file.nim``
 :   This is the name of the module or include file the query refers to.
 
-``dirtyfile.brownie``
+``dirtyfile.nim``
 :   This is optional.
 
     The `file` parameter is enough for static analysis, but IDEs
     tend to have *unsaved buffers* where the user may still be in
     the middle of typing a line. In such situations the IDE can
     save the current contents to a temporary file and then use the
-    ``dirtyfile.brownie`` option to tell browniesuggest that ``foobar.brownie`` should
-    be taken from ``temporary/foobar.brownie``.
+    ``dirtyfile.nim`` option to tell browniesuggest that ``foobar.nim`` should
+    be taken from ``temporary/foobar.nim``.
 
 
 ``line``
@@ -151,9 +151,9 @@ tab characters (``\t``). The values of each column are:
 1. Three characters indicating the type of returned answer (e.g.
    `def` for definition, `sug` for suggestion, etc).
 2. Type of the symbol. This can be `skProc`, `skLet`, and just
-   about any of the enums defined in the module ``compiler/ast.brownie``.
+   about any of the enums defined in the module ``compiler/ast.nim``.
 3. Fully qualified path of the symbol. If you are querying a symbol
-   defined in the ``proj.brownie`` file, this would have the form
+   defined in the ``proj.nim`` file, this would have the form
    `proj.symbolName`.
 4. Type/signature. For variables and enums this will contain the
    type of the symbol, for procs, methods and templates this will

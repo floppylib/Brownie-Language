@@ -3,7 +3,7 @@
   =====================================================================
   Self-contained, no Mathlib. Checked with Lean 4 (v4.32.0).
 
-  Formal model of the safety arguments behind lib/system/yrc.brownie in its
+  Formal model of the safety arguments behind lib/system/yrc.nim in its
   current form: lock-free write barrier, optimistic capture / validate /
   commit, and up to `MaxPar` concurrent collections over disjoint
   CAS-claimed partitions.
@@ -43,7 +43,7 @@
       outside a collection's partition is never freed by that collection.
   §5  Tag uniqueness and partition disjointness for parallel collections.
   §6  Grace period: no capture ever dereferences a freed cell.
-  §7  The asymmetric seq/GC fence (seqs_v2.brownie): Dekker-style mutual
+  §7  The asymmetric seq/GC fence (seqs_v2.nim): Dekker-style mutual
       exclusion between seq structure mutations and collections.
   §8  Deadlock freedom for the remaining locks (gMergeLock + stripes) and
       the spin-wait ordering argument.
@@ -523,7 +523,7 @@ theorem grace_no_use_after_free
   | inl h => have := h_grace h; omega
   | inr h => exact absurd h3 (h_miss h x hD)
 
-/-! ## §7 The asymmetric seq/GC fence (seqs_v2.brownie)
+/-! ## §7 The asymmetric seq/GC fence (seqs_v2.nim)
 
   Seq structure mutations (which may FREE the old buffer on realloc)
   must not overlap a collection, but seq-vs-seq and collection-vs-
@@ -689,7 +689,7 @@ theorem no_deadlock_from_total_order {n : Nat}
       the grace period (now enforced by the deferred batch's watch list,
       yrc_opt_proof.lean §C), no capture ever dereferences freed memory.
   §7  `fence_mutual_exclusion` — the SEQ_CST Dekker pairing in
-      seqs_v2.brownie excludes seq structure mutation during collection.
+      seqs_v2.nim excludes seq structure mutation during collection.
   §8  `lockLevel_injective`, `mergeLock_level_min`,
       `no_deadlock_from_total_order` — the remaining locks form a total
       order acquired ascending; spin-waits form an acyclic wait-for
@@ -751,7 +751,7 @@ theorem no_deadlock_from_total_order {n : Nat}
         (the original hook) let such a survivor be re-stamped, dropped
         from the retry set, and orphaned permanently once its last
         prune-source neighbour resolved — a real leak the dumpster `fuzz`
-        port surfaced (tests/yrc/tyrc_fuzz_graph.brownie: ~1% of allocations
+        port surfaced (tests/yrc/tyrc_fuzz_graph.nim: ~1% of allocations
         lost, ORC-clean, un-recoverable even by repeated GC_fullCollect).
         Registering every survivor of a pruning collection closes it; the
         cost is bounded because pruning keeps the captured set small, so

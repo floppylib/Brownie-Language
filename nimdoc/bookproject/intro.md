@@ -38,12 +38,12 @@ The same but using `.. code::` directive:
 
 Code included from a source file:
 
-.. include:: ./code1.brownie
+.. include:: ./code1.nim
   :code:
   
 Selective inclusuion:
 
-.. include:: ./code2.brownie
+.. include:: ./code2.nim
   :code:
   :start-after:#doublestart
   :end-before:#doubleend

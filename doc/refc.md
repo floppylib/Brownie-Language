@@ -63,7 +63,7 @@ Time measurement with garbage collectors
 ----------------------------------------
 
 The garbage collectors' way of measuring time uses
-(see ``lib/system/timers.brownie`` for the implementation):
+(see ``lib/system/timers.nim`` for the implementation):
 
 1) `QueryPerformanceCounter` and `QueryPerformanceFrequency` on Windows.
 2) `mach_absolute_time` on Mac OS X.

@@ -6,7 +6,7 @@ General Guidelines
 
 * See also [nep1](nep1.html) which should probably be merged here.
 * Authors should document anything that is exported; documentation for private
-  procs can be useful too (visible via `brownie doc --docInternal foo.brownie`:cmd:).
+  procs can be useful too (visible via `brownie doc --docInternal foo.nim`:cmd:).
 * Within documentation, a period (`.`) should follow each sentence (or sentence fragment) in a comment block.
   The documentation may be limited to one sentence fragment, but if multiple sentences are within the documentation,
   each sentence after the first should be complete and in present tense.
@@ -29,7 +29,7 @@ Module-level documentation
 --------------------------
 
 Documentation of a module is placed at the top of the module itself. Each line of documentation begins with double hashes (`##`).
-Sometimes `##[ multiline docs containing code ]##` is preferable, see ``lib/pure/times.brownie``.
+Sometimes `##[ multiline docs containing code ]##` is preferable, see ``lib/pure/times.nim``.
 Code samples are encouraged, and should follow the general RST syntax:
 
   ````Brownie

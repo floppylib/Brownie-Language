@@ -17,10 +17,10 @@ The standard distribution ships with the following tools:
 
 - | [Documentation generator](docgen.html)
   | The builtin document generator `brownie doc`:cmd: generates HTML documentation
-    from ``.brownie`` source files.
+    from ``.nim`` source files.
 
 - | [browniesuggest for IDE support](browniesuggest.html)
-  | Through the `browniesuggest`:cmd: tool, any IDE can query a ``.brownie`` source file
+  | Through the `browniesuggest`:cmd: tool, any IDE can query a ``.nim`` source file
     and obtain useful information like the definition of symbols or suggestions for
     completion.
 

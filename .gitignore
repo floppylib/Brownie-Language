@@ -55,7 +55,7 @@ xcuserdata/
 /tools/dochack/dochack.js
 *.json
 /pkgstemp/**/*
-# for `brownie doc foo.brownie`
+# for `brownie doc foo.nim`
 /*.html
 lib/**/*.html
 #/testresults.html #covered by /*.html
@@ -86,11 +86,11 @@ test.txt
 tweeter.db
 tweeter_test.db
 
-/tests/megatest.brownie
-/tests/ic/*_temp.brownie
-/tests/ic/*/*_temp.brownie
+/tests/megatest.nim
+/tests/ic/*_temp.nim
+/tests/ic/*/*_temp.nim
 /tests/ic/*_mm/
-/tests/navigator/*_temp.brownie
+/tests/navigator/*_temp.nim
 
 
 /outputExpected.txt

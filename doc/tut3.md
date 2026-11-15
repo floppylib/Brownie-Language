@@ -396,7 +396,7 @@ recommended way. But still `strformat` is a good example for a
 practical use case for a macro that is slightly more complex than the
 `assert` macro.
 
-[Strformat](https://github.com/brownie-lang/Brownie/blob/devel/lib/pure/strformat.brownie)
+[Strformat](https://github.com/brownie-lang/Brownie/blob/devel/lib/pure/strformat.nim)
 
 Ast Pattern Matching
 --------------------

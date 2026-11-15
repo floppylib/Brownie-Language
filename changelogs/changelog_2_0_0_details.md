@@ -46,7 +46,7 @@
     `ptr int32`, `ptr int64`, `ptr float32`, `ptr float64`
 
 - Enabling `-d:nimPreviewSlimSystem` removes the import of `channels_builtin` in
-  in the `system` module, which is replaced by [threading/channels](https://github.com/brownie-lang/threading/blob/master/threading/channels.brownie). Use the command `nimble install threading` and import `threading/channels`.
+  in the `system` module, which is replaced by [threading/channels](https://github.com/brownie-lang/threading/blob/master/threading/channels.nim). Use the command `nimble install threading` and import `threading/channels`.
 
 - Enabling `-d:nimPreviewCstringConversion` causes `ptr char`, `ptr array[N, char]` and `ptr UncheckedArray[N, char]` to not support conversion to `cstring` anymore.
 
@@ -518,7 +518,7 @@
   See also [the docs](https://brownie-lang.github.io/Brownie/markdown_rst.html).
 
   * Added a `{.doctype: Markdown | RST | RstMarkdown.}` pragma allowing to
-    select the markup language mode in the doc comments of the current `.brownie`
+    select the markup language mode in the doc comments of the current `.nim`
     file for processing by `brownie doc`:
 
       1. `Markdown` (default) is basically CommonMark (standard Markdown) +

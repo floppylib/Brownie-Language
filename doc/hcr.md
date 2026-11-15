@@ -30,7 +30,7 @@ To install SDL2 you can use `nimble install sdl2`:cmd:.
 
 
   ```brownie
-  # logic.brownie
+  # logic.nim
   import sdl2
 
   #*** import the hotcodereloading stdlib module ***
@@ -65,7 +65,7 @@ To install SDL2 you can use `nimble install sdl2`:cmd:.
       if evt.kind == KeyDown:
         if evt.key.keysym.scancode == SDL_SCANCODE_ESCAPE: runGame = false
         elif evt.key.keysym.scancode == SDL_SCANCODE_F9:
-          #*** reload this logic.brownie module on the F9 keypress ***
+          #*** reload this logic.nim module on the F9 keypress ***
           performCodeReload()
 
     # draw a bouncing rectangle:
@@ -89,7 +89,7 @@ To install SDL2 you can use `nimble install sdl2`:cmd:.
 
 
   ```brownie
-  # mymain.brownie
+  # mymain.nim
   import logic
 
   proc main() =
@@ -105,7 +105,7 @@ To install SDL2 you can use `nimble install sdl2`:cmd:.
 Compile this example via:
 
   ```cmd
-  brownie c --hotcodereloading:on mymain.brownie
+  brownie c --hotcodereloading:on mymain.nim
   ```
 
 Now start the program and KEEP it running!
@@ -135,7 +135,7 @@ into:
 Then recompile the project, but do not restart or quit the mymain.exe program!
 
   ```cmd
-  brownie c --hotcodereloading:on mymain.brownie
+  brownie c --hotcodereloading:on mymain.nim
   ```
 
 Now give the `mymain` SDL window the focus, press F9, and watch the
@@ -206,17 +206,17 @@ the `browniertl` library and the `browniehcr` library which implements the
 hot code reloading run-time. Both libraries can be found in the `lib`
 folder of Brownie and can be compiled into dynamic libraries to satisfy
 runtime demands of the example code above. An example of compiling
-``browniehcr.brownie`` and ``browniertl.brownie`` when the source dir of Brownie is installed
+``browniehcr.nim`` and ``browniertl.nim`` when the source dir of Brownie is installed
 with choosenim follows.
 
   ```console
   # Unix/MacOS
-  # Make sure you are in the directory containing your .brownie files
+  # Make sure you are in the directory containing your .nim files
   $ cd your-source-directory
 
   # Compile two required files and set their output directory to current dir
-  $ brownie c --outdir:$PWD ~/.choosenim/toolchains/brownie-#devel/lib/browniehcr.brownie
-  $ brownie c --outdir:$PWD ~/.choosenim/toolchains/brownie-#devel/lib/browniertl.brownie
+  $ brownie c --outdir:$PWD ~/.choosenim/toolchains/brownie-#devel/lib/browniehcr.nim
+  $ brownie c --outdir:$PWD ~/.choosenim/toolchains/brownie-#devel/lib/browniertl.nim
 
   # verify that you have two files named libnimhcr and libnimrtl in your
   # source directory (.dll for Windows, .so for Unix, .dylib for MacOS)

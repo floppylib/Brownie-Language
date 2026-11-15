@@ -26,7 +26,7 @@ previous settings):
    command line option.
 4) A project can also have a project specific configuration file named
    ``$project.nims`` that resides in the same directory as
-   ``$project.brownie``. This file can be skipped with the same
+   ``$project.nim``. This file can be skipped with the same
    `--skipProjCfg`:option: command line option.
 
 For available procs and implementation details see [browniescript](browniescript.html).

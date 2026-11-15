@@ -48,7 +48,7 @@ seconds when run on its own. Check `vm_stat` (page-ins per second) and
 `sysctl vm.swapusage` before looking for a bug. This was diagnosed as a
 testament/`brownie ic` interaction more than once before anyone measured.
 
-Cap the fan-out to fit the machine — precedence documented at `deps.brownie`'s
+Cap the fan-out to fit the machine — precedence documented at `deps.nim`'s
 `let parallel`:
 
     --parallelBuild:N     # standard flag, given meaning under IC
@@ -62,8 +62,8 @@ one stderr, so any per-process diagnostic printing (`NIM_IC_BNODE_GRIND`,
 
 ## Running a single test
 
-`testament r tests/ic/<file>.brownie` works for ordinary and metamorphic tests.
+`testament r tests/ic/<file>.nim` works for ordinary and metamorphic tests.
 
-Files matching `tests/ic/*_temp.brownie` are ignored by git (see `.gitignore`) and
+Files matching `tests/ic/*_temp.nim` are ignored by git (see `.gitignore`) and
 are scratch, not tests: several import helper modules that do not exist and fail
 for that reason alone.

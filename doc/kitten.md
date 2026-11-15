@@ -63,7 +63,7 @@ test command
 ------------
 
 The `test`:idx: command can also be invoked with the alias `tests`:option:. This
-command will compile and run ``testament/tester.brownie``, which is the main
+command will compile and run ``testament/tester.nim``, which is the main
 driver of Brownie's test suite. You can pass options to the `test`:option: command,
 they will be forwarded to the tester. See its source code for available
 options.

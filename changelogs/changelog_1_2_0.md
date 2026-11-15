@@ -4,7 +4,7 @@
 ## Standard library additions and changes
 - Added overloaded `strformat.fmt` macro that use specified characters as
   delimiter instead of '{' and '}'.
-- Added new procs in `tables.brownie`: `OrderedTable.pop`, `CountTable.del`,
+- Added new procs in `tables.nim`: `OrderedTable.pop`, `CountTable.del`,
   `CountTable.pop`, `Table.pop`.
 - Added `strtabs.clear` overload that reuses the existing mode.
 - Added `browsers.osOpen` const alias for the operating system specific *"open"* command.
@@ -79,7 +79,7 @@ echo f
 - `distinctBase` has been moved from `sugar` to `typetraits` and now it is
   implemented as compiler type trait instead of macro. `distinctBase` in sugar
   module is now deprecated.
-- `CountTable.mget` has been removed from `tables.brownie`. It didn't work, and it
+- `CountTable.mget` has been removed from `tables.nim`. It didn't work, and it
   was an oversight to be included in v1.0.
 - `tables.merge(CountTable, CountTable): CountTable` has been removed.
   It didn't work well together with the existing inplace version of the same proc
@@ -213,7 +213,7 @@ echo f
   ([#12330](https://github.com/brownie-lang/Brownie/issues/12330))
 - Fixed "Add --cc option to --help or --fullhelp output"
   ([#12010](https://github.com/brownie-lang/Brownie/issues/12010))
-- Fixed "questionable `csize` definition in `system.brownie`"
+- Fixed "questionable `csize` definition in `system.nim`"
   ([#12187](https://github.com/brownie-lang/Brownie/issues/12187))
 - Fixed "os.getAppFilename() returns incorrect results on OpenBSD"
   ([#12389](https://github.com/brownie-lang/Brownie/issues/12389))
@@ -279,7 +279,7 @@ echo f
   ([#12911](https://github.com/brownie-lang/Brownie/issues/12911))
 - Fixed "ARC/newruntime memory corruption"
   ([#12899](https://github.com/brownie-lang/Brownie/issues/12899))
-- Fixed "tasyncclosestall.brownie still flaky test: Address already in use"
+- Fixed "tasyncclosestall.nim still flaky test: Address already in use"
   ([#12919](https://github.com/brownie-lang/Brownie/issues/12919))
 - Fixed "newruntime and computed goto: variables inside the loop are in generated code uninitialised"
   ([#12785](https://github.com/brownie-lang/Brownie/issues/12785))
@@ -343,7 +343,7 @@ echo f
   ([#9674](https://github.com/brownie-lang/Brownie/issues/9674))
 - Fixed "[TODO] pathutils.`/` can return invalid AbsoluteFile"
   ([#13121](https://github.com/brownie-lang/Brownie/issues/13121))
-- Fixed "regression(1.04) `brownie doc main.brownie` generates broken html (no css)"
+- Fixed "regression(1.04) `brownie doc main.nim` generates broken html (no css)"
   ([#12998](https://github.com/brownie-lang/Brownie/issues/12998))
 - Fixed "Wrong supportsCopyMem on string in type section"
   ([#13095](https://github.com/brownie-lang/Brownie/issues/13095))
@@ -407,7 +407,7 @@ echo f
   ([#13457](https://github.com/brownie-lang/Brownie/issues/13457))
 - Fixed "joinPath("", "") is "/" ; should be """
   ([#13455](https://github.com/brownie-lang/Brownie/issues/13455))
-- Fixed "[CI] flaky test on windows: tests/osproc/texitcode.brownie"
+- Fixed "[CI] flaky test on windows: tests/osproc/texitcode.nim"
   ([#13449](https://github.com/brownie-lang/Brownie/issues/13449))
 - Fixed "Casting to float32 on NimVM is broken"
   ([#13479](https://github.com/brownie-lang/Brownie/issues/13479))

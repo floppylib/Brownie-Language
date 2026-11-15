@@ -75,7 +75,7 @@ def getNameFromNimRti(rti):
 class NimTypeRecognizer:
   # this type map maps from types that are generated in the C files to
   # how they are called in brownie. To not mix up the name ``int`` from
-  # system.brownie with the name ``int`` that could still appear in
+  # system.nim with the name ``int`` that could still appear in
   # generated code, ``NI`` is mapped to ``system.int`` and not just
   # ``int``.
 

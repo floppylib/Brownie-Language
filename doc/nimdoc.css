@@ -1109,7 +1109,7 @@ dt pre > span.Operator ~ span.Identifier, dt pre > span.Other ~ span.Identifier 
   font-weight: inherit; }
 
 /* Brownie sprite for the footer (taken from main page favicon) */
-.brownie-sprite {
+.nim-sprite {
   display: inline-block;
   width: 51px;
   height: 14px;

@@ -1,12 +1,12 @@
 # `NIM_IC_BNODE_GRIND` target
 
-Input for the differential oracle in `compiler/cgen.brownie` (`grindBNode`), which
+Input for the differential oracle in `compiler/cgen.nim` (`grindBNode`), which
 runs every codegen proc that has moved to `AnyNode` over BOTH the `.bif` cursor
 and the materialised `PNode` for the same body and requires the same answer.
 
-    brownie c -d:newIcBackend -o:bin/nim_grind compiler/brownie.brownie
+    brownie c -d:newIcBackend -o:bin/nim_grind compiler/nim.nim
     NIM_IC_BNODE_GRIND=1 bin/nim_grind c --ic:on --nimcache:/tmp/ncgrind \
-      tools/icgrind/grindme.brownie
+      tools/icgrind/grindme.nim
 
 A disagreement is an `internalError` naming the proc, the path within the body
 and both answers. Each backend process reports its coverage on exit:
@@ -33,7 +33,7 @@ be graded at all:
 
 1. **The main module's routines are never graded.** They are built in-process
    and never arrive as a deferred body. Anything worth grading has to live in
-   `grindlib.brownie`, not in `grindme.brownie`.
+   `grindlib.nim`, not in `grindme.nim`.
 
 2. **Only `nkStmtList` bodies are deferred**, so only those can be graded — see
    the placeholder site in `ast2nif.loadRoutine`. A one-line

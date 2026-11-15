@@ -2,7 +2,7 @@
 
 Convert a Markdown documentation book (currently built with mdBook) into a
 `brownie book` project. The book lives in a directory (call it `book/`) with a
-`SUMMARY.md` at its root, and the API docs (generated from `.brownie` source via
+`SUMMARY.md` at its root, and the API docs (generated from `.nim` source via
 `brownie doc --project --index:on`) live in a sibling `api/` directory that ends up
 at `<outdir>/api/`.
 
@@ -65,7 +65,7 @@ Notes:
 
 - `:code:` gives Brownie syntax highlighting (defaults to Brownie; use `:code: <lang>`
   for other languages).
-- The `#ANCHOR:` / `#ANCHOR_END:` markers must exist in the source `.brownie`
+- The `#ANCHOR:` / `#ANCHOR_END:` markers must exist in the source `.nim`
   files. Normalize them to `#ANCHOR:` (no space after `#`) — a space after `#`
   is interpreted as a Markdown heading.
 - Include paths are resolved **relative to each `.md` file's own directory**

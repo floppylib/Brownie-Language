@@ -23,7 +23,7 @@ Installation
 Compile browniegrep with the command:
 
   ```cmd
-  brownie c -d:release tools/browniegrep.brownie
+  brownie c -d:release tools/nimgrep.nim
   ```
 
 And copy the executable somewhere in your ``$PATH``.
@@ -37,13 +37,13 @@ Command line switches
 Path filter options
 -------------------
 
-Let us assume we have file `dirA/dirB/dirC/file.brownie`.
+Let us assume we have file `dirA/dirB/dirC/file.nim`.
 Filesystem path options will match for these parts of the path:
 
 | option              | matches for                        |
 | :------------------ | :--------------------------------  |
 | `--[not]extensions` | ``brownie``                            |
-| `--[not]filename`   | ``file.brownie``                       |
+| `--[not]filename`   | ``file.nim``                       |
 | `--[not]dirname`    | ``dirA`` and ``dirB`` and ``dirC`` |
 | `--[not]dirpath`    | ``dirA/dirB/dirC``                 |
 

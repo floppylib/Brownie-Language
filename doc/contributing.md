@@ -23,15 +23,15 @@ Writing tests
 
 There are 4 types of tests:
 
-1. `runnableExamples` documentation comment tests, ran by `brownie doc mymod.brownie`:cmd:
+1. `runnableExamples` documentation comment tests, ran by `brownie doc mymod.nim`:cmd:
    These end up in documentation and ensure documentation stays in sync with code.
 
-2. separate test files, e.g.: ``tests/stdlib/tos.brownie``.
+2. separate test files, e.g.: ``tests/stdlib/tos.nim``.
    In brownie repo, `testament`:cmd: (see below) runs all
-   ``$brownie/tests/*/t*.brownie`` test files;
+   ``$brownie/tests/*/t*.nim`` test files;
    for nimble packages, see https://github.com/brownie-lang/nimble#tests.
 
-3. (deprecated) tests in `when isMainModule:` block, ran by `brownie r mymod.brownie`:cmd:.
+3. (deprecated) tests in `when isMainModule:` block, ran by `brownie r mymod.nim`:cmd:.
    `nimble test`:cmd: can run those in nimble packages when specified in a
    `task "test"`.
 
@@ -47,8 +47,8 @@ that don't. Always leave the code cleaner than you found it.
 Stdlib
 ------
 
-Each stdlib module (anything under ``lib/``, e.g. ``lib/pure/os.brownie``) should
-preferably have a corresponding separate test file, e.g. ``tests/stdlib/tos.brownie``.
+Each stdlib module (anything under ``lib/``, e.g. ``lib/pure/os.nim``) should
+preferably have a corresponding separate test file, e.g. ``tests/stdlib/tos.nim``.
 The old convention was to add a `when isMainModule:` block in the source file,
 which only gets executed when the tester is building the file.
 
@@ -92,7 +92,7 @@ Compiler
 --------
 
 The tests for the compiler use a testing tool called `testament`:cmd:. They are all
-located in ``tests/`` (e.g.: ``tests/destructor/tdestructor3.brownie``).
+located in ``tests/`` (e.g.: ``tests/destructor/tdestructor3.nim``).
 Each test has its own file. All test files are prefixed with `t`. If you want
 to create a file for import into another test only, use the prefix `m`.
 
@@ -106,7 +106,7 @@ Possible keys are:
 - `file`: The file the errormsg was produced at
 - `line`: The line the errormsg was produced at
 
-For a full spec, see here: ``testament/specs.brownie``
+For a full spec, see here: ``testament/specs.nim``
 
 An example of a test:
 
@@ -143,7 +143,7 @@ only want to see the output of failing tests, go for
 
 You can also run only a single category of tests. A category is a subdirectory
 in the ``tests/`` directory. There are a couple of special categories; for a
-list of these, see ``testament/categories.brownie``, at the bottom.
+list of these, see ``testament/categories.nim``, at the bottom.
 
   ```cmd
   ./kitten tests c lib # compiles / runs stdlib modules, including `isMainModule` tests
@@ -154,7 +154,7 @@ To run a single test:
 
   ```cmd
   ./kitten test run <category>/<name>    # e.g.: tuples/ttuples_issues
-  ./kitten test run tests/stdlib/tos.brownie # can also provide relative path
+  ./kitten test run tests/stdlib/tos.nim # can also provide relative path
   ```
 
 For reproducible tests (to reproduce an environment more similar to the one
@@ -225,13 +225,13 @@ Documentation
 
 When contributing new procs, be sure to add documentation, especially if
 the proc is public. Even private procs benefit from documentation and can be
-viewed using `brownie doc --docInternal foo.brownie`:cmd:.
+viewed using `brownie doc --docInternal foo.nim`:cmd:.
 Documentation begins on the line
 following the `proc` definition, and is prefixed by `##` on each line.
 
 Runnable code examples are also encouraged, to show typical behavior with a few
 test cases (typically 1 to 3 `assert` statements, depending on complexity).
-These `runnableExamples` are automatically run by `brownie doc mymodule.brownie`:cmd:
+These `runnableExamples` are automatically run by `brownie doc mymodule.nim`:cmd:
 as well as `testament`:cmd: and guarantee they stay in sync.
 
   ```brownie
@@ -260,7 +260,7 @@ not guaranteed to stay in sync, so `runnableExamples` is almost always preferred
 
 The \`\`\` followed by a newline and an indentation instructs the
 `brownie doc`:cmd: command to produce syntax-highlighted example code with the
-documentation (\`\`\` is sufficient inside a ``.brownie`` module, while from
+documentation (\`\`\` is sufficient inside a ``.nim`` module, while from
 a ``.md`` one needs to set the language explicitly as \`\`\`brownie).
 
 When forward declaration is used, the documentation should be included with the
@@ -308,10 +308,10 @@ example below) from [Brownie Index] can be used in doc comment this way:
 Inline monospaced text can be input using \`single backticks\` or
 \`\`double backticks\`\`. The former are syntactically highlighted,
 the latter are not.
-To avoid accidental highlighting follow this rule in ``*.brownie`` files:
+To avoid accidental highlighting follow this rule in ``*.nim`` files:
 
 * Use single backticks for fragments of code in Brownie and other
-  programming languages, including identifiers, in ``*.brownie`` files.
+  programming languages, including identifiers, in ``*.nim`` files.
 
   For languages other than Brownie add a role after final backtick,
   e.g. for C++ inline highlighting:
@@ -328,7 +328,7 @@ To avoid accidental highlighting follow this rule in ``*.brownie`` files:
 
 * Use double backticks:
 
-  * For file names: \`\`os.brownie\`\`
+  * For file names: \`\`os.nim\`\`
   * For fragments of strings **not** enclosed by `"` and `"` and not
     related to code, e.g. text of compiler messages
   * When code ends with a standalone ``\`` (otherwise a combination of
@@ -387,7 +387,7 @@ Design with method call syntax chaining in mind
 
 .. _avoid_quit:
 Use exceptions (including `assert` / `doAssert`) instead of `quit`
-rationale: https://forum.brownie-lang.org/t/4089
+rationale: https://forum.nim-lang.org/t/4089
 
   ```brownie
   quit() # bad in almost all cases
@@ -443,7 +443,7 @@ unless stack allocation is needed (e.g. for efficiency).
 Tests (including in testament) should always prefer assertions over `echo`,
 except when that's not possible. It's more precise, easier for readers and
 maintainers to where expected values refer to. See for example
-https://github.com/brownie-lang/Brownie/pull/9335 and https://forum.brownie-lang.org/t/4089
+https://github.com/brownie-lang/Brownie/pull/9335 and https://forum.nim-lang.org/t/4089
 
   ```brownie
   echo foo() # adds a line for testament in `output:` block inside `discard`.
@@ -561,7 +561,7 @@ Code reviews
 
 1. Whenever possible, use GitHub's new 'Suggested change' in code reviews, which
    saves time explaining the change or applying it; see also
-   https://forum.brownie-lang.org/t/4317
+   https://forum.nim-lang.org/t/4317
 
 2. When reviewing large diffs that may involve code moving around, GitHub's interface
    doesn't help much, as it doesn't highlight moves. Instead, you can use something
@@ -667,11 +667,11 @@ Conventions
    require users to import via `import std/foo` instead of `import foo`,
    which would cause potential conflicts with nimble packages.
    Note that this still applies for new modules in existing logical
-   directories, e.g.: use ``lib/std/collections/foo.brownie``,
-   not ``lib/pure/collections/foo.brownie``.
+   directories, e.g.: use ``lib/std/collections/foo.nim``,
+   not ``lib/pure/collections/foo.nim``.
 
 2. New module names should prefer plural form whenever possible, e.g.:
-   ``std/sums.brownie`` instead of ``std/sum.brownie``. In particular, this reduces
+   ``std/sums.nim`` instead of ``std/sum.nim``. In particular, this reduces
    chances of conflicts between module name and the symbols it defines.
    Furthermore, module names should use `snake_case` and not use capital
    letters, which cause issues when going from an OS without case

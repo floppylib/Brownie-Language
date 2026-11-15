@@ -584,7 +584,7 @@ Compatibility notes:
 
 ## `std/times`
 
-- Added `ZZZ` and `ZZZZ` patterns to `times.brownie` `DateTime` parsing, to match time
+- Added `ZZZ` and `ZZZZ` patterns to `times.nim` `DateTime` parsing, to match time
   zone offsets without colons, e.g. `UTC+7 -> +0700`.
 - Added `dateTime` and deprecated `initDateTime`.
 
@@ -883,7 +883,7 @@ Compatibility notes:
     row (`:---`, `:--:`, `---:`) are ignored
   - every table row must start with `|`, e.g. `| cell 1 | cell 2 |`.
 - Implemented `doc2tex` compiler command which converts documentation in
-  `.brownie` files to Latex.
+  `.nim` files to Latex.
 - docgen now supports syntax highlighting for inline code.
 - docgen now supports same-line doc comments:
   ```brownie
