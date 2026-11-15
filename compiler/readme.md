@@ -1,7 +1,9 @@
-## Nim Compiler
+# Brownie Compiler
 
-- This directory contains the Nim compiler written in Nim.
-- Note that this code has been translated from a bootstrapping version written in Pascal.
-- So the code is **not** a poster child of good Nim code.
+This directory contains the compiler implementation used by Brownie.
 
-See [Internals of the Nim Compiler](https://nim-lang.github.io/Nim/intern.html) for more information.
+The implementation is in an adaptation phase. Existing compiler infrastructure is being progressively adapted to Brownie's syntax, semantics, command-line interface, and toolchain.
+
+Some internal identifiers and build conventions are inherited from the upstream project and have not yet been migrated. They should only be changed together with the related bootstrap, build scripts, tests, and tooling.
+
+For source provenance and attribution, see the repository-level [UPSTREAM.md](../UPSTREAM.md).
