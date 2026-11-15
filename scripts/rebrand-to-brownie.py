@@ -31,6 +31,7 @@ SKIP_EXACT = {
     "tests/config.nims",
     "tools/debug/brownie-gdb.py",
     "tools/debug/nimlldb.py",
+    "tools/debug/brownie-lldb.py",
     "lib/genode_cpp/signals.h",
     "lib/deps.txt",
     "tests/dll/nimhcr_compile.c",
@@ -55,7 +56,8 @@ TECHNICAL = (
     "nimHas", "nimUse", "nimStrict", "nimCompiler", "nimMain",
     "nimNode", "nimVM", "nimType", "nimBool", "nimIteration",
     "nimTitle", "nimgrp", "nimout", "NIM_", "NimMain",
-    "NimNode", "NimVM", "NimType", "NIM_BOOL",
+    "NimNode", "NimVM", "NimType", "NIM_BOOL", "Nimony",
+    "NimMajor", "NimMinor", "NimPatch",
 )
 
 COMPOUNDS = [
