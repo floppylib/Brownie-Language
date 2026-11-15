@@ -52,7 +52,7 @@ Hints on the build process:
   # build from C sources and then using kitten
   make -j   # supports parallel build
   # alternatively: ./build.sh --os $os_type --cpu $cpu_arch
-  ./bin/brownie c -d:release kitten
+  ./bin/brownie c -d:release -o:kitten koch.nim
   ./kitten boot -d:release
 
   # optionally generate docs into doc/html
