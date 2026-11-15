@@ -301,7 +301,7 @@ BrownieCmd()
 
 
 class NimbleCmd (gdb.Command):
-  """Command that invokes ``nimble'', the nim package manager and build tool."""
+  """Command that invokes ``nimble'', the Nimble package manager and build tool."""
 
   def __init__ (self):
     super (NimbleCmd, self).__init__ ("nimble",
