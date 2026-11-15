@@ -40,7 +40,7 @@ nimInternalInstallDepsWindows(){
 }
 
 nimInternalBuildKochAndRunCI(){
-  echo_run brownie c kitten
+  echo_run brownie c -o:kitten koch.nim
   if ! echo_run ./kitten runCI; then
     echo_run echo "runCI failed"
     echo_run brownie r tools/ci_testresults.nim
