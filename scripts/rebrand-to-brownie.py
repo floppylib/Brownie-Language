@@ -13,6 +13,7 @@ SKIP_EXACT = {
     "UPSTREAM.md",
     "copying.txt",
     "scripts/rebrand-to-brownie.py",
+    "compiler/installer.ini",
 }
 SKIP_PREFIXES = (
     ".github/workflows/",
@@ -162,6 +163,21 @@ def main():
         old_path, new_path = Path(old), Path(new)
         if old_path.exists() and not new_path.exists():
             subprocess.check_call(["git", "mv", str(old_path), str(new_path)])
+
+    # Validate the renamed shell helpers before allowing this sweep to commit.
+    for shell_file in [
+        "build_all.sh", "ci/funs.sh", "bin/brownie-gdb",
+        "tools/brownie.bash-completion", "tools/browniegrep.bash-completion",
+        "tools/browniepretty.bash-completion", "tools/browniesuggest.bash-completion",
+    ]:
+        if Path(shell_file).exists():
+            subprocess.check_call(["bash", "-n", shell_file])
+
+    # Parse the Python debugger helper without importing the GDB runtime.
+    debug_helper = Path("tools/debug/brownie-gdb.py")
+    if debug_helper.exists():
+        import ast
+        ast.parse(debug_helper.read_text(encoding="utf-8"), filename=str(debug_helper))
 
     # Report remaining Nim-like references for a follow-up, carefully reviewed
     # pass. This is an audit list, not an instruction to rewrite compiler ABI.
