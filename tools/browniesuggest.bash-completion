@@ -96,7 +96,7 @@ __ask_for_subcmd_opts()
     __ask_for_subcmd_or_subopts 2 "$@"
 }
 
-_nimsuggest()
+_browniesuggest()
 {
     local curr prev prevprev words
     local i_curr n_words i_prev i_prevprev
@@ -286,6 +286,6 @@ _nimsuggest()
     return 0
 
 } &&
-    complete -F _nimsuggest browniesuggest
+    complete -F _browniesuggest browniesuggest
 
 # ex: filetype=sh
