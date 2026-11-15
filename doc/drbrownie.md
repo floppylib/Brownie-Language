@@ -43,8 +43,9 @@ your code.
 Installation
 ============
 
-Run `kitten drbrownie`:cmd:, the executable will afterwards be
-in ``$brownie/bin/drbrownie``.
+The verifier's public build command is still being migrated from the inherited
+compiler implementation. This guide uses the Brownie-facing name; the dedicated
+Kitten command alias will be documented when that internal command is migrated.
 
 
 Motivating Example
