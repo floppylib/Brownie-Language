@@ -1,4 +1,4 @@
-include "../lib/system/compilation.brownie"
+include "../lib/system/compilation.nim"
 version = $NimMajor & "." & $NimMinor & "." & $NimPatch
 author = "Andreas Rumpf"
 description = "Compiler package providing the compiler sources as a library."
