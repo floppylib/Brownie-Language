@@ -6,10 +6,9 @@
 
 ## Project status
 
-Brownie is in its early language-design and compiler-adaptation stage. Its source repository currently starts from the Nim compiler codebase, which is being evaluated and adapted as the implementation foundation. Brownie is not yet a released or independently bootstrapped compiler.
+Brownie is in its early language-design and compiler-adaptation stage. Its implementation is being developed by adapting an existing compiler codebase. Brownie is not yet a released or independently bootstrapped compiler.
 
 - **Language source extension:** `.btw`
-- **Current implementation base:** Nim compiler source
 - **Current focus:** Brownie syntax specification, lexer/parser adaptation, and compiler architecture
 - **Execution targets under consideration:** Native, bytecode, and WebAssembly
 
@@ -35,7 +34,7 @@ Semicolons are optional in the current syntax baseline. Both `Let` and `Var` dec
 
 The compiler implementation is maintained in this repository. The separate [Brownie project repository](https://github.com/floppylib/Brownie) contains project-level specifications and documentation.
 
-Before building or contributing, consult the implementation instructions and build scripts in this repository. Since the compiler is undergoing adaptation, upstream Nim build and test instructions may still apply to parts of the codebase.
+Before building or contributing, consult the implementation instructions and build scripts in this repository. Some inherited build and test instructions may still apply while the compiler is being adapted.
 
 ## Project principles
 
@@ -46,6 +45,6 @@ Before building or contributing, consult the implementation instructions and bui
 
 ## Upstream foundation and attribution
 
-Brownie's current implementation is derived from the Nim compiler source tree. This repository retains applicable upstream copyright notices and license terms. See [UPSTREAM.md](UPSTREAM.md) and [copying.txt](copying.txt).
+Brownie's current implementation contains code inherited from an upstream compiler project. This repository retains applicable upstream copyright notices and license terms. See [UPSTREAM.md](UPSTREAM.md) and [copying.txt](copying.txt).
 
 Brownie-specific changes and original components will be documented as development progresses.
