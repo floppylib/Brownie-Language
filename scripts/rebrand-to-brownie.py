@@ -55,7 +55,8 @@ def replace_branding(text):
             return "Brownie"
         return "brownie"
 
-    text = re.sub(r"\bNim\b", replace_nim, text, flags=re.IGNORECASE)
+    # Avoid rewriting file extensions (.nim) and technical config names.
+    text = re.sub(r"(?<![A-Za-z0-9_.])Nim(?![A-Za-z0-9_.])", replace_nim, text, flags=re.IGNORECASE)
 
     # Koch is the old build-tool name; the public-facing name is now Kitten.
     def replace_koch(match):
@@ -66,7 +67,7 @@ def replace_branding(text):
             return "Kitten"
         return "kitten"
 
-    text = re.sub(r"\bkoch\b", replace_koch, text, flags=re.IGNORECASE)
+    text = re.sub(r"(?<![A-Za-z0-9_.])koch(?!\.nim\b)(?![A-Za-z0-9_])", replace_koch, text, flags=re.IGNORECASE)
     text = re.sub(r"(?i)\bdrnim\b", lambda m: "DrBrownie" if m.group(0)[:1].isupper() else "drbrownie", text)
     # Public-facing helper names and generated documentation targets.
     path_terms = {
@@ -85,6 +86,18 @@ def replace_branding(text):
     }
     for old, new in path_terms.items():
         text = re.sub(re.escape(old), new, text, flags=re.IGNORECASE)
+
+    # Undo source-path corruption produced by the first overly broad pass.
+    text = re.sub(r"\.brownie\b", ".nim", text, flags=re.IGNORECASE)
+    source_paths = {
+        "tools/browniegrep.nim": "tools/nimgrep.nim",
+        "tools/browniepretty.nim": "tools/nimpretty.nim",
+        "drbrownie/drbrownie.nim": "drnim/drnim.nim",
+        "compiler/brownie.nim": "compiler/nim.nim",
+        "testament/tester.brownie": "testament/tester.nim",
+    }
+    for old, new in source_paths.items():
+        text = text.replace(old, new)
     return text
 
 def tracked_paths():
@@ -95,6 +108,8 @@ def should_skip(path):
     name = path.as_posix()
     if path.suffix.lower() == ".nim":
         return "Nim source file"
+    if path.suffix.lower() in {".nims", ".nimf", ".nimble"}:
+        return "NimScript/template/package metadata (preserved for build compatibility)"
     if name in SKIP_EXACT:
         return "migration/provenance file"
     if any(name.startswith(prefix) for prefix in SKIP_PREFIXES):
