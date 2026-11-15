@@ -11,7 +11,7 @@ set -e # exit on first error
 . ci/funs.sh
 nimBuildCsourcesIfNeeded "$@"
 
-echo_run bin/brownie c --noNimblePath --skipUserCfg --skipParentCfg --hints:off kitten
+echo_run bin/brownie c --noNimblePath --skipUserCfg --skipParentCfg --hints:off -o:kitten koch.nim
 echo_run ./kitten boot -d:release --skipUserCfg --skipParentCfg --hints:off
 echo_run ./kitten tools --skipUserCfg --skipParentCfg --hints:off
 
