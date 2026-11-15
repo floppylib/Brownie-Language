@@ -175,12 +175,15 @@ def main():
 
     # Ensure public tool aliases are built and included in the installer.
     windows_build = Path("build_all.bat").read_text(encoding="utf-8")
+    unix_build = Path("build_all.sh").read_text(encoding="utf-8")
     installer = Path("compiler/installer.ini").read_text(encoding="utf-8")
+    for pair in ("nimgrep browniegrep", "nimsuggest browniesuggest", "nimpretty browniepretty"):
+        if pair not in unix_build:
+            raise RuntimeError(f"Unix bootstrap is missing tool alias rule: {pair}")
+    for entry in (r"bin\browniegrep.exe", r"bin\browniesuggest.exe", r"bin\browniepretty.exe"):
+        if entry not in windows_build:
+            raise RuntimeError(f"Windows bootstrap is missing tool alias rule: {entry}")
     for tool in ("browniegrep", "browniesuggest", "browniepretty"):
-        if f"bin\\\\{tool}.exe" not in windows_build and tool != "browniegrep":
-            # The Windows script creates these aliases by copying the upstream
-            # executable; its destination path must be present in the installer.
-            pass
         if f"bin/{tool}" not in installer and f"bin/{tool}.exe" not in installer:
             raise RuntimeError(f"installer is missing branded tool entry: {tool}")
 
