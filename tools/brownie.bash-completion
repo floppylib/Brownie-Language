@@ -97,7 +97,7 @@ __ask_for_subcmd_opts()
 }
 
 
-_nim()
+_brownie()
 {
     local curr prev prevprev words
     local i_curr n_words i_prev i_prevprev
@@ -496,6 +496,6 @@ _nim()
     return 0
 
 } &&
-    complete -F _nim brownie
+    complete -F _brownie brownie
 
 # ex: filetype=sh
