@@ -1,0 +1,35 @@
+name: Brownie rebrand sweep
+
+on:
+  push:
+    branches:
+      - brownie/rebrand
+    paths:
+      - "scripts/rebrand-to-brownie.py"
+      - ".github/workflows/brownie-rebrand.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  rebrand:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out rebrand branch
+        uses: actions/checkout@v4
+        with:
+          ref: brownie/rebrand
+          fetch-depth: 0
+      - name: Run text rebrand
+        run: python3 scripts/rebrand-to-brownie.py
+      - name: Commit replacements
+        run: |
+          if git diff --quiet; then
+            echo "No matching references found."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u
+          git commit -m "Rebrand standalone Nim references to Brownie"
+          git push origin HEAD:brownie/rebrand
