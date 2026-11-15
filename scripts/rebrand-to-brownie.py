@@ -14,6 +14,9 @@ SKIP_EXACT = {
     "copying.txt",
     "scripts/rebrand-to-brownie.py",
     "compiler/installer.ini",
+    "build_all.sh",
+    "build_all.bat",
+    "ci/funs.sh",
 }
 SKIP_PREFIXES = (
     ".github/workflows/",
