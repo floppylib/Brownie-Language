@@ -24,6 +24,6 @@ if not exist %nim_csources% (
   cd ..
   copy /y bin\brownie.exe  %nim_csources%
 )
-bin\brownie.exe c --noNimblePath --skipUserCfg --skipParentCfg --hints:off kitten
-kitten boot -d:release --skipUserCfg --skipParentCfg --hints:off
-kitten tools --skipUserCfg --skipParentCfg --hints:off
+bin\brownie.exe c --noNimblePath --skipUserCfg --skipParentCfg --hints:off -o:kitten.exe koch.nim
+kitten.exe boot -d:release --skipUserCfg --skipParentCfg --hints:off
+kitten.exe tools --skipUserCfg --skipParentCfg --hints:off
