@@ -59,6 +59,7 @@ TECHNICAL = (
 )
 
 COMPOUNDS = [
+    (re.compile(r"\bNimrod\b", re.IGNORECASE), "Brownie"),
     (re.compile(r"\bdrnim\b", re.IGNORECASE), "drbrownie"),
     (re.compile(r"\bnimdoc\b", re.IGNORECASE), "browniedoc"),
     (re.compile(r"\bnimscript\b", re.IGNORECASE), "browniescript"),
@@ -165,7 +166,8 @@ def main():
     # compiler config/header names or directories referenced by .nim sources.
     path_renames = {
         "doc/nimdoc.css": "doc/browniedoc.css",
-        "doc/nimdoc.cls": "doc/browniedoc.cls",\n        "tools/debug/nimlldb.py": "tools/debug/brownie-lldb.py",
+        "doc/nimdoc.cls": "doc/browniedoc.cls",
+        "tools/debug/nimlldb.py": "tools/debug/brownie-lldb.py",
         "icons/nim.ico": "icons/brownie.ico",
         "icons/nim.rc": "icons/brownie.rc",
         "icons/nim.res": "icons/brownie.res",
