@@ -38,6 +38,8 @@ COMPOUNDS = [
     (re.compile(r"\bnim_iteration_expression\b", re.IGNORECASE), "brownie_iteration_expression"),
     (re.compile(r"\bNIM_SYSROOT\b"), "BROWNIE_SYSROOT"),
     (re.compile(r"\bNIM_GDB\b"), "BROWNIE_GDB"),
+    (re.compile(r"\bNIM_BIN\b"), "BROWNIE_BIN"),
+    (re.compile(r"\bNIM_ROOT\b"), "BROWNIE_ROOT"),
 ]
 
 def replace_branding(text):
@@ -64,7 +66,26 @@ def replace_branding(text):
             return "Kitten"
         return "kitten"
 
-    return re.sub(r"\bkoch\b", replace_koch, text, flags=re.IGNORECASE)
+    text = re.sub(r"\bkoch\b", replace_koch, text, flags=re.IGNORECASE)
+    text = re.sub(r"(?i)\bdrnim\b", lambda m: "DrBrownie" if m.group(0)[:1].isupper() else "drbrownie", text)
+    # Public-facing helper names and generated documentation targets.
+    path_terms = {
+        "nimc.html": "brownie-compiler.html",
+        "nimc.md": "brownie-compiler.md",
+        "nimgrep.html": "brownie-grep.html",
+        "nimgrep.md": "brownie-grep.md",
+        "nimgrep_cmdline.txt": "brownie-grep_cmdline.txt",
+        "niminst.html": "brownie-installer.html",
+        "niminst.md": "brownie-installer.md",
+        "nims.html": "brownie-script.html",
+        "nims.md": "brownie-script.md",
+        "nimsuggest.html": "brownie-suggest.html",
+        "nimsuggest.md": "brownie-suggest.md",
+        "koch.html": "kitten.html",
+    }
+    for old, new in path_terms.items():
+        text = re.sub(re.escape(old), new, text, flags=re.IGNORECASE)
+    return text
 
 def tracked_paths():
     raw = subprocess.check_output(["git", "ls-files", "-z"])
@@ -103,11 +124,29 @@ def main():
             changed_files += 1
             replacements += 1
 
-    # Rename the documentation file too; its .md extension is not source code.
-    old_doc = Path("doc/drnim.md")
-    new_doc = Path("doc/drbrownie.md")
-    if old_doc.exists() and not new_doc.exists():
-        subprocess.check_call(["git", "mv", str(old_doc), str(new_doc)])
+    # Rename documentation and command-completion assets, never .nim source files.
+    path_renames = {
+        "doc/nimc.md": "doc/brownie-compiler.md",
+        "doc/nimgrep.md": "doc/brownie-grep.md",
+        "doc/nimgrep_cmdline.txt": "doc/brownie-grep_cmdline.txt",
+        "doc/niminst.md": "doc/brownie-installer.md",
+        "doc/nims.md": "doc/brownie-script.md",
+        "doc/nimsuggest.md": "doc/brownie-suggest.md",
+        "doc/koch.md": "doc/kitten.md",
+        "tools/nim.bash-completion": "tools/brownie.bash-completion",
+        "tools/nim.zsh-completion": "tools/brownie.zsh-completion",
+        "tools/nimgrep.bash-completion": "tools/browniegrep.bash-completion",
+        "tools/nimpretty.bash-completion": "tools/browniepretty.bash-completion",
+        "tools/nimsuggest.bash-completion": "tools/browniesuggest.bash-completion",
+        "bin/nim-gdb": "bin/brownie-gdb",
+        "bin/nim-gdb.bat": "bin/brownie-gdb.bat",
+        "tools/debug/nim-gdb.py": "tools/debug/brownie-gdb.py",
+        "doc/drnim.md": "doc/drbrownie.md",
+    }
+    for old, new in path_renames.items():
+        old_path, new_path = Path(old), Path(new)
+        if old_path.exists() and not new_path.exists():
+            subprocess.check_call(["git", "mv", str(old_path), str(new_path)])
 
     # Report remaining Nim-like references for a follow-up, carefully reviewed
     # pass. This is an audit list, not an instruction to rewrite compiler ABI.
