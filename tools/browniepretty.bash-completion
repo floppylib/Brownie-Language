@@ -96,7 +96,7 @@ __ask_for_subcmd_opts()
     __ask_for_subcmd_or_subopts 2 "$@"
 }
 
-_nimpretty()
+_browniepretty()
 {
     local curr prev prevprev words
     local i_curr n_words i_prev i_prevprev
@@ -262,6 +262,6 @@ _nimpretty()
     return 0
 
 } &&
-    complete -F _nimpretty browniepretty
+    complete -F _browniepretty browniepretty
 
 # ex: filetype=sh
