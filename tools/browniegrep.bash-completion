@@ -96,7 +96,7 @@ __ask_for_subcmd_opts()
     __ask_for_subcmd_or_subopts 2 "$@"
 }
 
-_nimgrep()
+_browniegrep()
 {
     local curr prev prevprev words
     local i_curr n_words i_prev i_prevprev
@@ -334,6 +334,6 @@ _nimgrep()
     return 0
 
 } &&
-    complete -F _nimgrep browniegrep
+    complete -F _browniegrep browniegrep
 
 # ex: filetype=sh
