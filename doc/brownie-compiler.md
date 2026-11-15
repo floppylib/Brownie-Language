@@ -178,15 +178,15 @@ implementation and should not be used elsewhere.
 ==========================       ============================================
 Name                             Description
 ==========================       ============================================
-nimStdSetjmp                     Use the standard `setjmp()/longjmp()` library
+brownieStdSetjmp                     Use the standard `setjmp()/longjmp()` library
                                  functions for setjmp-based exceptions. This is
                                  the default on most platforms.
-nimSigSetjmp                     Use `sigsetjmp()/siglongjmp()` for setjmp-based exceptions.
-nimRawSetjmp                     Use `_setjmp()/_longjmp()` on POSIX and `_setjmp()/longjmp()`
+brownieSigSetjmp                     Use `sigsetjmp()/siglongjmp()` for setjmp-based exceptions.
+brownieRawSetjmp                     Use `_setjmp()/_longjmp()` on POSIX and `_setjmp()/longjmp()`
                                  on Windows, for setjmp-based exceptions. It's the default on
                                  BSDs and BSD-like platforms, where it's significantly faster
                                  than the standard functions.
-nimBuiltinSetjmp                 Use `__builtin_setjmp()/__builtin_longjmp()` for setjmp-based
+brownieBuiltinSetjmp                 Use `__builtin_setjmp()/__builtin_longjmp()` for setjmp-based
                                  exceptions. This will not work if an exception is being thrown
                                  and caught inside the same procedure. Useful for benchmarking.
 ==========================       ============================================
@@ -402,7 +402,7 @@ of your program.
 
 
 The name `NimMain` can be influenced via the `--nimMainPrefix:prefix` switch.
-Use `--nimMainPrefix:MyLib` and the function to call is named `MyLibNimMain`.
+Use `--nimMainPrefix:MyLib` and the function to call is named `MyLibBrownieMain`.
 
 
 Cross-compilation for iOS
@@ -434,7 +434,7 @@ Note: XCode's "make clean" gets confused about the generated brownie.c files,
 so you need to clean those files manually to do a clean build.
 
 The name `NimMain` can be influenced via the `--nimMainPrefix:prefix` switch.
-Use `--nimMainPrefix:MyLib` and the function to call is named `MyLibNimMain`.
+Use `--nimMainPrefix:MyLib` and the function to call is named `MyLibBrownieMain`.
 
 
 Cross-compilation for Nintendo Switch
@@ -445,7 +445,7 @@ to your usual `brownie c`:cmd: or `brownie cpp`:cmd: command and set the `passC`
 and `passL`:option: command line switches to something like:
 
   ```cmd
-  brownie c ... --d:nimAllocPagesViaMalloc --mm:orc --passC="-I$DEVKITPRO/libnx/include" ...
+  brownie c ... --d:brownieAllocPagesViaMalloc --mm:orc --passC="-I$DEVKITPRO/libnx/include" ...
   --passL="-specs=$DEVKITPRO/libnx/switch.specs -L$DEVKITPRO/libnx/lib -lnx"
   ```
 
@@ -453,8 +453,8 @@ or setup a ``brownie.cfg`` file like so:
 
     #brownie.cfg
     --mm:orc
-    --d:nimAllocPagesViaMalloc
-    --define:nimInheritHandles
+    --d:brownieAllocPagesViaMalloc
+    --define:brownieInheritHandles
     --passC="-I$DEVKITPRO/libnx/include"
     --passL="-specs=$DEVKITPRO/libnx/switch.specs -L$DEVKITPRO/libnx/lib -lnx"
 
@@ -481,7 +481,7 @@ They are:
 3. mqueue. Sadly there are no mqueue headers.
 4. ucontext. No headers for these either. No coroutines for now :(
 5. nl_types. No headers for this.
-6. As mmap is not supported, the nimAllocPagesViaMalloc option has to be used.
+6. As mmap is not supported, the brownieAllocPagesViaMalloc option has to be used.
 
 GPU Compilation
 ===============
@@ -524,7 +524,7 @@ on ``browniertl.dll``. To generate the "browniertl.dll" file, use the command:
 To link against ``browniertl.dll`` use the command:
 
   ```cmd
-  brownie c -d:useNimRtl myprog.nim
+  brownie c -d:useBrownieRtl myprog.nim
   ```
 
 
@@ -543,7 +543,7 @@ Define                   Effect
                          `--passC:-ffast-math`:option: (but see issue #10305)
 `danger`                 Turns off all runtime checks and turns on the optimizer.
 `useFork`                Makes `osproc` use `fork`:c: instead of `posix_spawn`:c:.
-`useNimRtl`              Compile and link against ``browniertl.dll``.
+`useBrownieRtl`              Compile and link against ``browniertl.dll``.
 `useMalloc`              Makes Brownie use C's `malloc`:idx: instead of Brownie's
                          own memory manager, albeit prefixing each allocation with
                          its size to support clearing memory on reallocation.
@@ -717,36 +717,36 @@ Check the [Cross-compilation] section for instructions on how to compile the
 program for your target.
 
 
-nimAllocPagesViaMalloc
+brownieAllocPagesViaMalloc
 ----------------------
 
 Brownie's default allocator is based on TLSF, this algorithm was designed for embedded
 devices. This allocator gets blocks/pages of memory via a currently undocumented
 `osalloc` API which usually uses POSIX's `mmap` call. On many environments `mmap`
-is not available but C's `malloc` is. You can use the `nimAllocPagesViaMalloc`
-define to use `malloc` instead of `mmap`. `nimAllocPagesViaMalloc` is currently
+is not available but C's `malloc` is. You can use the `brownieAllocPagesViaMalloc`
+define to use `malloc` instead of `mmap`. `brownieAllocPagesViaMalloc` is currently
 only supported with `--mm:arc` or `--mm:orc`. (Since version 1.6)
 
-nimPage256 / nimPage512 / nimPage1k
+browniePage256 / browniePage512 / browniePage1k
 ===================================
 
 Adjust the page size for Brownie's GC allocator. This enables using
-`nimAllocPagesViaMalloc` on devices with less RAM. The default
+`brownieAllocPagesViaMalloc` on devices with less RAM. The default
 page size requires too much RAM to work.
 
 Recommended settings:
 
-- < 32 kB of RAM use `nimPage256`
+- < 32 kB of RAM use `browniePage256`
 
-- < 512 kB of RAM use `nimPage512`
+- < 512 kB of RAM use `browniePage512`
 
-- < 2 MB of RAM use `nimPage1k`
+- < 2 MB of RAM use `browniePage1k`
 
 Initial testing hasn't shown much difference between 512B or 1kB page sizes
-in terms of performance or latency. Using `nimPages256` will limit the
+in terms of performance or latency. Using `browniePages256` will limit the
 total amount of allocatable RAM.
 
-nimMemAlignTiny
+brownieMemAlignTiny
 ===============
 
 Sets `MemAlign` to `4` bytes which reduces the memory alignment
@@ -757,7 +757,7 @@ Thread stack size
 
 Brownie's thread API provides a simple wrapper around more advanced
 RTOS task features. Customizing the stack size and stack guard size can
-be done by setting `-d:nimThreadStackSize=16384` or `-d:nimThreadStackGuard=32`.
+be done by setting `-d:brownieThreadStackSize=16384` or `-d:brownieThreadStackGuard=32`.
 
 Currently only Zephyr, NuttX and FreeRTOS support these configurations.
 

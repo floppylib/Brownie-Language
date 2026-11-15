@@ -16,7 +16,7 @@
 #include <util/reconstructible.h>
 
 // Symbol for calling back into Brownie
-extern "C" void nimHandleSignal(void *arg);
+extern "C" void brownieHandleSignal(void *arg);
 
 namespace Brownie { struct SignalHandler; }
 
@@ -26,7 +26,7 @@ struct Brownie::SignalHandler
 	void *arg;
 
 	void handle_signal() {
-		Libc::with_libc([this] () { nimHandleSignal(arg); }); }
+		Libc::with_libc([this] () { brownieHandleSignal(arg); }); }
 
 	Genode::Signal_handler<SignalHandler> handler;
 

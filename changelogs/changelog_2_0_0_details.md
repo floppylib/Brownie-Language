@@ -64,7 +64,7 @@
 
 - The `Math.trunc` polyfill for targeting Internet Explorer was
   previously included in most JavaScript output files.
-  Now, it is only included with `-d:nimJsMathTruncPolyfill`.
+  Now, it is only included with `-d:brownieJsMathTruncPolyfill`.
   If you are targeting Internet Explorer, you may choose to enable this option
   or define your own `Math.trunc` polyfill using the [`emit` pragma](https://brownie-lang.org/docs/manual.html#implementation-specific-pragmas-emit-pragma).
   Brownie uses `Math.trunc` for the division and modulo operators for integers.
@@ -105,13 +105,13 @@
   Use `legacy:laxEffects` to keep backward compatibility.
 
 - The `gorge`/`staticExec` calls will now return a descriptive message in the output
-  if the execution fails for whatever reason. To get back legacy behaviour, use `-d:nimLegacyGorgeErrors`.
+  if the execution fails for whatever reason. To get back legacy behaviour, use `-d:brownieLegacyGorgeErrors`.
 
 - Pointer to `cstring` conversions now trigger a `[PtrToCstringConv]` warning.
   This warning will become an error in future versions! Use a `cast` operation
   like `cast[cstring](x)` instead.
 
-- `logging` will default to flushing all log level messages. To get the legacy behaviour of only flushing Error and Fatal messages, use `-d:nimV1LogFlushBehavior`.
+- `logging` will default to flushing all log level messages. To get the legacy behaviour of only flushing Error and Fatal messages, use `-d:brownieV1LogFlushBehavior`.
 
 - Redefining templates with the same signature was previously
   allowed to support certain macro code. To do this explicitly, the
@@ -254,7 +254,7 @@
   const oldName* {.deprecated: "use newName instead".} = newName
   ```
 
-  `defined(nimalias)` can be used to check for versions when this syntax was
+  `defined(browniealias)` can be used to check for versions when this syntax was
   available; however since code that used this syntax is usually very old,
   these deprecated aliases are likely not used anymore and it may make sense
   to simply remove these statements.
@@ -286,7 +286,7 @@
 - `std/oids` now uses `int64` to store time internally (before, it was int32).
 - `std/uri.Uri` dollar (`$`) improved, precalculates the `string` result length from the `Uri`.
 - `std/uri.Uri.isIpv6` is now exported.
-- `std/logging.ConsoleLogger` and `FileLogger` now have a `flushThreshold` attribute to set what log message levels are automatically flushed. For Brownie v1 use `-d:nimFlushAllLogs` to automatically flush all message levels. Flushing all logs is the default behavior for Brownie v2.
+- `std/logging.ConsoleLogger` and `FileLogger` now have a `flushThreshold` attribute to set what log message levels are automatically flushed. For Brownie v1 use `-d:brownieFlushAllLogs` to automatically flush all message levels. Flushing all logs is the default behavior for Brownie v2.
 
 
 - `std/jsfetch.newFetchOptions` now has default values for all parameters.
@@ -294,7 +294,7 @@
 
 - `std/sharedlist` and `std/sharedtables` are now deprecated, see [RFC #433](https://github.com/brownie-lang/RFCs/issues/433).
 
-- There is a new compile flag (`-d:nimNoGetRandom`) when building `std/sysrand` to remove the dependency on the Linux `getrandom` syscall.
+- There is a new compile flag (`-d:brownieNoGetRandom`) when building `std/sysrand` to remove the dependency on the Linux `getrandom` syscall.
 
   This compile flag only affects Linux builds and is necessary if either compiling on a Linux kernel version < 3.17, or if code built will be executing on kernel < 3.17.
 
@@ -302,12 +302,12 @@
 
   When building for RHEL7/CentOS7 for example, the entire build process for brownie from a source package would then be:
   ```sh
-  $ yum install devtoolset-8 # Install GCC version 8 vs the standard 4.8.5 on RHEL7/CentOS7. Alternatively use -d:nimEmulateOverflowChecks. See issue #13692 for details
+  $ yum install devtoolset-8 # Install GCC version 8 vs the standard 4.8.5 on RHEL7/CentOS7. Alternatively use -d:brownieEmulateOverflowChecks. See issue #13692 for details
   $ scl enable devtoolset-8 bash # Run bash shell with default toolchain of gcc 8
   $ sh build.sh  # per unix install instructions
   $ bin/brownie c kitten  # per unix install instructions
   $ ./kitten boot -d:release  # per unix install instructions
-  $ ./kitten tools -d:nimNoGetRandom  # pass the nimNoGetRandom flag to compile std/sysrand without support for getrandom syscall
+  $ ./kitten tools -d:brownieNoGetRandom  # pass the brownieNoGetRandom flag to compile std/sysrand without support for getrandom syscall
   ```
 
   This is necessary to pass when building Brownie on kernel versions < 3.17 in particular to avoid an error of "SYS_getrandom undeclared" during the build process for the stdlib (`sysrand` in particular).
@@ -359,7 +359,7 @@
 - Removed deprecated module `LockFreeHash`.
 - Removed deprecated module `events`.
 - Removed deprecated `oids.oidToString`.
-- Removed define `nimExperimentalAsyncjsThen` for `std/asyncjs.then` and `std/jsfetch`.
+- Removed define `brownieExperimentalAsyncjsThen` for `std/asyncjs.then` and `std/jsfetch`.
 - Removed deprecated `jsre.test` and `jsre.toString`.
 - Removed deprecated `math.c_frexp`.
 - Removed deprecated `` httpcore.`==` ``.
@@ -404,7 +404,7 @@
     ```
   - A generic `define` pragma for constants has been added that interprets
     the value of the define based on the type of the constant value.
-    See the [experimental manual](https://brownie-lang.github.io/Brownie/manual_experimental.html#generic-nimdefine-pragma)
+    See the [experimental manual](https://brownie-lang.github.io/Brownie/manual_experimental.html#generic-browniedefine-pragma)
     for a list of supported types.
 
 - [Macro pragmas](https://brownie-lang.github.io/Brownie/manual.html#userminusdefined-pragmas-macro-pragmas) changes:
@@ -420,7 +420,7 @@
 
     macro multiply(amount: static int, s: untyped): untyped =
       let name = $s[0].basename
-      result = newNimNode(nnkTypeSection)
+      result = newBrownieNode(nnkTypeSection)
       for i in 1 .. amount:
         result.add(newTree(nnkTypeDef, ident(name & $i), s[1], s[2]))
 

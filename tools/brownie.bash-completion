@@ -379,7 +379,7 @@ _brownie()
 	    && candids+=(${opts[$((${#opts[@]}-3))]} ${opts[$((${#opts[@]}-2))]})
 	opts+=("" "--jsbigint64" "on off") \
 	    && candids+=(${opts[$((${#opts[@]}-3))]} ${opts[$((${#opts[@]}-2))]})
-	opts+=("" "--nimBasePattern" "nimbase.h") \
+	opts+=("" "--brownieBasePattern" "browniebase.h") \
 	    && candids+=(${opts[$((${#opts[@]}-3))]} ${opts[$((${#opts[@]}-2))]})
     fi
     

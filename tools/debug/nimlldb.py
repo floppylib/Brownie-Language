@@ -27,7 +27,7 @@ def get_nti(value: lldb.SBValue, nim_name=None):
         type_info_name = "NTI" + "__" + id_string + "_"
         nti = value.target.FindFirstGlobalVariable(type_info_name)
     if not nti.IsValid():
-        print(f"NimEnumPrinter: lookup global symbol: '{type_info_name}' failed for {value.type.name}.\n")
+        print(f"BrownieEnumPrinter: lookup global symbol: '{type_info_name}' failed for {value.type.name}.\n")
     return type_nim_name, nti
 
 
@@ -72,7 +72,7 @@ def enum_to_string(value: lldb.SBValue, int_val=None, nim_name=None):
 
 
 def to_string(value: lldb.SBValue):
-    # For getting NimStringDesc * value
+    # For getting BrownieStringDesc * value
     value = value.GetNonSyntheticValue()
 
     # Check if data pointer is Null
@@ -101,7 +101,7 @@ def to_string(value: lldb.SBValue):
 
 
 def to_stringV2(value: lldb.SBValue):
-    # For getting NimStringV2 value
+    # For getting BrownieStringV2 value
     value = value.GetNonSyntheticValue()
 
     data = value["p"]["data"]
@@ -129,7 +129,7 @@ def to_stringV2(value: lldb.SBValue):
     return bytearray(cast.data.uint8s).decode("utf-8")
 
 
-def NimString(value: lldb.SBValue, internal_dict):
+def BrownieString(value: lldb.SBValue, internal_dict):
     if is_local(value):
         if not is_in_scope(value):
             return "undefined"
@@ -1187,7 +1187,7 @@ def get_custom_synthetic(value: lldb.SBValue) -> Union[lldb.SBValue, None]:
 
         command = f"""
             {ret_type.name} lldbT;
-            nimZeroMem((void*)(&lldbT), sizeof({ret_type.name}));
+            brownieZeroMem((void*)(&lldbT), sizeof({ret_type.name}));
             {fn.name}(({first_arg}), (&lldbT));
             lldbT;
         """
@@ -1254,7 +1254,7 @@ def breakpoint_function_wrapper(frame: lldb.SBFrame, bp_loc, internal_dict):
 
     target: lldb.SBTarget = debugger.GetSelectedTarget()
 
-    NIM_IS_V2 = target.FindFirstType("TNimTypeV2").IsValid()
+    NIM_IS_V2 = target.FindFirstType("TBrownieTypeV2").IsValid()
 
     module = frame.GetSymbolContext(lldb.eSymbolContextModule).module
 
@@ -1322,11 +1322,11 @@ def __lldb_init_module(debugger, internal_dict):
     debugger.HandleCommand(f"type summary add -w brownie -n chararray -F  {__name__}.CharArray -x char\s+[\d+]")
     debugger.HandleCommand(f"type summary add -w brownie -n array -F  {__name__}.Array -x tyArray_+[[:alnum:]]+")
     debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.ArrayChildrenProvider -x tyArray_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type summary add -w brownie -n string -F  {__name__}.NimString NimStringDesc")
+    debugger.HandleCommand(f"type summary add -w brownie -n string -F  {__name__}.NimString BrownieStringDesc")
 
-    debugger.HandleCommand(f"type summary add -w brownie -n stringv2 -F {__name__}.NimString -x NimStringV2$")
-    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.StringChildrenProvider -x NimStringV2$")
-    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.StringChildrenProvider -x NimStringDesc$")
+    debugger.HandleCommand(f"type summary add -w brownie -n stringv2 -F {__name__}.NimString -x BrownieStringV2$")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.StringChildrenProvider -x BrownieStringV2$")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.StringChildrenProvider -x BrownieStringDesc$")
 
     debugger.HandleCommand(f"type summary add -w brownie -n cstring -F  {__name__}.NCSTRING NCSTRING")
 

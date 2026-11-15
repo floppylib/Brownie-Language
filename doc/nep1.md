@@ -26,7 +26,7 @@ over time, this style guide will too.
 
 These rules will only be enforced for contributions to the Brownie
 codebase and official projects, such as the Brownie compiler, the standard library,
-and the various official tools such as C2Nim.
+and the various official tools such as c2brownie.
 
 ----------------
 Style Guidelines
@@ -288,7 +288,7 @@ Conventions for multi-line statements and expressions
 
     ```brownie
     startProcess(
-      nimExecutable, currentDirectory, compilerArguments
+      brownieExecutable, currentDirectory, compilerArguments
       environment, processOptions)
     ```
 

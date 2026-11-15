@@ -150,8 +150,8 @@ there are few sources or providing them along the Brownie code is easier than us
 a system library. Libraries installed on the host system can be linked in with
 the [PassL pragma](manual.html#implementation-specific-pragmas-passl-pragma).
 
-To wrap native code, take a look at the [c2nim tool](
-https://github.com/brownie-lang/c2nim/blob/master/doc/c2nim.rst) which helps
+To wrap native code, take a look at the [c2brownie tool](
+https://github.com/brownie-lang/c2brownie/blob/master/doc/c2brownie.rst) which helps
 with the process of scanning and transforming header files into a Brownie
 interface.
 
@@ -247,9 +247,9 @@ the compiler will assume certain types for the return value and parameters
 which will likely make your program crash at runtime.
 
 The name `NimMain` can be influenced via the `--nimMainPrefix:prefix` switch.
-Use `--nimMainPrefix:MyLib` and the function to call is named `MyLibNimMain`.
+Use `--nimMainPrefix:MyLib` and the function to call is named `MyLibBrownieMain`.
 
-When compiling to static or dynamic libraries, they don't call destructors of global variables as normal Brownie programs would do. A C API `NimDestroyGlobals` is provided to call these global destructors. It is influenced by the `--nimMainPrefix:prefix` switch, too.
+When compiling to static or dynamic libraries, they don't call destructors of global variables as normal Brownie programs would do. A C API `BrownieDestroyGlobals` is provided to call these global destructors. It is influenced by the `--nimMainPrefix:prefix` switch, too.
 
 
 ### Brownie invocation example from C
@@ -295,7 +295,7 @@ generating a `main()`:c: function in the generated files and to avoid linking th
 object files into a final binary. All the generated files are placed into the ``nimcache``
 directory. That's why the next command compiles the ``maths.c`` source plus
 all the ``.c`` files from ``nimcache``. In addition to this path, you also
-have to tell the C compiler where to find Brownie's ``nimbase.h`` header file.
+have to tell the C compiler where to find Brownie's ``browniebase.h`` header file.
 
 Instead of depending on the generation of the individual ``.c`` files you can
 also ask the Brownie compiler to generate a statically linked library:

@@ -130,7 +130,7 @@ echo f
 - The deprecated `lc` macro has been removed from `sugar`. It is now replaced
   with the more powerful `collect` macro.
 - `os.relativePath("foo", "foo")` is now `"."`, not `""`, as `""` means invalid
-  path and shouldn't be conflated with `"."`; use `-d:nimOldRelativePathBehavior`
+  path and shouldn't be conflated with `"."`; use `-d:brownieOldRelativePathBehavior`
   to restore the old behavior.
 - `os.joinPath(a, b)` now honors trailing slashes in `b` (or `a` if `b` = "").
 - `base64.encode` no longer supports `lineLen` and `newLine`.
@@ -140,7 +140,7 @@ echo f
 ### Breaking changes
 
 - `net.newContext` now performs SSL Certificate checking on Linux and OSX.
-  Define `nimDisableCertificateValidation` to disable it globally.
+  Define `brownieDisableCertificateValidation` to disable it globally.
 
 
 
@@ -196,7 +196,7 @@ echo f
   supports these). Some versions of GCC lack this feature and unfortunately
   we cannot detect this case reliably. So if you get compilation errors like
   "undefined reference to `__builtin_saddll_overflow`" compile your programs
-  with `-d:nimEmulateOverflowChecks`.
+  with `-d:brownieEmulateOverflowChecks`.
 
 
 
@@ -465,7 +465,7 @@ echo f
   ([#13310](https://github.com/brownie-lang/Brownie/issues/13310))
 - Fixed "browniescript listFiles should throw exception when path is not found"
   ([#12676](https://github.com/brownie-lang/Brownie/issues/12676))
-- Fixed "kitten boot fails if even an empty config.nims is present in ~/.config/nims/ [devel regression]"
+- Fixed "kitten boot fails if even an empty config.nims is present in ~/.config/brownies/ [devel regression]"
   ([#13633](https://github.com/brownie-lang/Brownie/issues/13633))
 - Fixed "brownie doc generates lots of false positive LockLevel warnings"
   ([#13218](https://github.com/brownie-lang/Brownie/issues/13218))
@@ -489,7 +489,7 @@ echo f
   ([#13524](https://github.com/brownie-lang/Brownie/issues/13524))
 - Fixed "oswalkdir.walkDirRec wont return folders"
   ([#11458](https://github.com/brownie-lang/Brownie/issues/11458))
-- Fixed "`echo 'echo 1' | brownie c -r -`  silently gives wrong results (nimBetterRun not updated for stdin)"
+- Fixed "`echo 'echo 1' | brownie c -r -`  silently gives wrong results (brownieBetterRun not updated for stdin)"
   ([#13412](https://github.com/brownie-lang/Brownie/issues/13412))
 - Fixed "gc:arc destroys the global variable accidentally."
   ([#13691](https://github.com/brownie-lang/Brownie/issues/13691))

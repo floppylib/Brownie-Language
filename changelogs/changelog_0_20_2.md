@@ -12,7 +12,7 @@
   should minimize gotchas porting code from other languages like Python or C++.)
 
 - On Windows stderr/stdout/stdin are not opened as binary files anymore. Use the switch
-  `-d:nimBinaryStdFiles` for a transition period.
+  `-d:brownieBinaryStdFiles` for a transition period.
 
 ### Breaking changes in the standard library
 

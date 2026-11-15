@@ -1,7 +1,7 @@
-int nimhcrCompileAnswer(int x) {
+int browniehcrCompileAnswer(int x) {
   return x * 2 + 1;
 }
 
-int nimhcrCompileHeader(int x) {
+int browniehcrCompileHeader(int x) {
   return x + 100;
 }

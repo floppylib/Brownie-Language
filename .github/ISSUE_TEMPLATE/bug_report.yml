@@ -69,5 +69,5 @@ body:
       - Consider writing a PR targetting devel branch after filing this, see [contributing](https://brownie-lang.github.io/Brownie/contributing.html).
       - If it's a pre-existing compiler bug, see [debugging the compiler](https://brownie-lang.github.io/Brownie/intern.html#debugging-the-compiler) which should give more context on a compiler crash.
       - If it's a regression, you can help us by identifying which version introduced the bug by [bisecting](https://brownie-lang.github.io/Brownie/intern.html#bisecting-for-regressions) or at least trying known past releases (e.g. `choosenim 2.0.0`).
-        The Brownie repo also supports bisecting in issue comments by adding `!brownie c`, `!brownie js` etc. before a code block, see [nimrun-action](https://github.com/juancarlospaco/nimrun-action).
+        The Brownie repo also supports bisecting in issue comments by adding `!brownie c`, `!brownie js` etc. before a code block, see [brownierun-action](https://github.com/juancarlospaco/brownierun-action).
       - [Please, consider a Donation for the Brownie project.](https://brownie-lang.org/donate.html)

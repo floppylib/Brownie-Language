@@ -43,7 +43,7 @@
 \usepackage{graphicx}
 
 \usepackage{makeidx}
-\newcommand{\nimindexterm}[2]{#2\index{#2}\label{#1}}
+\newcommand{\brownieindexterm}[2]{#2\index{#2}\label{#1}}
 \makeindex
 
 \usepackage{dingbat} % for \carriagereturn, etc

@@ -7,7 +7,7 @@ Module          Description
 brownie             main module: parses the command line and calls
                 `main.MainCommand`
 main            implements the top-level command dispatching
-nimconf         implements the config file reader
+brownieconf         implements the config file reader
 syntaxes        dispatcher for the different parsers and filters
 filter_tmpl     standard template filter (``#? stdtempl``)
 lexbase         buffer handling of the lexical analyser

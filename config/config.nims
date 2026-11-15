@@ -3,7 +3,7 @@
 cppDefine "errno"
 cppDefine "unix"
 
-# mangle the macro names in nimbase.h
+# mangle the macro names in browniebase.h
 cppDefine "NAN_INFINITY"
 cppDefine "INF"
 cppDefine "NAN"

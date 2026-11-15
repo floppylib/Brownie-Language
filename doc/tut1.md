@@ -1686,10 +1686,10 @@ variables! For example:
     (dir, name, ext) = splitFile(path)
     baddir, badname, badext = splitFile(path)
   echo dir      # outputs "usr/local"
-  echo name     # outputs "nimc"
+  echo name     # outputs "browniec"
   echo ext      # outputs ".html"
   # All the following output the same line:
-  # "(dir: usr/local, name: nimc, ext: .html)"
+  # "(dir: usr/local, name: browniec, ext: .html)"
   echo baddir
   echo badname
   echo badext

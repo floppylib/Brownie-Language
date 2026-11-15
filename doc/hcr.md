@@ -201,7 +201,7 @@ Native code targets
 ===================
 
 Native projects using the hot code reloading option will be implicitly
-compiled with the `-d:useNimRtl`:option: option and they will depend on both
+compiled with the `-d:useBrownieRtl`:option: option and they will depend on both
 the `browniertl` library and the `browniehcr` library which implements the
 hot code reloading run-time. Both libraries can be found in the `lib`
 folder of Brownie and can be compiled into dynamic libraries to satisfy

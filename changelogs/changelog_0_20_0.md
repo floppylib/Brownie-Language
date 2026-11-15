@@ -3,7 +3,7 @@
 
 ### Changes affecting backwards compatibility
 
-- `shr` is now sign preserving. Use `-d:nimOldShiftRight` to enable
+- `shr` is now sign preserving. Use `-d:brownieOldShiftRight` to enable
   the old behavior globally.
 
 - The ``isLower``, ``isUpper`` family of procs in strutils/unicode
@@ -127,7 +127,7 @@
   Use `string.addInt(int)` and `string.addFloat(float)` instead.
 
 - ``case object`` branch transitions via ``system.reset`` are deprecated.
-  Compile your code with ``-d:nimOldCaseObjects`` for a transition period.
+  Compile your code with ``-d:brownieOldCaseObjects`` for a transition period.
 
 - base64 module: The default parameter `newLine` for the `encode` procs
   was changed from `"\13\10"` to the empty string `""`.

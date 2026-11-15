@@ -1,5 +1,5 @@
 discard """
-  cmd: "nim e $file"
+  cmd: "brownie e $file"
 """
 
 import mscriptcompiletime

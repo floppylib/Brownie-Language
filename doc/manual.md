@@ -6796,7 +6796,7 @@ builtin can be used for that:
   import std/macros
 
   macro debug(n: varargs[typed]): untyped =
-    result = newNimNode(nnkStmtList, n)
+    result = newBrownieNode(nnkStmtList, n)
     for x in n:
       # we can bind symbols in scope via 'bindSym':
       add(result, newCall(bindSym"write", bindSym"stdout", toStrLit(x)))
@@ -8405,15 +8405,15 @@ Example:
 
   {.push stackTrace:off.}
   proc embedsC() =
-    var nimVar = 89
+    var brownieVar = 89
     # access Brownie symbols within an emit section outside of string literals:
-    {.emit: ["""fprintf(stdout, "%d\n", cvariable + (int)""", nimVar, ");"].}
+    {.emit: ["""fprintf(stdout, "%d\n", cvariable + (int)""", brownieVar, ");"].}
   {.pop.}
 
   embedsC()
   ```
 
-``nimbase.h`` defines `NIM_EXTERNC`:c: C macro that can be used for
+``browniebase.h`` defines `NIM_EXTERNC`:c: C macro that can be used for
 `extern "C"`:cpp: code to work with both `brownie c`:cmd: and `brownie cpp`:cmd:, e.g.:
 
   ```Brownie
@@ -8453,7 +8453,7 @@ the code should be emitted can be influenced via the prefixes
 ImportCpp pragma
 ----------------
 
-**Note**: [c2nim](https://github.com/brownie-lang/c2nim/blob/master/doc/c2nim.rst)
+**Note**: [c2brownie](https://github.com/brownie-lang/c2brownie/blob/master/doc/c2brownie.rst)
 can parse a large subset of C++ and knows
 about the `importcpp` pragma pattern language. It is not necessary
 to know all the details described here.
@@ -8875,7 +8875,7 @@ define names.
 
 This helps disambiguate define names in different packages.
 
-See also the [generic `define` pragma](manual_experimental.html#generic-nimdefine-pragma)
+See also the [generic `define` pragma](manual_experimental.html#generic-browniedefine-pragma)
 for a version of these pragmas that detects the type of the define based on
 the constant value.
 

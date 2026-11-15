@@ -495,12 +495,12 @@ Example code:
 
   ```brownie
   macro genRepeatEcho() =
-    result = newNimNode(nnkStmtList)
+    result = newBrownieNode(nnkStmtList)
 
-    var forStmt = newNimNode(nnkForStmt) # generate a for statement
+    var forStmt = newBrownieNode(nnkForStmt) # generate a for statement
     forStmt.add(ident("i")) # use the variable `i` for iteration
 
-    var rangeDef = newNimNode(nnkInfix).add(
+    var rangeDef = newBrownieNode(nnkInfix).add(
       ident("..")).add(
       newIntLitNode(3),newIntLitNode(5)) # iterate over the range 3..5
 

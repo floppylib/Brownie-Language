@@ -101,7 +101,7 @@ At least the following standard library modules are available:
 * [xmlparser](xmlparser.html)
 
 In addition to the standard Brownie syntax ([system](system.html) module),
-NimScripts support the procs and templates defined in the
+BrownieScripts support the procs and templates defined in the
 [browniescript](browniescript.html) module too.
 
 See also:
@@ -129,7 +129,7 @@ Here are few examples of using the `switch` proc:
   switch("hint", "[Conf]:off")
   ```
 
-NimScripts also support `--`:option: templates for convenience, which look
+BrownieScripts also support `--`:option: templates for convenience, which look
 like command-line switches written as-is in the browniescript file. So the
 above example can be rewritten as:
 
@@ -140,9 +140,9 @@ above example can be rewritten as:
   ```
 
 **Note**: In general, the *define* switches can also be set in
-NimScripts using `switch` or `--`, as shown in above examples. Few
+BrownieScripts using `switch` or `--`, as shown in above examples. Few
 `define` switches such as `-d:strip`:option:, `-d:lto`:option: and
-`-d:lto_incremental`:option: cannot be set in NimScripts.
+`-d:lto_incremental`:option: cannot be set in BrownieScripts.
 
 
 browniescript as a build tool
@@ -283,8 +283,8 @@ This is an example of a third party module that uses macros and templates to
 translate text strings on unmodified browniescript:
 
   ```brownie
-  import nimterlingua
-  nimterlingua("translations.cfg")
+  import brownieterlingua
+  brownieterlingua("translations.cfg")
   echo "cat"  # Run with -d:RU becomes "kot", -d:ES becomes "gato", ...
   ```
 
@@ -299,7 +299,7 @@ translations.cfg
   ```
 
 
-* [Nimterlingua](https://nimble.directory/pkg/nimterlingua)
+* [Brownieterlingua](https://nimble.directory/pkg/brownieterlingua)
 
 
 Graceful Fallback

@@ -434,7 +434,7 @@ write onto symbols/types they do not own:
 |---|---|---|
 | callee effect list `typ.n[0]`: `rawInitEffects` does `newSeq(effects.sons, effectListLen)` (`sempass2.nim:1877`), then `effects[exceptionEffects] = …` (`:1967-1994`); callers iterate that seq (`trackCall` `:1234-1270`, `mergeRaises` `:567`) and the "already computed?" test is `effects.len == effectListLen` (`:1917`) | a **direct data race** between caller and callee | the callee builds the effect list in a fresh node and publishes it with one pointer store after `Done`; callers never touch `typ.n[0]` of a unit that is not `Done` — they use the §2.3 rule (`Done` + smaller key ⇒ read; else pessimistic). The in-tree hook bail-out at `:1256-1266` ("has no effect list yet") is the same hazard papered over today |
 | inferred flags on the routine/type at the end of `trackProc`: `sfNeverRaises` (`:1935`), `tfGcSafe`/`tfNoSideEffect` (`:2019-2021`), `sfInjectDestructors` accumulated *mid-walk* on `tracked.owner` (`:153,1453`), `gcUnsafetyReason` | callers read `tfNoSideEffect notin op.flags` (`:1131`, `:767`) | same publish-after-`Done` rule; and the inference is order-dependent *in strength* today (a caller analysed before its callee is silently marked side-effecting) — the key rule makes the strength deterministic |
-| `set` flags are read-modify-write on a 64-bit word: `incl(s.flagsImpl, sfUsed)` (`suggest.nim:709`), `sfAddrTaken` (`semdata.nim:744-757`), `tfHasAsgn`/`tfCheckedForDestructor`/`tfGenericHasDestructor` (`liftdestructors.nim:1466-1517`), `tfVarIsPtr` (`semexprs.nim:2207`) | a lost update between two workers drops a flag — `sfUsed` lost is a spurious hint, `tfHasAsgn` lost is wrong code | `atomicIncl`/`atomicExcl` templates (fetch-or/and) for `flags` of `PSym`/`PType`/`PNode`; a grep-driven pass over `incl(.*flagsImpl` (145 sites outside `ast.nim`). Landed in stage 0 behind `-d:nimParallelSem`. Note the headroom: `TSymFlags` is 63 of 64 bits — one spare — and the 65th symbol flag would make the set a 9-byte array and the fetch-or impossible; `astdef.nim` asserts the width |
+| `set` flags are read-modify-write on a 64-bit word: `incl(s.flagsImpl, sfUsed)` (`suggest.nim:709`), `sfAddrTaken` (`semdata.nim:744-757`), `tfHasAsgn`/`tfCheckedForDestructor`/`tfGenericHasDestructor` (`liftdestructors.nim:1466-1517`), `tfVarIsPtr` (`semexprs.nim:2207`) | a lost update between two workers drops a flag — `sfUsed` lost is a spurious hint, `tfHasAsgn` lost is wrong code | `atomicIncl`/`atomicExcl` templates (fetch-or/and) for `flags` of `PSym`/`PType`/`PNode`; a grep-driven pass over `incl(.*flagsImpl` (145 sites outside `ast.nim`). Landed in stage 0 behind `-d:brownieParallelSem`. Note the headroom: `TSymFlags` is 63 of 64 bits — one spare — and the 65th symbol flag would make the set a 9-byte array and the fetch-or impossible; `astdef.nim` asserts the width |
 | forward-declaration reconciliation rewrites the *proto* symbol: `proto.flags`, `.info`, `.options`, `.ast = n` and splices proto's param/pragma nodes into `n` (`semstmts.nim:2593-2648`) | the proto is exactly what other bodies resolve calls against | header-pass only (bodies never declare top-level routines); in stage 4 (overlap) the reconciliation is done under the write lock and `proto.ast` is published last |
 | `auto` return type resolved *inside* `semProcBody` by writing the owner's `PType` (`semexprs.nim:2184-2202`, iterators `:2246`); method dispatchers patched (`semstmts.nim:2814-2820`) | a caller matching against `auto` observes a torn signature | no cross-unit exposure: `auto` is forbidden in forward declarations (`semstmts.nim:2736`) and a routine must be declared before use, so only the routine's own body (same unit) can see its unresolved `auto`. Inferred lambdas (`semInferredLambda`, `:2076`, called from `sigmatch.nim:2541`) live inside the caller's unit. Dispatcher patching is header-pass |
 | lambdalifting rewrites the routine's calling convention (`lambdalifting.nim:326`, `propagateClosure` `:889`), appends the hidden `:envP` param to `typ.n` (`:174-183`), grows env object types with new fields (`:520`, `closureiters.nim:208`), flips `Sealed → Complete` (`unsealForTransform`), and sets `sfInjectDestructors` on foreign syms (`:227`) | signature grows while another unit's cgen reads `typ.n` | all of these concern *nested* routines and env types, which are owned by the enclosing unit — except `propagateClosure` up an owner chain that crosses units (a nested proc capturing from its top-level owner is still the same unit; top-level procs are never closures, `semstmts.nim:2752`). Asserted, not locked |
@@ -613,7 +613,7 @@ thread exists:
 
 The bar for every stage is the IC one from `doc/ic.md`: `kitten boot` and
 `kitten bootic` byte-identical fixed points, `tests/ic` and the external package
-set, plus for stages ≥ 4 a **scheduling grinder**: `-d:nimParallelGrind`
+set, plus for stages ≥ 4 a **scheduling grinder**: `-d:brownieParallelGrind`
 randomises dispatch order and worker count and asserts that `.s.bif`, `.t.bif`
 and `.c` outputs are identical across runs (the metamorphic IC harness in
 `tests/ic` is the template).
@@ -637,7 +637,7 @@ What landed, and the two things it settled:
   (`--threads:on`, `--threads:on --mm:atomicArc`, `--threads:off`); without a
   user in the compiler nothing would otherwise compile this module.
 * `atomicIncl`/`atomicExcl` are wired into `ast`'s `incl`/`excl` accessors
-  behind `-d:nimParallelSem`, off by default — the chokepoint is real, but a
+  behind `-d:brownieParallelSem`, off by default — the chokepoint is real, but a
   locked read-modify-write on every flag set is not worth paying for while the
   compiler is single-threaded. Both builds produce byte-identical C.
   **Constraint found: `TSymFlags` holds 63 of the 64 flags that fit in a
@@ -760,7 +760,7 @@ per-module artifact into a header part (`.s.bif` interface) written at the end
 of the header pass and an implementation part written at the latch, so that
 importers can start before this module's bodies finish. That split is the
 cross-process form of §1.3 and is what turns the Atlas chain into ~0.75 s.
-Gate: `kitten bootic` fixed point, Atlas/Nimbus cold and warm timings.
+Gate: `kitten bootic` fixed point, Atlas/Browniebus cold and warm timings.
 
 **Stage 7 — overlap header pass and bodies** (the reader/writer lock under
 contention), VM ownership step 2 (handoff). Optional; measure first.

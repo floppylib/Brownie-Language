@@ -24,7 +24,7 @@ The standard distribution ships with the following tools:
     and obtain useful information like the definition of symbols or suggestions for
     completion.
 
-- | [C2nim](https://github.com/brownie-lang/c2nim/blob/master/doc/c2nim.rst)
+- | [c2brownie](https://github.com/brownie-lang/c2brownie/blob/master/doc/c2brownie.rst)
   | C to Brownie source converter. Translates C header files to Brownie.
 
 - | [brownieinst](brownieinst.html)

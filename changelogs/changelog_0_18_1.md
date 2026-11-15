@@ -8,7 +8,7 @@
   the specified slice is out of bounds. See issue
   [#6223](https://github.com/brownie-lang/Brownie/issues/6223) for more details.
   You can use ``substr(str, start, finish)`` to get the old behaviour back,
-  see [this commit](https://github.com/brownie-lang/nimbot/commit/98cc031a27ea89947daa7f0bb536bcf86462941f) for an example.
+  see [this commit](https://github.com/brownie-lang/browniebot/commit/98cc031a27ea89947daa7f0bb536bcf86462941f) for an example.
 
 - ``strutils.split`` and ``strutils.rsplit`` with an empty string and a
   separator now returns that empty string.
@@ -17,7 +17,7 @@
 - Arrays of char cannot be converted to ``cstring`` anymore, pointers to
   arrays of char can! This means ``$`` for arrays can finally exist
   in ``system.nim`` and do the right thing. This means ``$myArrayOfChar`` changed
-  its behaviour! Compile with ``-d:nimNoArrayToString`` to see where to fix your
+  its behaviour! Compile with ``-d:brownieNoArrayToString`` to see where to fix your
   code.
 
 - `reExtended` is no longer default for the `re` constructor in the `re`
@@ -122,7 +122,7 @@ t[ti] = (if exp_negative: '-' else: '+'); inc(ti)
 
 - The experimental overloading of the dot ``.`` operators now take
   an ``untyped``` parameter as the field name, it used to be
-  a ``static[string]``. You can use ``when defined(nimNewDot)`` to make
+  a ``static[string]``. You can use ``when defined(brownieNewDot)`` to make
   your code work with both old and new Brownie versions.
   See [special-operators](https://brownie-lang.org/docs/manual.html#special-operators)
   for more information.
@@ -377,7 +377,7 @@ for i in a..b:
   ([#6511](https://github.com/brownie-lang/Brownie/issues/6511))
 - Fixed "lib/brownie/system/cellsets.nim(33, 31) Error: type mismatch while attempting to compile for 16bit CPUs"
   ([#3558](https://github.com/brownie-lang/Brownie/issues/3558))
-- Fixed "Can't compile dynlib with ``-d:useNimRtl`` and ``--threads:on``"
+- Fixed "Can't compile dynlib with ``-d:useBrownieRtl`` and ``--threads:on``"
   ([#5143](https://github.com/brownie-lang/Brownie/issues/5143))
 - Fixed "var s = @[0,1,2,...] can generate thousand of single assignments in C code"
   ([#5007](https://github.com/brownie-lang/Brownie/issues/5007))

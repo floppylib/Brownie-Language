@@ -23,7 +23,7 @@ Installation
 Compile browniegrep with the command:
 
   ```cmd
-  brownie c -d:release tools/nimgrep.nim
+  brownie c -d:release tools/browniegrep.nim
   ```
 
 And copy the executable somewhere in your ``$PATH``.
@@ -102,8 +102,8 @@ All examples below use default PCRE Regex patterns:
 + To search recursively in Brownie files using style-insensitive identifiers:
 
     ```cmd
-    browniegrep --recursive --ext:'brownie|nims' --ignoreStyle
-    # short: -r --ext:'brownie|nims' -y
+    browniegrep --recursive --ext:'brownie|brownies' --ignoreStyle
+    # short: -r --ext:'brownie|brownies' -y
     ```
 
   .. Note:: we used `'` quotes to avoid special treatment of `|` symbol

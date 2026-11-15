@@ -203,7 +203,7 @@ parsed as `(a.?b).c` instead of `a.?(b.c)`.
 A warning is generated when a dot-like operator is used without `-d:nimPreviewDotLikeOps`.
 
 An important use case is to enable dynamic fields without affecting the
-built-in `.` operator, e.g. for `std/jsffi`, `std/json`, `pkg/nimpy`. Example:
+built-in `.` operator, e.g. for `std/jsffi`, `std/json`, `pkg/browniepy`. Example:
 ```brownie
 import std/json
 template `.?`(a: JsonNode, b: untyped{ident}): JsonNode =
@@ -267,7 +267,7 @@ The following modules were added (they are discussed in the rest of the text):
 Provides a wrapper for JS Fetch API.
 Example:
 ```brownie
-# requires -d:nimExperimentalAsyncjsThen
+# requires -d:brownieExperimentalAsyncjsThen
 import std/[jsfetch, asyncjs, jsconsole, jsffi, sugar]
 proc fn {.async.} =
   await fetch("https://api.github.com/users/torvalds".cstring)
@@ -350,7 +350,7 @@ Compatibility notes:
   bounds (it would delete the last entry then). Compile with `-d:nimStrictDelete` so
   that an index error is produced instead. Be aware however that your code might depend on
   this quirky behavior so a review process is required on your part before you can
-  use `-d:nimStrictDelete`. To make this review easier, use the `-d:nimAuditDelete`
+  use `-d:nimStrictDelete`. To make this review easier, use the `-d:brownieAuditDelete`
   switch, which pretends that `system.delete` is deprecated so that it is easier
   to see where it was used in your code.
   `-d:nimStrictDelete` will become the default in upcoming versions.
@@ -358,7 +358,7 @@ Compatibility notes:
   Please use `char` or `uint8` instead.
 - `repr` now doesn't insert trailing newlines; the previous behavior was very inconsistent,
   see [#16034](https://github.com/brownie-lang/Brownie/pull/16034).
-  Use `-d:nimLegacyReprWithNewline` for the previous behavior.
+  Use `-d:brownieLegacyReprWithNewline` for the previous behavior.
   `repr` now also renders ASTs correctly for user defined literals, setters, `do`, etc.
 - Deprecated `any`. See RFC [#281](https://github.com/brownie-lang/RFCs/issues/281).
 - The unary slice `..b` was deprecated, use `0..b` instead.
@@ -378,7 +378,7 @@ Compatibility notes:
 Compatibility notes:
 - `math.round` now rounds "away from zero" in the JS backend, which is consistent
   with other backends. See [#9125](https://github.com/brownie-lang/Brownie/pull/9125).
-  Use `-d:nimLegacyJsRound` for the previous behavior.
+  Use `-d:brownieLegacyJsRound` for the previous behavior.
 
 
 ## Random number generators: `std/random`, `std/sysrand`, `std/oids`
@@ -397,7 +397,7 @@ Compatibility notes:
 - Deprecated `std/mersenne`.
 - `random.initRand(seed)` now produces non-skewed values for the first call to
   `rand()` after initialization with a small (< 30000) seed.
-  Use `-d:nimLegacyRandomInitRand` to restore previous behavior for a transition
+  Use `-d:brownieLegacyRandomInitRand` to restore previous behavior for a transition
   time, see PR [#17467](https://github.com/brownie-lang/Brownie/pull/17467).
 
 
@@ -473,7 +473,7 @@ Compatibility notes:
 - `hashes.hash` can now support `object` and `ref` (can be overloaded in user code),
   if `-d:nimPreviewHashRef` is used. It is expected that this behavior
   becomes the new default in upcoming versions.
-- `hashes.hash(proc|ptr|ref|pointer)` now calls `hash(int)` and honors `-d:nimIntHash1`.
+- `hashes.hash(proc|ptr|ref|pointer)` now calls `hash(int)` and honors `-d:brownieIntHash1`.
   `hashes.hash(closure)` has also been improved.
 
 
@@ -520,7 +520,7 @@ Compatibility notes:
   This lets the OS perform its default actions, which might include core
   dumping (on select signals) and notifying the parent process about the cause
   of termination.
-- On POSIX systems, we now ignore `SIGPIPE` signals, use `-d:nimLegacySigpipeHandler`
+- On POSIX systems, we now ignore `SIGPIPE` signals, use `-d:brownieLegacySigpipeHandler`
   for previous behavior.
 - Added `posix_utils.osReleaseFile` to get system identification from `os-release`
   file on Linux and the BSDs.
@@ -598,7 +598,7 @@ Compatibility notes:
   `nnkTupleConstr` node. Will affect macros expecting nodes to be of `nnkPar`.
 - In `std/macros`, `treeRepr,lispRepr,astGenRepr` now represent SymChoice nodes
   in a collapsed way.
-  Use `-d:nimLegacyMacrosCollapseSymChoice` to get the previous behavior.
+  Use `-d:brownieLegacyMacrosCollapseSymChoice` to get the previous behavior.
 - Made custom op in `macros.quote` work for all statements.
 
 
@@ -632,7 +632,7 @@ Compatibility notes:
   characters in the decoded values. Prior versions would raise an error. This is
   no longer the case to comply with the HTML spec and other languages'
   implementations. Old behavior can be obtained with
-  `-d:nimLegacyParseQueryStrict`. `cgi.decodeData` which uses the same
+  `-d:brownieLegacyParseQueryStrict`. `cgi.decodeData` which uses the same
   underlying code is also updated the same way.
 
 
@@ -642,7 +642,7 @@ Compatibility notes:
 - Added `setCurrentException` for the JS backend.
 - `writeStackTrace` is available in the JS backend now.
 - Added `then`, `catch` to `std/asyncjs` for promise pipelining, for now hidden
-  behind `-d:nimExperimentalAsyncjsThen`.
+  behind `-d:brownieExperimentalAsyncjsThen`.
 - Added `std/jsfetch` module [Fetch](https://developer.mozilla.org/docs/Web/API/Fetch_API)
   wrapper for the JS target.
 - Added `std/jsheaders` module [Headers](https://developer.mozilla.org/en-US/docs/Web/API/Headers)
@@ -692,7 +692,7 @@ Compatibility notes:
 - Support for armv8l, refs [#18901](https://github.com/brownie-lang/Brownie/pull/18901).
 - Support for CROSSOS, refs [#18889](https://github.com/brownie-lang/Brownie/pull/18889).
 - The allocator for Nintendo Switch, which was nonfunctional because
-  of breaking changes in libnx, was removed, in favor of the new `-d:nimAllocPagesViaMalloc` option.
+  of breaking changes in libnx, was removed, in favor of the new `-d:brownieAllocPagesViaMalloc` option.
 - Allow reading parameters when compiling for Nintendo Switch.
 - `--nimcache` now correctly works in a cross-compilation setting.
 - Cross compilation targeting Windows was improved.
@@ -706,7 +706,7 @@ Compatibility notes:
   memory usage during compilation by a factor 1.25x
 - `std/jsonutils` deserialization is now up to 20x faster.
 - `os.copyFile` is now 2.5x faster on macOS, by using `copyfile` from `copyfile.h`;
-  use `-d:nimLegacyCopyFile` for macOS < 10.5.
+  use `-d:brownieLegacyCopyFile` for macOS < 10.5.
 - Float to string conversion is now 10x faster thanks to the Dragonbox algorithm,
   with `-d:nimPreviewFloatRoundtrip`.
 - `newSeqWith` is 3x faster.
@@ -796,7 +796,7 @@ and RFC [#168](https://github.com/brownie-lang/RFCs/issues/168) for details.
   This switch enforces that every symbol is written as it was declared, not enforcing
   the official Brownie style guide. To be enabled, this has to be combined either
   with `--styleCheck:error` or `--styleCheck:hint`.
-- Type mismatch errors now show more context, use `-d:nimLegacyTypeMismatch` for
+- Type mismatch errors now show more context, use `-d:brownieLegacyTypeMismatch` for
   previous behavior.
 - `typedesc[Foo]` now renders as such instead of `type Foo` in compiler messages.
 - `runnableExamples` now show originating location in stacktraces on failure.
@@ -851,10 +851,10 @@ Compatibility notes:
   [#16849](https://github.com/brownie-lang/Brownie/pull/16849),
   [#17993](https://github.com/brownie-lang/Brownie/pull/17993).
 - `--gc:orc` is now 10% faster than previously for common workloads.
-  If you have trouble with its changed behavior, compile with `-d:nimOldOrc`.
+  If you have trouble with its changed behavior, compile with `-d:brownieOldOrc`.
 - The `--gc:orc` algorithm was refined so that custom container types can participate in the
   cycle collection process. See the documentation of `=trace` for more details.
-- On embedded devices `malloc` can now be used instead of `mmap` via `-d:nimAllocPagesViaMalloc`.
+- On embedded devices `malloc` can now be used instead of `mmap` via `-d:brownieAllocPagesViaMalloc`.
   This is only supported for `--gc:orc` or `--gc:arc`.
 
 Compatibility notes:

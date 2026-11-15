@@ -1,5 +1,5 @@
 include "../lib/system/compilation.brownie"
-version = $NimMajor & "." & $NimMinor & "." & $NimPatch
+version = $BrownieMajor & "." & $BrownieMinor & "." & $BrowniePatch
 author = "Andreas Rumpf"
 description = "Compiler package providing the compiler sources as a library."
 license = "MIT"

@@ -35,7 +35,7 @@ the future.
 Later versions of the **Brownie compiler** will **assume** that the checks inside
 the `staticBoundChecks: on` environment have been proven correct and so
 it will **omit** the runtime checks. If you do not want this behavior, use
-instead `{.push staticBoundChecks: defined(nimDrNim).}`. This way the
+instead `{.push staticBoundChecks: defined(brownieDrNim).}`. This way the
 Brownie compiler remains unaware of the performed proofs but drbrownie will prove
 your code.
 
@@ -86,7 +86,7 @@ drbrownie adds 4 additional annotations (pragmas) to Brownie:
 - `assume`:idx:
 
 These pragmas are ignored by the Brownie compiler so that they don't have to
-be disabled via `when defined(nimDrNim)`.
+be disabled via `when defined(brownieDrNim)`.
 
 
 Invariant

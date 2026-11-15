@@ -1,7 +1,7 @@
-sfml-nimrod
+sfml-brownierod
 ===========
 
-Nimrod binding of SFML 2.0
+Brownierod binding of SFML 2.0
 
 This is only tested for Linux at the moment
 

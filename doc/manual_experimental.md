@@ -2247,21 +2247,21 @@ The return type can be referred to as `-> '0`, but this is optional and often no
 
 type
   CppPrinter {.importcpp, inheritable.} = object
-  NimPrinter {.exportc.} = object of CppPrinter
+  BrowniePrinter {.exportc.} = object of CppPrinter
 
 proc printConst(self: CppPrinter; message:cstring) {.importcpp.}
 CppPrinter().printConst(message)
 
 # override is optional.
-proc printConst(self: NimPrinter; message: cstring) {.virtual: "$1('2 #2) const override".} =
-  echo "NimPrinter: " & $message
+proc printConst(self: BrowniePrinter; message: cstring) {.virtual: "$1('2 #2) const override".} =
+  echo "BrowniePrinter: " & $message
 
-proc printConstRef(self: NimPrinter; message: cstring; flag:int32) {.virtual: "$1('2 #2, const '3& #3 ) const override".} =
-  echo "NimPrinterConstRef: " & $message
+proc printConstRef(self: BrowniePrinter; message: cstring; flag:int32) {.virtual: "$1('2 #2, const '3& #3 ) const override".} =
+  echo "BrowniePrinterConstRef: " & $message
 
-NimPrinter().printConst(message)
+BrowniePrinter().printConst(message)
 var val: int32 = 10
-NimPrinter().printConstRef(message, val)
+BrowniePrinter().printConstRef(message, val)
 
 ```
 
@@ -2303,13 +2303,13 @@ type
   CppClass* {.importcpp, inheritable.} = object
     x: int32
     y: int32
-  NimClass* = object of CppClass
+  BrownieClass* = object of CppClass
 
-proc makeNimClass(x: int32): NimClass {.constructor:"NimClass('1 #1) : CppClass(0, #1)".} =
+proc makeBrownieClass(x: int32): BrownieClass {.constructor:"BrownieClass('1 #1) : CppClass(0, #1)".} =
   result.x = x
 
 # Optional: define the default constructor explicitly
-proc makeCppClass(): NimClass {.constructor: "NimClass() : CppClass(0, 0)".} =
+proc makeCppClass(): BrownieClass {.constructor: "BrownieClass() : CppClass(0, 0)".} =
   result.x = 1
 ```
 
@@ -2440,14 +2440,14 @@ For example:
 
 ```brownie
 type
-  NimFunctor = object
+  BrownieFunctor = object
     discard
-proc invoke(f: NimFunctor; n: int) {.member: "operator ()('2 #2)".} = 
+proc invoke(f: BrownieFunctor; n: int) {.member: "operator ()('2 #2)".} = 
   echo "FunctorSupport!"
 
 {.experimental: "callOperator".}
-proc `()`(f: NimFunctor; n:int) {.importcpp: "#(@)" .} 
-NimFunctor()(1)
+proc `()`(f: BrownieFunctor; n:int) {.importcpp: "#(@)" .} 
+BrownieFunctor()(1)
 ```
 Notice we use the overload of `()` to have the same semantics in Brownie, but on the `importcpp` we import the functor as a function. 
 This allows to easy interop with functions that accepts for example a `const` operator in its signature. 

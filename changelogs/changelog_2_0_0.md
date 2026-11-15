@@ -201,16 +201,16 @@ const objTemplate = """
   };
 """;
 
-type NimChild {.codegenDecl: objTemplate .} = object of Base
+type BrownieChild {.codegenDecl: objTemplate .} = object of Base
 
-proc makeNimChild(val: int32): NimChild {.constructor: "NimClass('1 #1) : Base(#1)".} =
+proc makeBrownieChild(val: int32): BrownieChild {.constructor: "BrownieClass('1 #1) : Base(#1)".} =
   echo "It calls the base constructor passing " & $this.someValue
-  this.someValue = val * 2 # Notice how we can access `this` inside the constructor. It's of the type `ptr NimChild`.
+  this.someValue = val * 2 # Notice how we can access `this` inside the constructor. It's of the type `ptr BrownieChild`.
 
-proc print*(self: NimChild) {.virtual.} =
+proc print*(self: BrownieChild) {.virtual.} =
   echo "Some value is " & $self.someValue
 
-let child = makeNimChild(10)
+let child = makeBrownieChild(10)
 child.print()
 ```
 

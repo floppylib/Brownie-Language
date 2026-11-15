@@ -59,7 +59,7 @@ doAssert wd == getCurrentDir()
 
 when false:
   # this doesn't work in a 'koch testintall' environment
-  doAssert findExe("nim") != ""
+  doAssert findExe("brownie") != ""
 
 # general tests
 mode = ScriptMode.Verbose
@@ -80,11 +80,11 @@ doAssert dirExists("tests") == true
 discard selfExe()
 
 when defined(windows):
-  doAssert toExe("nim") == "nim.exe"
-  doAssert toDll("nim") == "nim.dll"
+  doAssert toExe("brownie") == "nim.exe"
+  doAssert toDll("brownie") == "nim.dll"
 else:
-  doAssert toExe("nim") == "nim"
-  doAssert toDll("nim") == "libnim.so"
+  doAssert toExe("brownie") == "brownie"
+  doAssert toDll("brownie") == "libnim.so"
 
 rmDir("tempXYZ")
 doAssertRaises(OSError):
@@ -98,9 +98,9 @@ when false:
   # this doesn't work in a 'koch testintall' environment
   cpFile("koch.nim", "tempXYZ/koch.nim")
   doAssert fileExists("tempXYZ/koch.nim") == true
-  cpDir("nimsuggest", "tempXYZ/.")
+  cpDir("browniesuggest", "tempXYZ/.")
   doAssert dirExists("tempXYZ/tests") == true
-  doAssert fileExists("tempXYZ/nimsuggest.nim") == true
+  doAssert fileExists("tempXYZ/browniesuggest.nim") == true
   rmFile("tempXYZ/koch.nim")
   doAssert fileExists("tempXYZ/koch.nim") == false
 

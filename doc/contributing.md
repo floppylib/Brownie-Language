@@ -362,7 +362,7 @@ to avoid name conflicts across packages.
   ```brownie
   # if in brownie sources
   when defined(allocStats): discard # bad, can cause conflicts
-  when defined(nimAllocStats): discard # preferred
+  when defined(brownieAllocStats): discard # preferred
   # if in a package `cligen`:
   when defined(debug): discard # bad, can cause conflicts
   when defined(cligenDebug): discard # preferred

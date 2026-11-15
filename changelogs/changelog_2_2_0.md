@@ -3,7 +3,7 @@
 
 ## Changes affecting backward compatibility
 
-- `-d:nimStrictDelete` becomes the default. An index error is produced when the index passed to `system.delete` is out of bounds. Use `-d:nimAuditDelete` to mimic the old behavior for backward compatibility.
+- `-d:nimStrictDelete` becomes the default. An index error is produced when the index passed to `system.delete` is out of bounds. Use `-d:brownieAuditDelete` to mimic the old behavior for backward compatibility.
 
 - The default user-agent in `std/httpclient` has been changed to `Brownie-httpclient/<version>` instead of `Brownie httpclient/<version>` which was incorrect according to the HTTP spec.
 
@@ -95,13 +95,13 @@ slots when enlarging a sequence.
   convert a value with a range type to its base type.
 - Added Viewport API for the JavaScript targets in the `dom` module.
 - Added `toSinglyLinkedRing` and `toDoublyLinkedRing` to `std/lists` to convert from `openArray`s.
-- ORC: To be enabled via `nimOrcStats` there is a new API called `GC_orcStats` that can be used to query how many
+- ORC: To be enabled via `brownieOrcStats` there is a new API called `GC_orcStats` that can be used to query how many
   objects the cyclic collector did free. If the number is zero that is a strong indicator that you can use `--mm:arc`
   instead of `--mm:orc`.
 - A `$` template is provided for `Path` in `std/paths`.
 - `std/hashes.hash(x:string)` changed to produce a 64-bit string `Hash` (based
 on Google's Farm Hash) which is also often faster than the present one.  Define
-`nimStringHash2` to get the old values back.  `--jsbigint=off` mode always only
+`brownieStringHash2` to get the old values back.  `--jsbigint=off` mode always only
 produces the old values.  This may impact your automated tests if they depend
 on hash order in some obvious or indirect way.  Using `sorted` or `OrderedTable`
 is often an easy workaround.

@@ -157,7 +157,7 @@ _browniesuggest()
 	    && candids+=(${opts[$((${#opts[@]}-3))]} ${opts[$((${#opts[@]}-2))]})
 	opts+=("" "--v4" "") \
 	    && candids+=(${opts[$((${#opts[@]}-3))]} ${opts[$((${#opts[@]}-2))]})
-	opts+=("" "--info" "nimVer protocolVer capabilities") \
+	opts+=("" "--info" "brownieVer protocolVer capabilities") \
 	    && candids+=(${opts[$((${#opts[@]}-3))]} ${opts[$((${#opts[@]}-2))]})
 	opts+=("" "--refresh" "") \
 	    && candids+=(${opts[$((${#opts[@]}-3))]} ${opts[$((${#opts[@]}-2))]})

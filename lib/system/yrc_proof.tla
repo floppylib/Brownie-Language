@@ -4,13 +4,13 @@
 \*
 \* ## Key Barrier Semantics Modeled
 \*
-\* ### Write Barrier (nimAsgnYrc)
+\* ### Write Barrier (brownieAsgnYrc)
 \*   1. atomicStoreN(dest, src, ATOMIC_RELEASE)
 \*      - Graph update is immediately visible to all threads (including collector)
 \*      - ATOMIC_RELEASE ensures all prior writes are visible before this store
 \*      - No lock required for graph updates (lock-free)
 \*
-\*   2. nimIncRefCyclic(src, true)
+\*   2. brownieIncRefCyclic(src, true)
 \*      - Acquires per-stripe lockInc[stripe] (fine-grained)
 \*      - Buffers increment in toInc[stripe] queue
 \*      - On overflow: acquires global lock, merges all stripes, applies increment
@@ -187,11 +187,11 @@ LogicalRC(obj) ==
 GetStripe(thread) == 0
 
 \* ============================================================================
-\* Write Barrier: nimAsgnYrc
+\* Write Barrier: brownieAsgnYrc
 \* ============================================================================
 \* The write barrier does:
 \*   1. atomicStoreN(dest, src, ATOMIC_RELEASE)  -- graph update is immediate
-\*   2. nimIncRefCyclic(src, true)                -- buffer inc(src)
+\*   2. brownieIncRefCyclic(src, true)                -- buffer inc(src)
 \*   3. yrcDec(tmp, desc)                         -- buffer dec(old)
 \*
 \* Key barrier semantics:

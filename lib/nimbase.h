@@ -21,8 +21,8 @@ __unix__
 */
 
 
-#ifndef NIMBASE_H
-#define NIMBASE_H
+#ifndef BROWNIEBASE_H
+#define BROWNIEBASE_H
 
 /*------------ declaring a custom attribute to support using LLVM's Address Sanitizer ------------ */
 
@@ -586,34 +586,34 @@ NIM_STATIC_ASSERT(sizeof(NI) == sizeof(void*) && NIM_INTBITS == sizeof(NI)*8, "P
 #endif
 
 /* these exist to make the codegen logic simpler */
-#define nimModInt(a, b, res) (((*res) = (a) % (b)), 0)
-#define nimModInt64(a, b, res) (((*res) = (a) % (b)), 0)
+#define brownieModInt(a, b, res) (((*res) = (a) % (b)), 0)
+#define brownieModInt64(a, b, res) (((*res) = (a) % (b)), 0)
 
 #if (!defined(_MSC_VER) || defined(__clang__)) && !defined(NIM_EmulateOverflowChecks)
   /* these exist because we cannot have .compilerProcs that are importc'ed
     by a different name */
 
-  #define nimAddInt64(a, b, res) __builtin_saddll_overflow(a, b, (long long int*)res)
-  #define nimSubInt64(a, b, res) __builtin_ssubll_overflow(a, b, (long long int*)res)
-  #define nimMulInt64(a, b, res) __builtin_smulll_overflow(a, b, (long long int*)res)
+  #define brownieAddInt64(a, b, res) __builtin_saddll_overflow(a, b, (long long int*)res)
+  #define brownieSubInt64(a, b, res) __builtin_ssubll_overflow(a, b, (long long int*)res)
+  #define brownieMulInt64(a, b, res) __builtin_smulll_overflow(a, b, (long long int*)res)
 
   #if NIM_INTBITS == 32
     #if ((defined(__arm__) && !defined(__unix__)) || defined(__riscv) || (defined(__xtensa__) && !defined(__unix__))) && defined(__GNUC__)
       /* arm-none-eabi-gcc, riscv32-unknown-elf-gcc and xtensa-esp-elf-gcc targets
          define int32_t as long int */
-      #define nimAddInt(a, b, res) __builtin_saddl_overflow(a, b, res)
-      #define nimSubInt(a, b, res) __builtin_ssubl_overflow(a, b, res)
-      #define nimMulInt(a, b, res) __builtin_smull_overflow(a, b, res)
+      #define brownieAddInt(a, b, res) __builtin_saddl_overflow(a, b, res)
+      #define brownieSubInt(a, b, res) __builtin_ssubl_overflow(a, b, res)
+      #define brownieMulInt(a, b, res) __builtin_smull_overflow(a, b, res)
     #else
-      #define nimAddInt(a, b, res) __builtin_sadd_overflow(a, b, res)
-      #define nimSubInt(a, b, res) __builtin_ssub_overflow(a, b, res)
-      #define nimMulInt(a, b, res) __builtin_smul_overflow(a, b, res)
+      #define brownieAddInt(a, b, res) __builtin_sadd_overflow(a, b, res)
+      #define brownieSubInt(a, b, res) __builtin_ssub_overflow(a, b, res)
+      #define brownieMulInt(a, b, res) __builtin_smul_overflow(a, b, res)
     #endif
   #else
     /* map it to the 'long long' variant */
-    #define nimAddInt(a, b, res) __builtin_saddll_overflow(a, b, (long long int*)res)
-    #define nimSubInt(a, b, res) __builtin_ssubll_overflow(a, b, (long long int*)res)
-    #define nimMulInt(a, b, res) __builtin_smulll_overflow(a, b, (long long int*)res)
+    #define brownieAddInt(a, b, res) __builtin_saddll_overflow(a, b, (long long int*)res)
+    #define brownieSubInt(a, b, res) __builtin_ssubll_overflow(a, b, (long long int*)res)
+    #define brownieMulInt(a, b, res) __builtin_smulll_overflow(a, b, (long long int*)res)
   #endif
 #endif
 
@@ -625,4 +625,4 @@ NIM_STATIC_ASSERT(sizeof(NI) == sizeof(void*) && NIM_INTBITS == sizeof(NI)*8, "P
 using std::_setjmp;
 #endif
 
-#endif /* NIMBASE_H */
+#endif /* BROWNIEBASE_H */

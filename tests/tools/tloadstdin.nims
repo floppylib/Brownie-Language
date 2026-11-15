@@ -1,1 +1,1 @@
---d:nimscriptConfigLoaded
+--d:browniescriptConfigLoaded

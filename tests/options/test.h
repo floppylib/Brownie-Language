@@ -1,5 +1,5 @@
 #pragma once
-#include "nimbase.h"
+#include "browniebase.h"
 struct Foo {
   int a;
 };

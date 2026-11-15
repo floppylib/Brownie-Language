@@ -109,7 +109,7 @@ you don't need a debug version of the compiler (which runs slower), you can repl
 
 See also:
 
-- Crossplatform C/Cpp/Valgrind/JS Bisect in GitHub: https://github.com/juancarlospaco/nimrun-action#examples
+- Crossplatform C/Cpp/Valgrind/JS Bisect in GitHub: https://github.com/juancarlospaco/brownierun-action#examples
 
 
 Building an instrumented compiler
@@ -136,8 +136,8 @@ enabled. Here are compiler options that are of interest when debugging:
 * `--opt:speed`:option:\: build with optimizations enabled
 * `--debugger:native`:option:\: enables `--debuginfo --lineDir:on`:option: for using
   a native debugger like GDB, LLDB or CDB
-* `-d:nimDebug`:option: cause calls to `quit` to raise an assertion exception
-* `-d:nimDebugUtils`:option:\: enables various debugging utilities;
+* `-d:brownieDebug`:option: cause calls to `quit` to raise an assertion exception
+* `-d:brownieDebugUtils`:option:\: enables various debugging utilities;
   see `compiler/debugutils`
 * `-d:stacktraceMsgs -d:nimCompilerStacktraceHints`:option:\: adds some additional
   stacktrace hints; see https://github.com/brownie-lang/Brownie/pull/13351
@@ -277,7 +277,7 @@ breakpoints are triggered. The same methods as in [Debug logging] can be applied
 here when combined with calls to the debug helpers `enteringDebugSection()`:brownie:
 and `exitingDebugSection()`:brownie:.
 
-#. Compile the temp compiler with `--debugger:native -d:nimDebugUtils`:option:
+#. Compile the temp compiler with `--debugger:native -d:brownieDebugUtils`:option:
 #. Set your desired breakpoints or watchpoints.
 #. Configure your debugger:
    * GDB: execute `source tools/compiler.gdb` at startup
@@ -322,7 +322,7 @@ Runtimes
 
 Brownie has two different runtimes, the "old runtime" and the "new runtime". The old
 runtime supports the old GCs (markAndSweep, refc, Boehm), the new runtime supports
-ARC/ORC. The new runtime is active `when defined(nimV2)`.
+ARC/ORC. The new runtime is active `when defined(brownieV2)`.
 
 
 Coding Guidelines

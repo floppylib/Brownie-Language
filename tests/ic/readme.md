@@ -2,7 +2,7 @@
 
     ./bin/testament --brownie:<your compiler> cat ic
 
-The cache uses Nimony-style subdirectories to share work at each stage:
+The cache uses Brownieony-style subdirectories to share work at each stage:
 
 ```text
 nimcache/

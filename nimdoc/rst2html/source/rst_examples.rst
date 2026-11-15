@@ -286,7 +286,7 @@ deprecated pragma
 
 The deprecated pragma is used to mark a symbol as deprecated:
 
-**Note**: `c2nim <https://github.com/brownie-lang/c2nim/blob/master/doc/c2nim.rst>`_ can parse a large subset of C++ and knows
+**Note**: `c2brownie <https://github.com/brownie-lang/c2brownie/blob/master/doc/c2brownie.rst>`_ can parse a large subset of C++ and knows
 about the ``importcpp`` pragma pattern language. It is not necessary
 to know all the details described here.
 

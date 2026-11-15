@@ -29,7 +29,7 @@
 - `-d:nimPreviewFloatRoundtrip` becomes the default. `system.addFloat` and `system.$` now can produce string representations of
 floating point numbers that are minimal in size and possess round-trip and correct
 rounding guarantees (via the
-[Dragonbox](https://raw.githubusercontent.com/jk-jeon/dragonbox/master/other_files/Dragonbox.pdf) algorithm). Use `-d:nimLegacySprintf` to emulate old behaviors.
+[Dragonbox](https://raw.githubusercontent.com/jk-jeon/dragonbox/master/other_files/Dragonbox.pdf) algorithm). Use `-d:brownieLegacySprintf` to emulate old behaviors.
 
 - The `default` parameter of `tables.getOrDefault` has been renamed to `def` to
   avoid conflicts with `system.default`, so named argument usage for this
@@ -70,7 +70,7 @@ parameter and result types, not just their source-level shape. Use
   `lent` value, so a closure that captures the loop variable of such a `for`
   loop no longer compiles ("cannot be captured as it would violate memory
   safety"). Copy the variable first (`for x in a: let x = x`), or use
-  `-d:nimNoLentIterators` to restore the old behavior. The JS backend and
+  `-d:brownieNoLentIterators` to restore the old behavior. The JS backend and
   browniescript are unaffected: there `items` yields copies.
 
 - `std/asyncnet` (and `AsyncHttpClient` with it) now checks that the server
@@ -244,7 +244,7 @@ parameter and result types, not just their source-level shape. Use
   of type `owned proc ()` no longer makes its enclosing type cyclic.
   Without the feature `owned` continues to be erased.
 
-- Sum types, ported from Nimony: an object `case` without a discriminator
+- Sum types, ported from Brownieony: an object `case` without a discriminator
   declares a sum type. The branch names construct values, and a pattern
   matching `case` binds the fields of a branch:
 

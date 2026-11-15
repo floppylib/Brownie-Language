@@ -26,7 +26,7 @@
   to the `dom` module for the JavaScript target.
 - The default hash for `Ordinal` has changed to something more bit-scrambling.
   `import hashes; proc hash(x: myInt): Hash = hashIdentity(x)` recovers the old
-  one in an instantiation context while `-d:nimIntHash1` recovers it globally.
+  one in an instantiation context while `-d:brownieIntHash1` recovers it globally.
 - `deques.peekFirst` and `deques.peekLast` now have `var Deque[T] -> var T` overloads.
 - File handles created from high-level abstractions in the stdlib will no longer
   be inherited by child processes. In particular, these modules are affected:
@@ -38,7 +38,7 @@
   ease the writing of multi-process servers, where sockets inheritance is
   desired.
 
-  For a transition period, define `nimInheritHandles` to enable file handle
+  For a transition period, define `brownieInheritHandles` to enable file handle
   inheritance by default. This flag does **not** affect the `selectors` module
   due to the differing semantics between operating systems.
 
@@ -420,7 +420,7 @@
   ([#8481](https://github.com/brownie-lang/Brownie/issues/8481))
 - Fixed "tests/stdlib/tgetaddrinfo.nim fails on NetBSD"
   ([#14091](https://github.com/brownie-lang/Brownie/issues/14091))
-- Fixed "tests/niminaction/Chapter8/sdl/sdl_test.nim fails on NetBSD"
+- Fixed "tests/brownieinaction/Chapter8/sdl/sdl_test.nim fails on NetBSD"
   ([#14088](https://github.com/brownie-lang/Brownie/issues/14088))
 - Fixed "Incorrect escape sequence for example in jsffi library documentation"
   ([#14110](https://github.com/brownie-lang/Brownie/issues/14110))
@@ -460,7 +460,7 @@
   ([#14151](https://github.com/brownie-lang/Brownie/issues/14151))
 - Fixed "proc execCmdEx doesn't work with -d:useWinAnsi"
   ([#14203](https://github.com/brownie-lang/Brownie/issues/14203))
-- Fixed "Use -d:nimEmulateOverflowChecks by default?"
+- Fixed "Use -d:brownieEmulateOverflowChecks by default?"
   ([#14209](https://github.com/brownie-lang/Brownie/issues/14209))
 - Fixed "Old sequences with destructor objects bug"
   ([#14217](https://github.com/brownie-lang/Brownie/issues/14217))
@@ -520,7 +520,7 @@
   ([#14380](https://github.com/brownie-lang/Brownie/issues/14380))
 - Fixed "runnableExamples block with `except` on specified error fails with `brownie doc`"
   ([#12746](https://github.com/brownie-lang/Brownie/issues/12746))
-- Fixed "compiler as a library: findNimStdLibCompileTime fails to find system.nim"
+- Fixed "compiler as a library: findBrownieStdLibCompileTime fails to find system.nim"
   ([#12293](https://github.com/brownie-lang/Brownie/issues/12293))
 - Fixed "5 bugs with importcpp exceptions"
   ([#14369](https://github.com/brownie-lang/Brownie/issues/14369))
@@ -712,7 +712,7 @@
   ([#14194](https://github.com/brownie-lang/Brownie/issues/14194))
 - Fixed ""Could not load" dynamic library at runtime because of hidden dependency"
   ([#2408](https://github.com/brownie-lang/Brownie/issues/2408))
-- Fixed "--gc:arc generate invalid code for {.global.} (`«nimErr_» in NIM_UNLIKELY`)"
+- Fixed "--gc:arc generate invalid code for {.global.} (`«brownieErr_» in NIM_UNLIKELY`)"
   ([#14480](https://github.com/brownie-lang/Brownie/issues/14480))
 - Fixed "Using `^` from stdlib/math along with converters gives a match for types that aren't SomeNumber"
   ([#15033](https://github.com/brownie-lang/Brownie/issues/15033))

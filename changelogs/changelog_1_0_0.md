@@ -3,12 +3,12 @@
 
 ## Changes affecting backwards compatibility
 
-- The switch ``-d:nimBinaryStdFiles`` does not exist anymore. Instead
+- The switch ``-d:brownieBinaryStdFiles`` does not exist anymore. Instead
   stdin/stdout/stderr are binary files again. This change only affects
   Windows.
 
 - On Windows console applications the code-page is set at program startup
-  to UTF-8. Use the new switch `-d:nimDontSetUtf8CodePage` to disable this
+  to UTF-8. Use the new switch `-d:brownieDontSetUtf8CodePage` to disable this
   feature.
 
 - The language definition and compiler are now stricter about ``gensym``'ed

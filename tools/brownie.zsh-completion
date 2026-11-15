@@ -9,7 +9,7 @@
 #     fpath=( ~/scripts "${fpath[@]}" )
 
 _brownie() {
-  local -a nimCommands=(
+  local -a brownieCommands=(
     {compile,c}:'compile project with default code generator C'
     {compileToC,cc}:'compile project with C code generator'
     {compileToCpp,cpp}:'compile project to C++ code'
@@ -33,12 +33,12 @@ _brownie() {
   _arguments '*:: :->anyState' && return 0
 
   if (( CURRENT == 1 )); then
-    _describe -t commands "Brownie commands" nimCommands -V1
+    _describe -t commands "Brownie commands" brownieCommands -V1
     return
   fi
 
   local -a conditionalSymbols=(
-    release danger mingw androidNDK useNimRtl useMalloc noSignalHandler ssl
+    release danger mingw androidNDK useBrownieRtl useMalloc noSignalHandler ssl
     debug leanCompiler gcDestructors)
   local -a sharedOpts=(
     {--define\\:-,-d\\:-}'[define a conditional symbol]:x:($conditionalSymbols)'

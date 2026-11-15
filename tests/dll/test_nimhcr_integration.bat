@@ -6,5 +6,5 @@ set NIM_FLAGS=-d:debug
 
 set HCR_FLAGS=--forceBuild --hotCodeReloading:on --nimcache:nimcache %NIM_FLAGS%
 
-%BROWNIE% %HCR_FLAGS% c nimhcr_integration.nim
-nimhcr_integration %BROWNIE% %HCR_FLAGS% c nimhcr_integration.nim
+%BROWNIE% %HCR_FLAGS% c browniehcr_integration.nim
+browniehcr_integration %BROWNIE% %HCR_FLAGS% c browniehcr_integration.nim

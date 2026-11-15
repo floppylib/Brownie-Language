@@ -57,7 +57,7 @@ brownie	z15	testproject.html#z15.t	template z15()		345
 brownie	asyncFun1	testproject.html#asyncFun1	proc asyncFun1(): Future[int]		370
 brownie	asyncFun2	testproject.html#asyncFun2	proc asyncFun2(): owned(Future[void])		373
 brownie	asyncFun3	testproject.html#asyncFun3	proc asyncFun3(): owned(Future[void])		374
-brownie	testNimDocTrailingExample	testproject.html#testNimDocTrailingExample.t	template testNimDocTrailingExample()		383
+brownie	testBrownieDocTrailingExample	testproject.html#testBrownieDocTrailingExample.t	template testBrownieDocTrailingExample()		383
 brownie	Circle	testproject.html#Circle	Shapes.Circle		392
 brownie	Triangle	testproject.html#Triangle	Shapes.Triangle		392
 brownie	Rectangle	testproject.html#Rectangle	Shapes.Rectangle		392

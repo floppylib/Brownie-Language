@@ -191,6 +191,6 @@ Advanced options:
   --deepcopy:on|off         enable 'system.deepCopy' for ``--mm:arc|orc``
   --jsbigint64:on|off       toggle the use of BigInt for 64-bit integers for
                             the JavaScript backend (default: on)
-  --nimBasePattern:nimbase.h
-                            allows to specify a custom pattern for `nimbase.h`
+  --brownieBasePattern:browniebase.h
+                            allows to specify a custom pattern for `browniebase.h`
   --spawncodegen:on|off     spawn a separate process for the codegen phase

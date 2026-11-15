@@ -5,7 +5,7 @@ The changes should go to changelog.md!
 
 ## Changes affecting backward compatibility
 
-- `foo` now behaves differently, use `-d:nimLegacyFoo` for previous behavior.
+- `foo` now behaves differently, use `-d:brownieLegacyFoo` for previous behavior.
 
 ## Standard library additions and changes
 

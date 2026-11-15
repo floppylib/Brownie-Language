@@ -347,7 +347,7 @@ classic path, not new machinery.
 Design notes and open decisions
 ===============================
 
-The per-module backend (above) mirrors Nimony's ``src/nimony/deps.nim``: the
+The per-module backend (above) mirrors Brownieony's ``src/brownieony/deps.nim``: the
 backend stopped re-implementing `nifmake`; each stage is a build rule, so reuse is
 just mtime checks and the merge stage is the only cross-module coordination.
 
@@ -525,7 +525,7 @@ See also
 ========
 
 - NIF format spec: [nifspec/doc/nif-spec.md](../nifspec/doc/nif-spec.md)
-- NIFC (C-like target) spec: dist/nimony/doc/nifc-spec.md
+- NIFC (C-like target) spec: dist/brownieony/doc/nifc-spec.md
 
 Testing IC
 ==========
@@ -565,7 +565,7 @@ $file"`) simply gains the switch — no verb rewriting, and the C++ corpus comes
 along for free. Each also gets a private nimcache; without one they would share
 a cache and thrash it.
 
-To keep that affordable, testament borrows nimony's hastur model
+To keep that affordable, testament borrows brownieony's hastur model
 (`warmupSharedCache` + `prefillFromWarmup`): a generated warmup program pulling in
 `system` and the most-imported stdlib modules is compiled once per distinct
 compile configuration into `nimcache/ic_warmup_<hash>`, and each test's empty
@@ -608,7 +608,7 @@ change for that, and they are worth knowing because they are the shape of every
   granularity (``.nim.cpp`` / ``.nim.m`` / ``.nim.c``).
 
 * **C++ has no designated initializers**, so the RTTI record is a bare variable
-  that ``DatInit`` fills field by field. That bare ``TNimTypeV2 x;`` is a
+  that ``DatInit`` fills field by field. That bare ``TBrownieTypeV2 x;`` is a
   tentative definition, which C's linker merges and C++'s does not — every TU
   that demanded the type defined it. It now gets the same extern-declaration +
   owned-``'d'``-definition split the C flavour has.
