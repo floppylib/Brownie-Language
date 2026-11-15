@@ -1,5 +1,5 @@
-include "../lib/system/compilation.brownie"
-version = $BrownieMajor & "." & $BrownieMinor & "." & $BrowniePatch
+include "../lib/system/compilation.nim"
+version = $NimMajor & "." & $NimMinor & "." & $NimPatch
 author = "Andreas Rumpf"
 description = "Tool for providing auto completion data for Brownie source code."
 license = "MIT"
