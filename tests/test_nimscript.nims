@@ -1,5 +1,5 @@
-# This browniescript is used to test if the following modules can be imported
-# http://brownie-lang.org/docs/brownie-script.html
+# This nimscript is used to test if the following modules can be imported
+# http://nim-lang.org/docs/nims.html
 
 {.warning[UnusedImport]: off.}
 
@@ -89,7 +89,7 @@ import stdtest/testutils
 import stdlib/trandom
 import stdlib/tosenv
 
-echo "browniescript imports are successful."
+echo "Nimscript imports are successful."
 
 block:
   doAssert "./foo//./bar/".normalizedPath == "foo/bar".unixToNativePath
@@ -100,7 +100,7 @@ block:
 block: # #14142
   discard dirExists("/usr")
   discard fileExists("/usr/foo")
-  discard findExe("brownie")
+  discard findExe("nim")
 
 block:
   doAssertRaises(AssertionDefect): doAssert false

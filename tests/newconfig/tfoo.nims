@@ -58,8 +58,8 @@ cd(wd)
 doAssert wd == getCurrentDir()
 
 when false:
-  # this doesn't work in a 'kitten testintall' environment
-  doAssert findExe("brownie") != ""
+  # this doesn't work in a 'koch testintall' environment
+  doAssert findExe("nim") != ""
 
 # general tests
 mode = ScriptMode.Verbose
@@ -80,11 +80,11 @@ doAssert dirExists("tests") == true
 discard selfExe()
 
 when defined(windows):
-  doAssert toExe("brownie") == "brownie.exe"
-  doAssert toDll("brownie") == "brownie.dll"
+  doAssert toExe("nim") == "nim.exe"
+  doAssert toDll("nim") == "nim.dll"
 else:
-  doAssert toExe("brownie") == "brownie"
-  doAssert toDll("brownie") == "libnim.so"
+  doAssert toExe("nim") == "nim"
+  doAssert toDll("nim") == "libnim.so"
 
 rmDir("tempXYZ")
 doAssertRaises(OSError):
@@ -92,17 +92,17 @@ doAssertRaises(OSError):
 doAssert dirExists("tempXYZ") == false
 mkDir("tempXYZ")
 doAssert dirExists("tempXYZ") == true
-doAssert fileExists("tempXYZ/kitten.brownie") == false
+doAssert fileExists("tempXYZ/koch.nim") == false
 
 when false:
-  # this doesn't work in a 'kitten testintall' environment
-  cpFile("kitten.brownie", "tempXYZ/kitten.brownie")
-  doAssert fileExists("tempXYZ/kitten.brownie") == true
-  cpDir("browniesuggest", "tempXYZ/.")
+  # this doesn't work in a 'koch testintall' environment
+  cpFile("koch.nim", "tempXYZ/koch.nim")
+  doAssert fileExists("tempXYZ/koch.nim") == true
+  cpDir("nimsuggest", "tempXYZ/.")
   doAssert dirExists("tempXYZ/tests") == true
-  doAssert fileExists("tempXYZ/browniesuggest.brownie") == true
-  rmFile("tempXYZ/kitten.brownie")
-  doAssert fileExists("tempXYZ/kitten.brownie") == false
+  doAssert fileExists("tempXYZ/nimsuggest.nim") == true
+  rmFile("tempXYZ/koch.nim")
+  doAssert fileExists("tempXYZ/koch.nim") == false
 
 rmDir("tempXYZ")
 doAssert dirExists("tempXYZ") == false

@@ -1,6 +1,6 @@
 mode = ScriptMode.Verbose
 proc build() =
-  echo "building brownie... "
+  echo "building nim... "
   exec "sleep 10"
   exec "nonexistant command"
   echo getCurrentDir()

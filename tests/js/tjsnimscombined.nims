@@ -1,1 +1,1 @@
-# test the condition where both `js` and `browniescript` are defined (browniescript receives priority)
+# test the condition where both `js` and `nimscript` are defined (nimscript receives priority)
