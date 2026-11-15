@@ -27,3 +27,8 @@ if not exist %nim_csources% (
 bin\brownie.exe c --noNimblePath --skipUserCfg --skipParentCfg --hints:off -o:kitten.exe koch.nim
 kitten.exe boot -d:release --skipUserCfg --skipParentCfg --hints:off
 kitten.exe tools --skipUserCfg --skipParentCfg --hints:off
+
+rem Publish Brownie-branded executable names alongside original build outputs.
+if exist bin\nimgrep.exe copy /Y bin\nimgrep.exe bin\browniegrep.exe >nul
+if exist bin\nimsuggest.exe copy /Y bin\nimsuggest.exe bin\browniesuggest.exe >nul
+if exist bin\nimpretty.exe copy /Y bin\nimpretty.exe bin\browniepretty.exe >nul
