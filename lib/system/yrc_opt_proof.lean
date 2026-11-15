@@ -413,7 +413,7 @@ structure SlotState where
 def finishParked (st : SlotState) : SlotState := { st with phase := 0 }
 
 /-- releasePending, after the grace wait: the tag is given up first, then
-    the destructors and `brownieRawDispose` run. -/
+    the destructors and `nimRawDispose` run. -/
 def releaseSlot (st : SlotState) : SlotState := { st with tag := 0 }
 
 theorem finishParked_keeps_tag (st : SlotState) :
@@ -644,7 +644,7 @@ theorem release_wait_acyclic (capturing releasing : Nat → Prop)
   ## What is NOT proved
 
   • Slot-retention liveness. A parked batch holds its tag slot until the
-    owning thread's NEXT collection (or GC_runOrc / brownieYrcThreadTeardown,
+    owning thread's NEXT collection (or GC_runOrc / nimYrcThreadTeardown,
     both of which call releasePending). A thread that parks a batch and
     then never collects again keeps a slot occupied; with enough such
     threads the table could saturate and other collectors would park
@@ -655,7 +655,7 @@ theorem release_wait_acyclic (capturing releasing : Nat → Prop)
   • Destructor timing. Deferral runs a dead batch's destructors one
     collection later. Safety is C6; the observable-behaviour claim
     ("nothing else observes the delay, the cells are unreachable and
-    their references already dropped") is an argument about the Brownie
+    their references already dropped") is an argument about the Nim
     language semantics, not modelled here.
   • Conservatism of tag retention. While a batch is parked, the tag also
     protects SURVIVORS that kept a stale tag (dirty and pruned SCCs are

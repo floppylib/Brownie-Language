@@ -2,7 +2,7 @@
 extern "C" {
 #endif
 
-int browniehcrCompileHeader(int x);
+int nimhcrCompileHeader(int x);
 
 #ifdef __cplusplus
 }

@@ -1,10 +1,10 @@
-set BROWNIE=brownie
+set NIM=nim
 set NIM_FLAGS=-d:debug
 
-%BROWNIE% c --outdir:"." %NIM_FLAGS% ../../lib/browniertl.nim
-%BROWNIE% c --outdir:"." %NIM_FLAGS% ../../lib/browniehcr.nim
+%NIM% c --outdir:"." %NIM_FLAGS% ../../lib/nimrtl.nim
+%NIM% c --outdir:"." %NIM_FLAGS% ../../lib/nimhcr.nim
 
 set HCR_FLAGS=--forceBuild --hotCodeReloading:on --nimcache:nimcache %NIM_FLAGS%
 
-%BROWNIE% %HCR_FLAGS% c browniehcr_integration.nim
-browniehcr_integration %BROWNIE% %HCR_FLAGS% c browniehcr_integration.nim
+%NIM% %HCR_FLAGS% c nimhcr_integration.nim
+nimhcr_integration %NIM% %HCR_FLAGS% c nimhcr_integration.nim

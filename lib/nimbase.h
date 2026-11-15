@@ -1,6 +1,6 @@
 /*
 
-            Brownie's Runtime Library
+            Nim's Runtime Library
         (c) Copyright 2015 Andreas Rumpf
 
     See the file "copying.txt", included in this
@@ -21,13 +21,13 @@ __unix__
 */
 
 
-#ifndef BROWNIEBASE_H
-#define BROWNIEBASE_H
+#ifndef NIMBASE_H
+#define NIMBASE_H
 
 /*------------ declaring a custom attribute to support using LLVM's Address Sanitizer ------------ */
 
 /*
-   This definition exists to provide support for using the LLVM ASAN (Address SANitizer) tooling with Brownie. This
+   This definition exists to provide support for using the LLVM ASAN (Address SANitizer) tooling with Nim. This
    should only be used to mark implementations of the GC system that raise false flags with the ASAN tooling, or
    for functions that are hot and need to be disabled for performance reasons. Based on the official ASAN
    documentation, both the clang and gcc compilers are supported. In addition to that, a check is performed to
@@ -48,7 +48,7 @@ __unix__
 #endif
 
 
-/* ------------ ignore typical warnings in Brownie-generated files ------------- */
+/* ------------ ignore typical warnings in Nim-generated files ------------- */
 #if defined(__GNUC__) || defined(__clang__)
 #  pragma GCC diagnostic ignored "-Wpragmas"
 #  pragma GCC diagnostic ignored "-Wwritable-strings"
@@ -301,7 +301,7 @@ __unix__
 #endif
 
 
-/* wrap all Brownie typedefs into namespace Brownie */
+/* wrap all Nim typedefs into namespace Nim */
 #ifdef USE_NIM_NAMESPACE
 #ifdef HAVE_CSTDINT
 #include <cstdint>
@@ -313,7 +313,7 @@ namespace USE_NIM_NAMESPACE {
 
 // preexisting check, seems paranoid, maybe remove
 #if defined(NIM_TRUE) || defined(NIM_FALSE) || defined(NIM_BOOL)
-#error "brownie reserved preprocessor macros clash"
+#error "nim reserved preprocessor macros clash"
 #endif
 
 /* bool types (C++ has it): */
@@ -329,7 +329,7 @@ typedef unsigned char NIM_BOOL; // best effort
 NIM_STATIC_ASSERT(sizeof(NIM_BOOL) == 1, ""); // check whether really needed
 NIM_STATIC_ASSERT(CHAR_BIT == 8, "");
   // fail fast for (rare) environments where this doesn't hold, as some implicit
-  // assumptions would need revisiting (e.g. `uint8` or https://github.com/brownie-lang/Brownie/pull/18505)
+  // assumptions would need revisiting (e.g. `uint8` or https://github.com/nim-lang/Nim/pull/18505)
 
 #define NIM_TRUE true
 #define NIM_FALSE false
@@ -451,7 +451,7 @@ typedef NU8 NU;
 
 // for now there isn't an easy way for C code to reach the program result
 // when hot code reloading is ON - users will have to:
-// load the browniehcr.dll, get the hcrGetGlobal proc from there and use it
+// load the nimhcr.dll, get the hcrGetGlobal proc from there and use it
 #ifndef NIM_HOT_CODE_RELOADING
 extern NI nim_program_result;
 #endif
@@ -559,8 +559,8 @@ static inline void GCGuard (void *ptr) { asm volatile ("" :: "X" (ptr)); }
 #  define GC_GUARD
 #endif
 
-// Test to see if Brownie and the C compiler agree on the size of a pointer.
-NIM_STATIC_ASSERT(sizeof(NI) == sizeof(void*) && NIM_INTBITS == sizeof(NI)*8, "Pointer size mismatch between Brownie and C/C++ backend. You probably need to setup the backend compiler for target CPU.");
+// Test to see if Nim and the C compiler agree on the size of a pointer.
+NIM_STATIC_ASSERT(sizeof(NI) == sizeof(void*) && NIM_INTBITS == sizeof(NI)*8, "Pointer size mismatch between Nim and C/C++ backend. You probably need to setup the backend compiler for target CPU.");
 
 #ifdef USE_NIM_NAMESPACE
 }
@@ -586,34 +586,34 @@ NIM_STATIC_ASSERT(sizeof(NI) == sizeof(void*) && NIM_INTBITS == sizeof(NI)*8, "P
 #endif
 
 /* these exist to make the codegen logic simpler */
-#define brownieModInt(a, b, res) (((*res) = (a) % (b)), 0)
-#define brownieModInt64(a, b, res) (((*res) = (a) % (b)), 0)
+#define nimModInt(a, b, res) (((*res) = (a) % (b)), 0)
+#define nimModInt64(a, b, res) (((*res) = (a) % (b)), 0)
 
 #if (!defined(_MSC_VER) || defined(__clang__)) && !defined(NIM_EmulateOverflowChecks)
   /* these exist because we cannot have .compilerProcs that are importc'ed
     by a different name */
 
-  #define brownieAddInt64(a, b, res) __builtin_saddll_overflow(a, b, (long long int*)res)
-  #define brownieSubInt64(a, b, res) __builtin_ssubll_overflow(a, b, (long long int*)res)
-  #define brownieMulInt64(a, b, res) __builtin_smulll_overflow(a, b, (long long int*)res)
+  #define nimAddInt64(a, b, res) __builtin_saddll_overflow(a, b, (long long int*)res)
+  #define nimSubInt64(a, b, res) __builtin_ssubll_overflow(a, b, (long long int*)res)
+  #define nimMulInt64(a, b, res) __builtin_smulll_overflow(a, b, (long long int*)res)
 
   #if NIM_INTBITS == 32
     #if ((defined(__arm__) && !defined(__unix__)) || defined(__riscv) || (defined(__xtensa__) && !defined(__unix__))) && defined(__GNUC__)
       /* arm-none-eabi-gcc, riscv32-unknown-elf-gcc and xtensa-esp-elf-gcc targets
          define int32_t as long int */
-      #define brownieAddInt(a, b, res) __builtin_saddl_overflow(a, b, res)
-      #define brownieSubInt(a, b, res) __builtin_ssubl_overflow(a, b, res)
-      #define brownieMulInt(a, b, res) __builtin_smull_overflow(a, b, res)
+      #define nimAddInt(a, b, res) __builtin_saddl_overflow(a, b, res)
+      #define nimSubInt(a, b, res) __builtin_ssubl_overflow(a, b, res)
+      #define nimMulInt(a, b, res) __builtin_smull_overflow(a, b, res)
     #else
-      #define brownieAddInt(a, b, res) __builtin_sadd_overflow(a, b, res)
-      #define brownieSubInt(a, b, res) __builtin_ssub_overflow(a, b, res)
-      #define brownieMulInt(a, b, res) __builtin_smul_overflow(a, b, res)
+      #define nimAddInt(a, b, res) __builtin_sadd_overflow(a, b, res)
+      #define nimSubInt(a, b, res) __builtin_ssub_overflow(a, b, res)
+      #define nimMulInt(a, b, res) __builtin_smul_overflow(a, b, res)
     #endif
   #else
     /* map it to the 'long long' variant */
-    #define brownieAddInt(a, b, res) __builtin_saddll_overflow(a, b, (long long int*)res)
-    #define brownieSubInt(a, b, res) __builtin_ssubll_overflow(a, b, (long long int*)res)
-    #define brownieMulInt(a, b, res) __builtin_smulll_overflow(a, b, (long long int*)res)
+    #define nimAddInt(a, b, res) __builtin_saddll_overflow(a, b, (long long int*)res)
+    #define nimSubInt(a, b, res) __builtin_ssubll_overflow(a, b, (long long int*)res)
+    #define nimMulInt(a, b, res) __builtin_smulll_overflow(a, b, (long long int*)res)
   #endif
 #endif
 
@@ -625,4 +625,4 @@ NIM_STATIC_ASSERT(sizeof(NI) == sizeof(void*) && NIM_INTBITS == sizeof(NI)*8, "P
 using std::_setjmp;
 #endif
 
-#endif /* BROWNIEBASE_H */
+#endif /* NIMBASE_H */

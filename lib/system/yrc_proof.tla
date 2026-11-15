@@ -4,13 +4,13 @@
 \*
 \* ## Key Barrier Semantics Modeled
 \*
-\* ### Write Barrier (brownieAsgnYrc)
+\* ### Write Barrier (nimAsgnYrc)
 \*   1. atomicStoreN(dest, src, ATOMIC_RELEASE)
 \*      - Graph update is immediately visible to all threads (including collector)
 \*      - ATOMIC_RELEASE ensures all prior writes are visible before this store
 \*      - No lock required for graph updates (lock-free)
 \*
-\*   2. brownieIncRefCyclic(src, true)
+\*   2. nimIncRefCyclic(src, true)
 \*      - Acquires per-stripe lockInc[stripe] (fine-grained)
 \*      - Buffers increment in toInc[stripe] queue
 \*      - On overflow: acquires global lock, merges all stripes, applies increment
@@ -187,11 +187,11 @@ LogicalRC(obj) ==
 GetStripe(thread) == 0
 
 \* ============================================================================
-\* Write Barrier: brownieAsgnYrc
+\* Write Barrier: nimAsgnYrc
 \* ============================================================================
 \* The write barrier does:
 \*   1. atomicStoreN(dest, src, ATOMIC_RELEASE)  -- graph update is immediate
-\*   2. brownieIncRefCyclic(src, true)                -- buffer inc(src)
+\*   2. nimIncRefCyclic(src, true)                -- buffer inc(src)
 \*   3. yrcDec(tmp, desc)                         -- buffer dec(old)
 \*
 \* Key barrier semantics:
@@ -409,7 +409,7 @@ MarkGray(obj, desc) ==
               IF x \in objectsToMarkGray THEN colGray ELSE color[x]]
        /\ \* Subtract internal edges: for each reachable object, decrement its RC
           \* by the number of internal edges pointing to it from within the subgraph.
-          \* This matches the Brownie implementation which decrements once per edge traversed.
+          \* This matches the Nim implementation which decrements once per edge traversed.
           \* Note: obj's RC is not decremented here (it has no parent in this subgraph).
           \* For roots, the RC includes external refs which survive trial deletion.
           rc' = [x \in Objects |->

@@ -10,7 +10,7 @@
 
   ## What the implementation does (the things we model)
 
-  Write barrier `brownieAsgnYrc(dest, src)`:
+  Write barrier `nimAsgnYrc(dest, src)`:
     1. direct ATOMIC incRef of src        (rc word mutation, visible to all)
     2. atomicExchange dest ← src          (graph is immediately current;
                                            old value read atomically)
@@ -116,14 +116,14 @@ theorem yrc_safety (s : State) (x : Obj)
 
 /-! ## §2 The write barrier
 
-  `brownieAsgnYrc` performs the atomic inc of `src` BEFORE the exchange, so
+  `nimAsgnYrc` performs the atomic inc of `src` BEFORE the exchange, so
   there is no instant at which the edge `a → src` exists without src's rc
   accounting for it; and the exchange reads `old` atomically, so two
   racing barriers on the same slot can never both dec the same old value.
   The dec of `old` is deferred: until the next merge, old's rc is merely
   inflated — always conservative. -/
 
-/-- Model of `brownieAsgnYrc(field a, src)`: `a`'s field pointed to `old`,
+/-- Model of `nimAsgnYrc(field a, src)`: `a`'s field pointed to `old`,
     now points to `src`. The graph update is immediate (atomicExchange). -/
 def writeBarrier (s : State) (a old src : Obj) : State :=
   { s with
@@ -579,14 +579,14 @@ theorem fence_mutual_exclusion
   In fact the current paths never HOLD two of these at once — strictly
   stronger than the ascending-order requirement the theorem needs:
 
-  **brownieIncRefCyclic / brownieAsgnYrc / brownieSinkYrc / enqueueDec /
+  **nimIncRefCyclic / nimAsgnYrc / nimSinkYrc / enqueueDec /
     registerLocal / markDirtyFromQueues**: lock-free, no locks at all;
     enqueueDec's overflow calls collectCycles with nothing held. ✓
   **drainStripe**: consumerLock[i] alone; the processing inside
     (trialDec, registerLocal into the thread-local buffer) takes no
     lock. drainAllStripes: consumerLock[i] ascending, released between
     stripes. ✓
-  **startCollection / brownieYrcThreadTeardown**: drain first (consumerLock,
+  **startCollection / nimYrcThreadTeardown**: drain first (consumerLock,
     released), THEN gMergeLock for the slot claim / orphan spill —
     sequential, never nested. adoptOrphans: gMergeLock alone. ✓
   **validateDead / commitDead**: no locks (candidate re-registration is
