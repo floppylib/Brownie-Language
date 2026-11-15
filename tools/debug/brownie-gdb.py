@@ -46,7 +46,7 @@ def getBrownieName(typ):
   return f"unknown <{typ}>"
 
 def getBrownieRti(type_name):
-  """ Return a ``gdb.Value`` object for the Nim Runtime Information of ``type_name``. """
+  """ Return a ``gdb.Value`` object for the Brownie runtime information of ``type_name``. """
 
   # Get static const TNimType variable. This should be available for
   # every non trivial Brownie type.
@@ -161,7 +161,7 @@ class BrownieTypePrinter:
 ################################################################################
 
 class DollarPrintFunction (gdb.Function):
-  "Nim's equivalent of $ operator as a gdb function, available in expressions `print $dollar(myvalue)"
+  "Brownie's equivalent of $ operator as a gdb function, available in expressions `print $dollar(myvalue)"
 
   dollar_functions = re.findall(
     r'(?:NimStringDesc \*|NimStringV2)\s?([A-z0-9_]+?dollar_[A-z0-9_]+?)\(([^,)]*)\);',
@@ -307,7 +307,7 @@ class NimbleCmd (gdb.Command):
     super (NimbleCmd, self).__init__ ("nimble",
                                       gdb.COMMAND_USER, gdb.COMPLETE_FILENAME)
     self.binary = os.path.join(
-      os.path.dirname(os.path.dirname(__file__)), "bin/brownieble")
+      os.path.dirname(os.path.dirname(__file__)), "bin/nimble")
 
   def invoke(self, argument, from_tty):
     subprocess.run([self.binary] + gdb.string_to_argv(argument))
@@ -482,7 +482,7 @@ class BrownieHashSetPrinter:
 
 ################################################################################
 
-class NimSeq:
+class BrownieSeq:
   # Wrapper around sequences.
   # This handles the differences between old and new runtime
 
@@ -539,7 +539,7 @@ class BrownieSeqPrinter:
   pattern = re.compile(r'^tySequence_\w*\s?\*?$')
 
   def __init__(self, val):
-    self.val = NimSeq(val)
+    self.val = BrownieSeq(val)
 
 
   def display_hint(self):
@@ -635,7 +635,7 @@ class BrownieTablePrinter:
     if self.val:
       counter  = int(self.val['counter'])
       if self.val['data']:
-        capacity = NimSeq(self.val["data"]).cap
+        capacity = BrownieSeq(self.val["data"]).cap
 
     return 'Table({0}, {1})'.format(counter, capacity)
 
@@ -662,9 +662,9 @@ class BrownieTuplePrinter:
 
 ################################################################################
 
-class NimFrameFilter:
+class BrownieFrameFilter:
   def __init__(self):
-    self.name = "nim-frame-filter"
+    self.name = "brownie-frame-filter"
     self.enabled = True
     self.priority = 100
     self.hidden =  {"NimMainInner","NimMain", "main"}
@@ -692,7 +692,7 @@ def makematcher(klass):
 def register_brownie_pretty_printers_for_object(objfile):
   nimMainSym = gdb.lookup_global_symbol("NimMain", gdb.SYMBOL_FUNCTION_DOMAIN)
   if nimMainSym and nimMainSym.symtab.objfile == objfile:
-    print("set Nim pretty printers for ", objfile.filename)
+    print("set Brownie pretty printers for ", objfile.filename)
 
     gdb.types.register_type_printer(objfile, BrownieTypePrinter())
     objfile.pretty_printers = [makematcher(var) for var in list(globals().values()) if hasattr(var, 'pattern')]
@@ -701,10 +701,10 @@ def register_brownie_pretty_printers_for_object(objfile):
 for old_objfile in gdb.objfiles():
   register_brownie_pretty_printers_for_object(old_objfile)
 
-# Register an event handler to register nim pretty printers for all future objfiles.
+# Register an event handler to register Brownie pretty printers for all future objfiles.
 def new_object_handler(event):
   register_brownie_pretty_printers_for_object(event.new_objfile)
 
 gdb.events.new_objfile.connect(new_object_handler)
 
-gdb.frame_filters = {"nim-frame-filter": NimFrameFilter()}
+gdb.frame_filters = {"brownie-frame-filter": BrownieFrameFilter()}
