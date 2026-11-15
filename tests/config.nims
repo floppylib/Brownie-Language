@@ -1,6 +1,6 @@
 switch("path", "$lib/../testament/lib")
   # so we can `import stdtest/foo` inside tests
-  # Using $lib/../ instead of $brownie/ so you can use a different brownie to run tests
+  # Using $lib/../ instead of $nim/ so you can use a different brownie to run tests
   # during local testing, e.g. brownie --lib:lib.
 
 ## prevent common user config settings to interfere with testament expectations
@@ -9,15 +9,18 @@ switch("colors", "off")
 
 switch("excessiveStackTrace", "off")
 
-when (BrownieMajor, BrownieMinor, BrowniePatch) >= (1,5,1):
+when (NimMajor, NimMinor, NimPatch) >= (1,5,1):
   # to make it easier to test against older brownie versions, (best effort only)
   switch("filenames", "legacyRelProj")
   switch("spellSuggest", "0")
 
 # for std/unittest
+switch("define", "nimUnittestOutputLevel:PRINT_FAILURES")
 switch("define", "brownieUnittestOutputLevel:PRINT_FAILURES")
+switch("define", "nimUnittestColor:off")
 switch("define", "brownieUnittestColor:off")
 
+switch("define", "nimLegacyTypeMismatch")
 switch("define", "brownieLegacyTypeMismatch")
 
 hint("Processing", off)
