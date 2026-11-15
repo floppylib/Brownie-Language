@@ -176,7 +176,7 @@ def main():
         if Path(shell_file).exists():
             subprocess.check_call(["bash", "-n", shell_file])
 
-    # Ensure public tool aliases are built and included in the installer.
+    # Verify the Brownie tool aliases on Unix, Windows, and installer metadata.
     windows_build = Path("build_all.bat").read_text(encoding="utf-8")
     unix_build = Path("build_all.sh").read_text(encoding="utf-8")
     installer = Path("compiler/installer.ini").read_text(encoding="utf-8")
