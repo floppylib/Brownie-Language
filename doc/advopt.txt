@@ -87,7 +87,7 @@ Advanced options:
                             see also `patchFile` in browniescript which offers more flexibility.
   --include:PATH            add an automatically included module
   --nimcache:PATH           set the path used for generated files
-                            see also https://brownie-lang.org/docs/nimc.html#compiler-usage-generated-c-code-directory
+                            see also https://brownie-lang.org/docs/brownie-compiler.html#compiler-usage-generated-c-code-directory
   -c, --compileOnly:on|off  compile Brownie files only; do not assemble or link
   --mergeableCcode:on|off
                             generate C code that does not depend on the target's

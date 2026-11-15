@@ -49,7 +49,7 @@ via sockets is more reasonable so that is the default. It listens to port 6000
 by default.
 
 browniesuggest is basically a frontend for the brownie compiler so `--path`:option: flags and
-[config files](nimc.html#compiler-usage-configuration-files)
+[config files](brownie-compiler.html#compiler-usage-configuration-files)
 can be used to specify additional dependencies like 
 `browniesuggest --stdin --debug --path:"dependencies" myproject.brownie`:cmd:.
 

@@ -15,7 +15,7 @@ The documentation consists of several documents:
 - | [Library documentation](lib.html)
   | This document describes Brownie's standard library.
 
-- | [Compiler user guide](nimc.html)
+- | [Compiler user guide](brownie-compiler.html)
   | The user guide lists command line arguments, special features of the
     compiler, etc.
 

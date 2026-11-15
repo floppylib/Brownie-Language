@@ -50,7 +50,7 @@ Save this code to the file "greetings.brownie". Now compile and run it:
   brownie compile --run greetings.brownie
   ```
 
-With the ``--run`` [switch](nimc.html#compiler-usage-commandminusline-switches) Brownie
+With the ``--run`` [switch](brownie-compiler.html#compiler-usage-commandminusline-switches) Brownie
 executes the file automatically after compilation. You can give your program
 command-line arguments by appending them after the filename:
   ```cmd
@@ -71,7 +71,7 @@ To compile a release version use:
 By default, the Brownie compiler generates a large number of runtime checks
 aiming for your debugging pleasure. With ``-d:release`` some checks are
 [turned off and optimizations are turned on](
-nimc.html#compiler-usage-compileminustime-symbols).
+brownie-compiler.html#compiler-usage-compileminustime-symbols).
 
 For benchmarking or production code, use the ``-d:release`` switch.
 For comparing the performance with unsafe languages like C, use the ``-d:danger`` switch
@@ -1682,7 +1682,7 @@ variables! For example:
   import std/os
 
   let
-    path = "usr/local/nimc.html"
+    path = "usr/local/brownie-compiler.html"
     (dir, name, ext) = splitFile(path)
     baddir, badname, badext = splitFile(path)
   echo dir      # outputs "usr/local"

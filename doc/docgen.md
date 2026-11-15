@@ -15,7 +15,7 @@ Introduction
 ============
 
 This document describes the `documentation generation tools`:idx: built into
-the [Brownie compiler](nimc.html), which can generate HTML, Latex and JSON output
+the [Brownie compiler](brownie-compiler.html), which can generate HTML, Latex and JSON output
 from input ``.brownie`` files and projects.
 The output documentation will include the module
 dependencies (`import`), any top-level documentation comments (`##`), and
@@ -994,7 +994,7 @@ the ``.idx`` file.
 Additional resources
 ====================
 
-* [Brownie Compiler User Guide](nimc.html#compiler-usage-commandminusline-switches)
+* [Brownie Compiler User Guide](brownie-compiler.html#compiler-usage-commandminusline-switches)
 
 * already mentioned documentation for
   [Markdown and RST markup languages](markdown_rst.html), which also

@@ -28,7 +28,7 @@ Pragmas are Brownie's method to give the compiler additional information/
 commands without introducing a massive number of new keywords. Pragmas are
 enclosed in the special `{.` and `.}` curly dot brackets. This tutorial
 does not cover pragmas. See the [manual](manual.html#pragmas) or [user guide](
-nimc.html#additional-features) for a description of the available
+brownie-compiler.html#additional-features) for a description of the available
 pragmas.
 
 

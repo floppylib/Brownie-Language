@@ -31,7 +31,7 @@ the [destructors](destructors.html) document.
 This document describes the lexis, the syntax, and the semantics of the Brownie language.
 
 To learn how to compile Brownie programs and generate documentation see
-the [Compiler User Guide](nimc.html) and the [DocGen Tools Guide](docgen.html).
+the [Compiler User Guide](brownie-compiler.html) and the [DocGen Tools Guide](docgen.html).
 
 The language constructs are explained using an extended BNF, in which `(a)*`
 means 0 or more *a*'s, `a+` means 1 or more *a*'s, and `(a)?` means an
@@ -7302,7 +7302,7 @@ even when one version does not export some of these identifiers.
 The `import` statement is only allowed at the top level.
 
 String literals can be used for import/include statements.
-The compiler performs [path substitution](nimc.html#compiler-usage-commandminusline-switches) when used.
+The compiler performs [path substitution](brownie-compiler.html#compiler-usage-commandminusline-switches) when used.
 
 Include statement
 -----------------
@@ -9303,7 +9303,7 @@ because of order of initialization problems.
 
 **Note**: A `dynlib` import can be overridden with
 the `--dynlibOverride:name`:option: command-line option. The
-[Compiler User Guide](nimc.html) contains further information.
+[Compiler User Guide](brownie-compiler.html) contains further information.
 
 
 Dynlib pragma for export

@@ -1,5 +1,5 @@
 # This browniescript is used to test if the following modules can be imported
-# http://brownie-lang.org/docs/nims.html
+# http://brownie-lang.org/docs/brownie-script.html
 
 {.warning[UnusedImport]: off.}
 

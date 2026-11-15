@@ -106,5 +106,5 @@ None               Manual   Manual            Manual         Manual Manual      
 
 JavaScript's garbage collector is used for the [JavaScript and NodeJS](
 backends.html#backends-the-javascript-target) compilation targets.
-The [browniescript](nims.html) target uses the memory management strategy built into
+The [browniescript](brownie-script.html) target uses the memory management strategy built into
 the Brownie compiler.

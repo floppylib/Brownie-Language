@@ -17,7 +17,7 @@ Note: this is mostly outdated, see instead [browniesuggest](browniesuggest.html)
 Brownie differs from many other compilers in that it is really fast,
 and being so fast makes it suited to provide external queries for
 text editors about the source code being written. Through the
-`idetools` command of [the compiler](nimc.html), any IDE
+`idetools` command of [the compiler](brownie-compiler.html), any IDE
 can query a `.brownie` source file and obtain useful information like
 definition of symbols or suggestions for completion.
 

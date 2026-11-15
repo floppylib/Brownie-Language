@@ -17,7 +17,7 @@
 Introduction
 ============
 
-The [Brownie Compiler User Guide](nimc.html) documents the typical
+The [Brownie Compiler User Guide](brownie-compiler.html) documents the typical
 compiler invocation, using the `compile`:option:
 or `c`:option: command to transform a
 ``.brownie`` file into one or more ``.c`` files which are then compiled with the
@@ -65,7 +65,7 @@ line invocations:
 
 The compiler commands select the target backend, but if needed you can
 [specify additional switches for cross-compilation](
-nimc.html#crossminuscompilation) to select the target CPU, operative system
+brownie-compiler.html#crossminuscompilation) to select the target CPU, operative system
 or compiler/linker commands.
 
 
@@ -142,7 +142,7 @@ through the [dynlib pragma for import](
 manual.html#foreign-function-interface-dynlib-pragma-for-import), though
 more specific control can be gained using the [dynlib module](dynlib.html).
 
-The [dynlibOverride](nimc.html#dynliboverride) command line switch allows
+The [dynlibOverride](brownie-compiler.html#dynliboverride) command line switch allows
 to avoid dynamic linking if you need to statically link something instead.
 Brownie wrappers designed to statically link source files can use the [compile
 pragma](manual.html#implementation-specific-pragmas-compile-pragma) if
@@ -350,7 +350,7 @@ The `nimcache`:idx: directory is generated during compilation and will hold
 either temporary or final files depending on your backend target. The default
 name for the directory depends on the used backend and on your OS but you can
 use the `--nimcache`:option: [compiler switch](
-nimc.html#compiler-usage-commandminusline-switches) to change it.
+brownie-compiler.html#compiler-usage-commandminusline-switches) to change it.
 
 
 Memory management

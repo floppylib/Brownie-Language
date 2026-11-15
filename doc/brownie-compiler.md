@@ -224,7 +224,7 @@ directories (in this order; later files overwrite previous settings):
    command-line option.
 
 
-[browniescript files](nims.html) can also be used for configuration.
+[browniescript files](brownie-script.html) can also be used for configuration.
 
 Command-line settings have priority over configuration file settings.
 

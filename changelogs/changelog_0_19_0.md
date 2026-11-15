@@ -82,7 +82,7 @@
 - The undocumented ``#? braces`` parsing mode was removed.
 - The undocumented PHP backend was removed.
 - The default location of ``nimcache`` for the native code targets was
-  changed. Read [the compiler user guide](https://brownie-lang.org/docs/nimc.html#generated-c-code-directory)
+  changed. Read [the compiler user guide](https://brownie-lang.org/docs/brownie-compiler.html#generated-c-code-directory)
   for more information.
 
 ### Library additions
@@ -232,7 +232,7 @@
 - ``experimental`` is now a pragma / command line switch that can enable specific
   language extensions, it is not an all-or-nothing switch anymore.
 
-- Nintendo Switch was added as a new platform target. See [the compiler user guide](https://brownie-lang.org/docs/nimc.html)
+- Nintendo Switch was added as a new platform target. See [the compiler user guide](https://brownie-lang.org/docs/brownie-compiler.html)
   for more info.
 
 - macros.bindSym now capable to accepts not only literal string or string constant expression.

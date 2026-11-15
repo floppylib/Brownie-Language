@@ -32,7 +32,7 @@ And copy the executable somewhere in your ``$PATH``.
 Command line switches
 =====================
 
-.. include:: nimgrep_cmdline.txt
+.. include:: brownie-grep_cmdline.txt
 
 Path filter options
 -------------------
