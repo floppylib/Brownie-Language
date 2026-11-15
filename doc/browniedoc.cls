@@ -44,7 +44,7 @@
 
 \usepackage{makeidx}
 \newcommand{\brownieindexterm}[2]{#2\index{#2}\label{#1}}
-\newcommand{\nimindexterm}[2]{\brownieindexterm{#1}{#2}}
+\newcommand{\brownieindexterm}[2]{\brownieindexterm{#1}{#2}}
 \makeindex
 
 \usepackage{dingbat} % for \carriagereturn, etc

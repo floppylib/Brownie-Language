@@ -4,9 +4,9 @@ author = "Andreas Rumpf"
 description = "Brownie package providing the compiler binary"
 license = "MIT"
 
-bin = @["compiler/nim", "nimsuggest/nimsuggest"]
+bin = @["compiler/brownie", "browniesuggest/browniesuggest"]
 skipFiles = @["build_all.bat" , "build_all.sh" , "build_nimble.bat" , "build_nimble.sh" , "changelog.md" , "koch.nim.cfg" , "nimblemeta.json" , "readme.md" , "security.md" ]
-skipDirs = @["build" , "changelogs" , "ci" , "csources_v4" , "drnim" , "nimdoc", "testament"]
+skipDirs = @["build" , "changelogs" , "ci" , "csources_v4" , "drbrownie" , "browniedoc", "testament"]
 
 before install:
   when defined(windows):
