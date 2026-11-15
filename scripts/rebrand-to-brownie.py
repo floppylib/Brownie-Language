@@ -206,9 +206,12 @@ def main():
     ):
         if Path(shell_file).exists():
             subprocess.check_call(["bash", "-n", shell_file])
-    debug_helper = Path("tools/debug/brownie-gdb.py")
-    if debug_helper.exists():
-        ast.parse(debug_helper.read_text(encoding="utf-8"), filename=str(debug_helper))
+    for debug_helper in (
+        Path("tools/debug/brownie-gdb.py"),
+        Path("tools/debug/brownie-lldb.py"),
+    ):
+        if debug_helper.exists():
+            ast.parse(debug_helper.read_text(encoding="utf-8"), filename=str(debug_helper))
 
     print(f"Updated {changed_files} non-.nim text files.")
     print(f"Rebrand pass completed; {changed_occurrences} legacy tool-name occurrences replaced.")
