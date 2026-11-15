@@ -16,7 +16,7 @@ echo_run ./kitten boot -d:release --skipUserCfg --skipParentCfg --hints:off
 echo_run ./kitten tools --skipUserCfg --skipParentCfg --hints:off
 
 # Publish Brownie-branded names while keeping upstream build outputs intact.
-for pair in "browniegrep browniegrep" "browniesuggest browniesuggest" "browniepretty browniepretty"; do
+for pair in "nimgrep browniegrep" "nimsuggest browniesuggest" "nimpretty browniepretty"; do
   set -- $pair
   if [ -x "bin/$1" ]; then
     cp -f "bin/$1" "bin/$2"
