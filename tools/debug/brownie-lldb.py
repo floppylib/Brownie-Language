@@ -13,26 +13,26 @@ def sbvaluegetitem(self: lldb.SBValue, name: Union[int, str]) -> lldb.SBValue:
 # Make this easier to work with
 lldb.SBValue.__getitem__ = sbvaluegetitem
 
-NIM_IS_V2 = True
+BROWNIE_IS_V2 = True
 
 
-def get_nti(value: lldb.SBValue, nim_name=None):
+def get_nti(value: lldb.SBValue, brownie_name=None):
     name_split = value.type.name.split("_")
-    type_nim_name = nim_name or name_split[1]
+    type_brownie_name = brownie_name or name_split[1]
     id_string = name_split[-1].split(" ")[0]
 
-    type_info_name = "NTI" + type_nim_name.lower() + "__" + id_string + "_"
+    type_info_name = "NTI" + type_brownie_name.lower() + "__" + id_string + "_"
     nti = value.target.FindFirstGlobalVariable(type_info_name)
     if not nti.IsValid():
         type_info_name = "NTI" + "__" + id_string + "_"
         nti = value.target.FindFirstGlobalVariable(type_info_name)
     if not nti.IsValid():
-        print(f"NimEnumPrinter: lookup global symbol: '{type_info_name}' failed for {value.type.name}.\n")
-    return type_nim_name, nti
+        print(f"BrownieEnumPrinter: lookup global symbol: '{type_info_name}' failed for {value.type.name}.\n")
+    return type_brownie_name, nti
 
 
-def enum_to_string(value: lldb.SBValue, int_val=None, nim_name=None):
-    tname = nim_name or value.type.name.split("_")[1]
+def enum_to_string(value: lldb.SBValue, int_val=None, brownie_name=None):
+    tname = brownie_name or value.type.name.split("_")[1]
 
     enum_val = value.signed
     if int_val is not None:
@@ -56,7 +56,7 @@ def enum_to_string(value: lldb.SBValue, int_val=None, nim_name=None):
     arg1_type: lldb.SBType = arg_types.GetTypeAtIndex(0)
     arg2_type: lldb.SBType = arg_types.GetTypeAtIndex(1)
 
-    ty_info_name, nti = get_nti(value, nim_name=tname)
+    ty_info_name, nti = get_nti(value, brownie_name=tname)
 
     if not nti.IsValid():
         return default_val
@@ -129,7 +129,7 @@ def to_stringV2(value: lldb.SBValue):
     return bytearray(cast.data.uint8s).decode("utf-8")
 
 
-def NimString(value: lldb.SBValue, internal_dict):
+def BrownieString(value: lldb.SBValue, internal_dict):
     if is_local(value):
         if not is_in_scope(value):
             return "undefined"
@@ -138,7 +138,7 @@ def NimString(value: lldb.SBValue, internal_dict):
     if not custom_summary is None:
         return custom_summary
 
-    if NIM_IS_V2:
+    if BROWNIE_IS_V2:
         res = to_stringV2(value)
     else:
         res = to_string(value)
@@ -157,7 +157,7 @@ def rope_helper(value: lldb.SBValue) -> str:
     if value["length"].unsigned == 0:
         return ""
 
-    if NIM_IS_V2:
+    if BROWNIE_IS_V2:
         str_val = to_stringV2(value["data"])
     else:
         str_val = to_string(value["data"])
@@ -479,7 +479,7 @@ class StringChildrenProvider:
     def __init__(self, value: lldb.SBValue, internalDict):
         self.value = value
         self.data_type: lldb.SBType
-        if not NIM_IS_V2:
+        if not BROWNIE_IS_V2:
             self.data_type = self.value.target.FindFirstType("char")
 
         self.first_element: lldb.SBValue
@@ -497,10 +497,10 @@ class StringChildrenProvider:
         return self.first_element.CreateChildAtOffset("[" + str(index) + "]", offset, self.data_type)
 
     def get_data(self) -> lldb.SBValue:
-        return self.value["p"]["data"] if NIM_IS_V2 else self.value["data"]
+        return self.value["p"]["data"] if BROWNIE_IS_V2 else self.value["data"]
 
     def get_len(self) -> int:
-        if NIM_IS_V2:
+        if BROWNIE_IS_V2:
             if self.value["p"].unsigned == 0:
                 return 0
 
@@ -548,7 +548,7 @@ class StringChildrenProvider:
         self.count = size
         self.first_element = data
 
-        if NIM_IS_V2:
+        if BROWNIE_IS_V2:
             self.data_type = data.type.GetArrayElementType().GetTypedefedType()
 
         self.data_size = self.data_type.GetByteSize()
@@ -608,10 +608,10 @@ class SeqChildrenProvider:
         return self.first_element.CreateChildAtOffset("[" + str(index) + "]", offset, self.data_type)
 
     def get_data(self) -> lldb.SBValue:
-        return self.value["p"]["data"] if NIM_IS_V2 else self.value["data"]
+        return self.value["p"]["data"] if BROWNIE_IS_V2 else self.value["data"]
 
     def get_len(self) -> lldb.SBValue:
-        return self.value["len"] if NIM_IS_V2 else self.value["Sup"]["len"]
+        return self.value["len"] if BROWNIE_IS_V2 else self.value["Sup"]["len"]
 
     def update(self):
         self.count = 0
@@ -709,10 +709,10 @@ class HashSetChildrenProvider:
         return self.child_list[index]
 
     def get_data(self) -> lldb.SBValue:
-        return self.value["data"]["p"]["data"] if NIM_IS_V2 else self.value["data"]["data"]
+        return self.value["data"]["p"]["data"] if BROWNIE_IS_V2 else self.value["data"]["data"]
 
     def get_len(self) -> lldb.SBValue:
-        return self.value["data"]["len"] if NIM_IS_V2 else self.value["data"]["Sup"]["len"]
+        return self.value["data"]["len"] if BROWNIE_IS_V2 else self.value["data"]["Sup"]["len"]
 
     def update(self):
         self.child_list = []
@@ -919,10 +919,10 @@ class TableChildrenProvider:
         return self.child_list[index]
 
     def get_data(self) -> lldb.SBValue:
-        return self.value["data"]["p"]["data"] if NIM_IS_V2 else self.value["data"]["data"]
+        return self.value["data"]["p"]["data"] if BROWNIE_IS_V2 else self.value["data"]["data"]
 
     def get_len(self) -> lldb.SBValue:
-        return self.value["data"]["len"] if NIM_IS_V2 else self.value["data"]["Sup"]["len"]
+        return self.value["data"]["len"] if BROWNIE_IS_V2 else self.value["data"]["Sup"]["len"]
 
     def update(self):
         self.child_list = []
@@ -972,10 +972,10 @@ class StringTableChildrenProvider:
         return self.child_list[index]
 
     def get_data(self) -> lldb.SBValue:
-        return self.value["data"]["p"]["data"] if NIM_IS_V2 else self.value["data"]["data"]
+        return self.value["data"]["p"]["data"] if BROWNIE_IS_V2 else self.value["data"]["data"]
 
     def get_len(self) -> lldb.SBValue:
-        return self.value["data"]["len"] if NIM_IS_V2 else self.value["data"]["Sup"]["len"]
+        return self.value["data"]["len"] if BROWNIE_IS_V2 else self.value["data"]["Sup"]["len"]
 
     def update(self):
         self.children.clear()
@@ -1073,7 +1073,7 @@ class LLDBBasicObjectProvider:
 class CustomObjectChildrenProvider:
     """
     This children provider handles values returned from lldbDebugSynthetic*
-    Nim procedures
+    Brownie procedures
     """
 
     def __init__(self, value: lldb.SBValue, internalDict):
@@ -1238,23 +1238,23 @@ def use_base_type(ty: lldb.SBType) -> bool:
 
 
 def breakpoint_function_wrapper(frame: lldb.SBFrame, bp_loc, internal_dict):
-    """This allows function calls to Nim for custom object summaries and synthetic children"""
+    """This allows function calls to Brownie for custom object summaries and synthetic children"""
     debugger = lldb.debugger
 
     global SUMMARY_FUNCTIONS
     global SYNTHETIC_FUNCTIONS
 
-    global NIM_IS_V2
+    global BROWNIE_IS_V2
 
     for tname, fn in SYNTHETIC_FUNCTIONS.items():
-        debugger.HandleCommand(f"type synthetic delete -w nim {tname}")
+        debugger.HandleCommand(f"type synthetic delete -w brownie {tname}")
 
     SUMMARY_FUNCTIONS = {}
     SYNTHETIC_FUNCTIONS = {}
 
     target: lldb.SBTarget = debugger.GetSelectedTarget()
 
-    NIM_IS_V2 = target.FindFirstType("TNimTypeV2").IsValid()
+    BROWNIE_IS_V2 = target.FindFirstType("TNimTypeV2").IsValid()
 
     module = frame.GetSymbolContext(lldb.eSymbolContextModule).module
 
@@ -1290,7 +1290,7 @@ def breakpoint_function_wrapper(frame: lldb.SBFrame, bp_loc, internal_dict):
         elif sym.name.startswith("lldbDebugSynthetic"):
             SYNTHETIC_FUNCTIONS[arg_type.name] = fn
             debugger.HandleCommand(
-                f"type synthetic add -w nim -l {__name__}.CustomObjectChildrenProvider {arg_type.name}"
+                f"type synthetic add -w brownie -l {__name__}.CustomObjectChildrenProvider {arg_type.name}"
             )
 
 
@@ -1316,65 +1316,65 @@ def executeCommand(command, *args):
 def __lldb_init_module(debugger, internal_dict):
     # fmt: off
     debugger.HandleCommand(f"breakpoint command add -F {__name__}.breakpoint_function_wrapper --script-type python 1")
-    debugger.HandleCommand(f"type summary add -w nim -n sequence -F  {__name__}.Sequence -x tySequence_+[[:alnum:]]+$")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.SeqChildrenProvider -x tySequence_+[[:alnum:]]+$")
+    debugger.HandleCommand(f"type summary add -w brownie -n sequence -F  {__name__}.Sequence -x tySequence_+[[:alnum:]]+$")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.SeqChildrenProvider -x tySequence_+[[:alnum:]]+$")
 
-    debugger.HandleCommand(f"type summary add -w nim -n chararray -F  {__name__}.CharArray -x char\s+[\d+]")
-    debugger.HandleCommand(f"type summary add -w nim -n array -F  {__name__}.Array -x tyArray_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.ArrayChildrenProvider -x tyArray_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type summary add -w nim -n string -F  {__name__}.NimString NimStringDesc")
+    debugger.HandleCommand(f"type summary add -w brownie -n chararray -F  {__name__}.CharArray -x char\s+[\d+]")
+    debugger.HandleCommand(f"type summary add -w brownie -n array -F  {__name__}.Array -x tyArray_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.ArrayChildrenProvider -x tyArray_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n string -F  {__name__}.BrownieString NimStringDesc")
 
-    debugger.HandleCommand(f"type summary add -w nim -n stringv2 -F {__name__}.NimString -x NimStringV2$")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.StringChildrenProvider -x NimStringV2$")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.StringChildrenProvider -x NimStringDesc$")
+    debugger.HandleCommand(f"type summary add -w brownie -n stringv2 -F {__name__}.BrownieString -x NimStringV2$")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.StringChildrenProvider -x NimStringV2$")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.StringChildrenProvider -x NimStringDesc$")
 
-    debugger.HandleCommand(f"type summary add -w nim -n cstring -F  {__name__}.NCSTRING NCSTRING")
+    debugger.HandleCommand(f"type summary add -w brownie -n cstring -F  {__name__}.NCSTRING NCSTRING")
 
-    debugger.HandleCommand(f"type summary add -w nim -n object -F  {__name__}.ObjectV2 -x tyObject_+[[:alnum:]]+_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.ObjectChildrenProvider -x tyObject_+[[:alnum:]]+_+[[:alnum:]]+$")
+    debugger.HandleCommand(f"type summary add -w brownie -n object -F  {__name__}.ObjectV2 -x tyObject_+[[:alnum:]]+_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.ObjectChildrenProvider -x tyObject_+[[:alnum:]]+_+[[:alnum:]]+$")
 
-    debugger.HandleCommand(f"type summary add -w nim -n tframe -F  {__name__}.ObjectV2 -x TFrame$")
+    debugger.HandleCommand(f"type summary add -w brownie -n tframe -F  {__name__}.ObjectV2 -x TFrame$")
 
-    debugger.HandleCommand(f"type summary add -w nim -n rootobj -F  {__name__}.ObjectV2 -x RootObj$")
+    debugger.HandleCommand(f"type summary add -w brownie -n rootobj -F  {__name__}.ObjectV2 -x RootObj$")
 
-    debugger.HandleCommand(f"type summary add -w nim -n enum -F  {__name__}.Enum -x tyEnum_+[[:alnum:]]+_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type summary add -w nim -n hashset -F  {__name__}.HashSet -x tyObject_+HashSet_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.HashSetChildrenProvider -x tyObject_+HashSet_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n enum -F  {__name__}.Enum -x tyEnum_+[[:alnum:]]+_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n hashset -F  {__name__}.HashSet -x tyObject_+HashSet_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.HashSetChildrenProvider -x tyObject_+HashSet_+[[:alnum:]]+")
 
-    debugger.HandleCommand(f"type summary add -w nim -n rope -F  {__name__}.Rope -x tyObject_+Rope[[:alnum:]]+_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n rope -F  {__name__}.Rope -x tyObject_+Rope[[:alnum:]]+_+[[:alnum:]]+")
 
-    debugger.HandleCommand(f"type summary add -w nim -n setuint -F  {__name__}.Set -x tySet_+tyInt_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.SetIntChildrenProvider -x tySet_+tyInt[0-9]+_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type summary add -w nim -n setint -F  {__name__}.Set -x tySet_+tyInt[0-9]+_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type summary add -w nim -n setuint2 -F  {__name__}.Set -x tySet_+tyUInt[0-9]+_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.SetUIntChildrenProvider -x tySet_+tyUInt[0-9]+_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.SetUIntChildrenProvider -x tySet_+tyInt_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type summary add -w nim -n setenum -F  {__name__}.EnumSet -x tySet_+tyEnum_+[[:alnum:]]+_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.SetEnumChildrenProvider -x tySet_+tyEnum_+[[:alnum:]]+_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type summary add -w nim -n setchar -F  {__name__}.Set -x tySet_+tyChar_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.SetCharChildrenProvider -x tySet_+tyChar_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type summary add -w nim -n table -F  {__name__}.Table -x tyObject_+Table_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.TableChildrenProvider -x tyObject_+Table_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type summary add -w nim -n stringtable -F  {__name__}.StringTable -x tyObject_+StringTableObj_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type synthetic add -w nim -l {__name__}.StringTableChildrenProvider -x tyObject_+StringTableObj_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type summary add -w nim -n tuple2 -F  {__name__}.Tuple -x tyObject_+Tuple_+[[:alnum:]]+")
-    debugger.HandleCommand(f"type summary add -w nim -n tuple -F  {__name__}.Tuple -x tyTuple_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n setuint -F  {__name__}.Set -x tySet_+tyInt_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.SetIntChildrenProvider -x tySet_+tyInt[0-9]+_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n setint -F  {__name__}.Set -x tySet_+tyInt[0-9]+_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n setuint2 -F  {__name__}.Set -x tySet_+tyUInt[0-9]+_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.SetUIntChildrenProvider -x tySet_+tyUInt[0-9]+_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.SetUIntChildrenProvider -x tySet_+tyInt_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n setenum -F  {__name__}.EnumSet -x tySet_+tyEnum_+[[:alnum:]]+_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.SetEnumChildrenProvider -x tySet_+tyEnum_+[[:alnum:]]+_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n setchar -F  {__name__}.Set -x tySet_+tyChar_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.SetCharChildrenProvider -x tySet_+tyChar_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n table -F  {__name__}.Table -x tyObject_+Table_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.TableChildrenProvider -x tyObject_+Table_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n stringtable -F  {__name__}.StringTable -x tyObject_+StringTableObj_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type synthetic add -w brownie -l {__name__}.StringTableChildrenProvider -x tyObject_+StringTableObj_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n tuple2 -F  {__name__}.Tuple -x tyObject_+Tuple_+[[:alnum:]]+")
+    debugger.HandleCommand(f"type summary add -w brownie -n tuple -F  {__name__}.Tuple -x tyTuple_+[[:alnum:]]+")
 
-    debugger.HandleCommand(f"type summary add -w nim -n float -F  {__name__}.Float NF")
-    debugger.HandleCommand(f"type summary add -w nim -n float32 -F  {__name__}.Float NF32")
-    debugger.HandleCommand(f"type summary add -w nim -n float64 -F  {__name__}.Float NF64")
-    debugger.HandleCommand(f"type summary add -w nim -n integer -F  {__name__}.Number -x NI")
-    debugger.HandleCommand(f"type summary add -w nim -n integer8 -F  {__name__}.Number -x NI8")
-    debugger.HandleCommand(f"type summary add -w nim -n integer16 -F  {__name__}.Number -x NI16")
-    debugger.HandleCommand(f"type summary add -w nim -n integer32 -F  {__name__}.Number -x NI32")
-    debugger.HandleCommand(f"type summary add -w nim -n integer64 -F  {__name__}.Number -x NI64")
-    debugger.HandleCommand(f"type summary add -w nim -n bool -F  {__name__}.Bool -x bool")
-    debugger.HandleCommand(f"type summary add -w nim -n bool2 -F  {__name__}.Bool -x NIM_BOOL")
-    debugger.HandleCommand(f"type summary add -w nim -n uinteger -F  {__name__}.UnsignedNumber -x NU")
-    debugger.HandleCommand(f"type summary add -w nim -n uinteger8 -F  {__name__}.UnsignedNumber -x NU8")
-    debugger.HandleCommand(f"type summary add -w nim -n uinteger16 -F  {__name__}.UnsignedNumber -x NU16")
-    debugger.HandleCommand(f"type summary add -w nim -n uinteger32 -F  {__name__}.UnsignedNumber -x NU32")
-    debugger.HandleCommand(f"type summary add -w nim -n uinteger64 -F  {__name__}.UnsignedNumber -x NU64")
-    debugger.HandleCommand("type category enable nim")
+    debugger.HandleCommand(f"type summary add -w brownie -n float -F  {__name__}.Float NF")
+    debugger.HandleCommand(f"type summary add -w brownie -n float32 -F  {__name__}.Float NF32")
+    debugger.HandleCommand(f"type summary add -w brownie -n float64 -F  {__name__}.Float NF64")
+    debugger.HandleCommand(f"type summary add -w brownie -n integer -F  {__name__}.Number -x NI")
+    debugger.HandleCommand(f"type summary add -w brownie -n integer8 -F  {__name__}.Number -x NI8")
+    debugger.HandleCommand(f"type summary add -w brownie -n integer16 -F  {__name__}.Number -x NI16")
+    debugger.HandleCommand(f"type summary add -w brownie -n integer32 -F  {__name__}.Number -x NI32")
+    debugger.HandleCommand(f"type summary add -w brownie -n integer64 -F  {__name__}.Number -x NI64")
+    debugger.HandleCommand(f"type summary add -w brownie -n bool -F  {__name__}.Bool -x bool")
+    debugger.HandleCommand(f"type summary add -w brownie -n bool2 -F  {__name__}.Bool -x NIM_BOOL")
+    debugger.HandleCommand(f"type summary add -w brownie -n uinteger -F  {__name__}.UnsignedNumber -x NU")
+    debugger.HandleCommand(f"type summary add -w brownie -n uinteger8 -F  {__name__}.UnsignedNumber -x NU8")
+    debugger.HandleCommand(f"type summary add -w brownie -n uinteger16 -F  {__name__}.UnsignedNumber -x NU16")
+    debugger.HandleCommand(f"type summary add -w brownie -n uinteger32 -F  {__name__}.UnsignedNumber -x NU32")
+    debugger.HandleCommand(f"type summary add -w brownie -n uinteger64 -F  {__name__}.UnsignedNumber -x NU64")
+    debugger.HandleCommand("type category enable brownie")
     debugger.HandleCommand(f"command script add -f  {__name__}.echo echo")
     # fmt: on
